@@ -195,7 +195,7 @@
 <p>该接口的重要实现类有： <code>ConstantTransformer</code> 、 <code>invokerTransformer</code> 、 <code>ChainedTransformer，TransformedMap</code></p>
 <h3 id="constanttransformer"><a class="markdownIt-Anchor" href="#constanttransformer">#</a> ConstantTransformer</h3>
 <p>其中我们来看一下 <code>ConstantTransformer</code>  类</p>
-<p><img src="E:%5Cki10Moc-img%5Cimage-20220719130215175.png" alt="image-20220719130215175"></p>
+<p><img src="https://img-blog.csdnimg.cn/cb480e35a29946c5b627ad698f1dda3a.png" alt="img"></p>
 <p>常量转换，转换的逻辑也非常的简单：传入对象不会经过任何改变直接返回。例如传入 <code>Runtime.class</code>  ，进行转换返回的依旧是 <code>Runtime.class</code></p>
 <p>这里的 iConstant 是在构造函数时传入的一个对象</p>
 <p>但是无论是调用 transform 方法还是 getConstant 方法，他们的返回值都是 iConstant</p>
@@ -215,7 +215,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Runtime</span> <span class="variable">r</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">InvokerTransformer</span>(<span class="string">&quot;exec&quot;</span>,<span class="keyword">new</span> <span class="title class_">Class</span>[]&#123;String.class&#125;,<span class="keyword">new</span> <span class="title class_">Object</span>[]&#123;<span class="string">&quot;calc&quot;</span>&#125;).transform(r);</span><br></pre></td></tr></table></figure>
 <p><img src="https://img-blog.csdnimg.cn/b970dec0008f44adbc4204be5febc134.png" alt="img"></p>
 <p>到这里，我们先整理一下思路，看我们下一步需要找什么</p>
-<p><img src="E:%5Cki10Moc-img%5Cimage-20220719130503851.png" alt="image-20220719130503851"></p>
+<p><img src="https://img-blog.csdnimg.cn/1ac023a06f984b0d991265c16390cfbf.png" alt="img"></p>
 <p>对于反序列化，我们肯定要找到一个 readObject 来读取 InputStream 流的对象，而最后的恶意代码执行也有了上面的 <code>InvokerTransformer</code>  类可以实现，所以下一步我们就需要找到一个调用 transform 方法的类</p>
 <p>跟进我们写的本地执行中 transform 方法，并查询调用该方法的所有类</p>
 <h3 id="transfomedmap"><a class="markdownIt-Anchor" href="#transfomedmap">#</a> TransfomedMap</h3>
@@ -324,6 +324,11 @@
               
           </div>
           <div class="post-foot-prev">
+            
+              <a href="/2022/07/17/hello-world/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
             
           </div>
         </div>
