@@ -6,7 +6,7 @@
   <link href="https://ki10moc.github.io/atom.xml" rel="self"/>
   
   <link href="https://ki10moc.github.io/"/>
-  <updated>2022-07-20T18:49:44.599Z</updated>
+  <updated>2022-07-21T08:44:31.176Z</updated>
   <id>https://ki10moc.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AWD-Attack</title>
+    <link href="https://ki10moc.github.io/2022/07/21/AWD-Attack/"/>
+    <id>https://ki10moc.github.io/2022/07/21/AWD-Attack/</id>
+    <published>2022-07-21T08:41:08.000Z</published>
+    <updated>2022-07-21T08:44:31.176Z</updated>
+    
+    <content type="html"><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="┗|｀O′|┛ 嗷~~，密码错误捏." data-whm="不可以！这件事情不可以哦！.">  <script id="hbeData" type="hbeData" data-hmacdigest="284b64401bd255e7701e6875f30fd39afadbbd4417fa2e918b55580ce71da1e2">8a096de8b258d3b653380fc40302630d7f35163f22530e70fb17b270c64bcb1e</script>  <div class="hbe hbe-content">    <div class="hbe hbe-input hbe-input-default">      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hello啊，这里需要钥匙才能进来哦.</span>      </label>    </div>  </div></div><script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
+    
+    
+    <summary type="html">似乎被加密了耶.</summary>
+    
+    
+    
+    
+    <category term="渗透" scheme="https://ki10moc.github.io/tags/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="AWD" scheme="https://ki10moc.github.io/tags/AWD/"/>
+    
+  </entry>
   
   <entry>
     <title>Vulnhub：Sar-1</title>

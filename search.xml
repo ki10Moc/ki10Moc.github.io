@@ -4,6 +4,27 @@
   
     
     <entry>
+      <title>AWD-Attack</title>
+      <link href="/2022/07/21/AWD-Attack/"/>
+      <url>/2022/07/21/AWD-Attack/</url>
+      
+        <content type="html"><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="┗|｀O′|┛ 嗷~~，密码错误捏." data-whm="不可以！这件事情不可以哦！.">  <script id="hbeData" type="hbeData" data-hmacdigest="284b64401bd255e7701e6875f30fd39afadbbd4417fa2e918b55580ce71da1e2">8a096de8b258d3b653380fc40302630d7f35163f22530e70fb17b270c64bcb1e</script>  <div class="hbe hbe-content">    <div class="hbe hbe-input hbe-input-default">      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hello啊，这里需要钥匙才能进来哦.</span>      </label>    </div>  </div></div><script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 渗透 </tag>
+            
+            <tag> AWD </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Vulnhub：Sar-1</title>
       <link href="/2022/07/21/Vulnhub%EF%BC%9ASar-1/"/>
       <url>/2022/07/21/Vulnhub%EF%BC%9ASar-1/</url>
