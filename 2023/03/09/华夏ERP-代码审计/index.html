@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      华夏ERP-代码审计 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">华夏ERP-代码审计</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-03-09 21:09:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                    <b>#</b> Java安全
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>[TOC]</p>
+<h1 id="0x01环境搭建"><a href="#0x01环境搭建" class="headerlink" title="0x01环境搭建"></a>0x01环境搭建</h1><p><a target="_blank" rel="noopener" href="https://github.com/jishenghua/jshERP/releases/tag/2.3">Release 华夏ERP_v2.3 · jishenghua&#x2F;jshERP · GitHub</a></p>
+<p>连数据库，改端口，直接run</p>
+<h1 id="0x02代码审计"><a href="#0x02代码审计" class="headerlink" title="0x02代码审计"></a>0x02代码审计</h1><h2 id="Filter过滤器"><a href="#Filter过滤器" class="headerlink" title="Filter过滤器"></a>Filter过滤器</h2><p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230512154239040.png" alt="image-20230512154239040"></p>
+<ul>
+<li>ignoredUrl：表示被忽略的 URL 的模式，它使用 # 分隔了一些后缀名，如 .css、.js、.jpg、.png、.gif、.ico，这些后缀名的 URL 将不会被 LogCostFilter 过滤。</li>
+<li>filterPath：表示需要过滤的 URL 的模式，它使用 # 分隔了一些需要过滤的 URL，如 &#x2F;user&#x2F;login、&#x2F;user&#x2F;registerUser、&#x2F;v2&#x2F;api-docs 等。</li>
+</ul>
+<p>接着是初始化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">filterPath</span> <span class="operator">=</span> filterConfig.getInitParameter(FILTER_PATH);</span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isEmpty(filterPath)) &#123;</span><br><span class="line">            allowUrls = filterPath.contains(<span class="string">&quot;#&quot;</span>) ? filterPath.split(<span class="string">&quot;#&quot;</span>) : <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;filterPath&#125;;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">ignoredPath</span> <span class="operator">=</span> filterConfig.getInitParameter(IGNORED_PATH);</span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isEmpty(ignoredPath)) &#123;</span><br><span class="line">            ignoredUrls = ignoredPath.contains(<span class="string">&quot;#&quot;</span>) ? ignoredPath.split(<span class="string">&quot;#&quot;</span>) : <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;ignoredPath&#125;;</span><br><span class="line">            <span class="keyword">for</span> (String ignoredUrl : ignoredUrls) &#123;</span><br><span class="line">                ignoredList.add(ignoredUrl);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>获取两个参数·<code>*FILTER_PATH*</code>和<code>*IGNORED_PATH*</code>，检索其是否有#，并分离然后存入数组</p>
+<p>再来看下<code>doFilter</code>函数，这也是来看Filter&#96;过滤器实际的作用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span></span><br><span class="line"><span class="params">                         FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">        <span class="type">HttpServletRequest</span> <span class="variable">servletRequest</span> <span class="operator">=</span> (HttpServletRequest) request;</span><br><span class="line">        <span class="type">HttpServletResponse</span> <span class="variable">servletResponse</span> <span class="operator">=</span> (HttpServletResponse) response;</span><br><span class="line">        <span class="type">String</span> <span class="variable">requestUrl</span> <span class="operator">=</span> servletRequest.getRequestURI();</span><br><span class="line">        <span class="comment">//具体，比如：处理若用户未登录，则跳转到登录页</span></span><br><span class="line">        <span class="type">Object</span> <span class="variable">userInfo</span> <span class="operator">=</span> servletRequest.getSession().getAttribute(<span class="string">&quot;user&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(userInfo!=<span class="literal">null</span>) &#123; <span class="comment">//如果已登录，不阻止</span></span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (requestUrl != <span class="literal">null</span> &amp;&amp; (requestUrl.contains(<span class="string">&quot;/doc.html&quot;</span>) ||</span><br><span class="line">            requestUrl.contains(<span class="string">&quot;/register.html&quot;</span>) || requestUrl.contains(<span class="string">&quot;/login.html&quot;</span>))) &#123;</span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (verify(ignoredList, requestUrl)) &#123;</span><br><span class="line">            chain.doFilter(servletRequest, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> != allowUrls &amp;&amp; allowUrls.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (String url : allowUrls) &#123;</span><br><span class="line">                <span class="keyword">if</span> (requestUrl.startsWith(url)) &#123;</span><br><span class="line">                    chain.doFilter(request, response);</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        servletResponse.sendRedirect(<span class="string">&quot;/login.html&quot;</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里理解起来也比较简单</p>
+<p>首先是初始化的两个变量，一个请求一个相应，<code>requestUrl</code>获取请求的<code>Url</code></p>
+<p>第一个if</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">然后读取`Session`获取用户信息</span><br><span class="line">如果是登录状态则放行</span><br></pre></td></tr></table></figure>
+
+
+
+<p>第二个if</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果Url不为空就判断是否包含&quot;/doc.html&quot;,&quot;/register.html&quot;和&quot;/login.html&quot;</span><br><span class="line">如果包含就放行</span><br></pre></td></tr></table></figure>
+
+
+
+<p>第三个if</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">调用`verify`函数，实际上就是来检测`Url`是否是可忽视`Url`</span><br><span class="line">如果是则放行</span><br></pre></td></tr></table></figure>
+
+
+
+<p>第四个if</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果允许Url数组不为空，则检索Url是否在允许列表</span><br><span class="line">如果是则放行</span><br></pre></td></tr></table></figure>
+
+
+
+<p>否则跳转到登录界面</p>
+<p>可直接访问忽略的urlpath</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230512170907517.png" alt="image-20230512170907517"></p>
+<p>那么这里考虑两个问题，实际是一个问题</p>
+<p>也就是Filter放行的两个数组名单，一个忽略的一个白名单</p>
+<p>第一</p>
+<p>其中对<code>*ignoredList*</code>的判断是通过一个<code>verify</code>函数，</p>
+<p>相当于只匹配<code>regex</code>而不顾及前后缀</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230512173140932.png" alt="image-20230512173140932"></p>
+<p>这里应该使用<code>endsWith()</code>来判断资源的后缀为js、css等</p>
+<p>第二</p>
+<p>白名单的判断通过<code>startsWith()</code>的话</p>
+<p>是可以通过目录穿越来饶过认证</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230512173314096.png" alt="image-20230512173314096"></p>
+<p>另外如果<code>Url</code>中存在&#x2F;doc.html，&#x2F;register.html，&#x2F;login.html同样也会放行，也就是可以进行绕过</p>
+<h2 id="鉴权绕过"><a href="#鉴权绕过" class="headerlink" title="鉴权绕过"></a>鉴权绕过</h2><p>前面我们说了<code>Filter</code>拦截器的处理规则</p>
+<p>当<code>Url</code>中存在&#x2F;doc.html，&#x2F;register.html，&#x2F;login.html的时候就会直接放行</p>
+<p><img src="C:\Users\ki10Moc\AppData\Roaming\Typora\typora-user-images\image-20230519163611007.png" alt="image-20230519163611007"></p>
+<p>这里没有session，就会重定向到login.html界面</p>
+<h2 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h2><p>全局搜索<code>$&#123;</code></p>
+<p>来到<code>UserMaooerEx.xml</code></p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230517195937230.png" alt="image-20230517195937230"></p>
+<p>全局搜索<code>selectByConditionUser</code></p>
+<p>到<code>UserMapperEx</code>的接口</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230517200021735.png" alt="image-20230517200021735"></p>
+<p>接着全局搜索或者查找引用</p>
+<p>到<code>UsserService</code>的java文件</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230517200133414.png" alt="image-20230517200133414"></p>
+<p>来到<code>UserComponent</code></p>
+<p>接着找哪里调用了<code>UserService.select</code>方法</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230517200820484.png" alt="image-20230517200820484"></p>
+<p>这里通过<code>search</code>字段获取<code>userName</code>和<code>loginName</code>并且可控</p>
+<p>在<code>CommonQueryManager</code>下调用</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230518224148428.png" alt="image-20230518224148428"></p>
+<p>接着来到<code>ResourceController</code></p>
+<p>这里到了contoller层就可以看前端获取数据了</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230518224236337.png" alt="image-20230518224236337"></p>
+<p>到用户管理界面进行验证</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230517173521606.png" alt="image-20230517173521606"></p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230517173309096.png" alt="image-20230517173309096"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/01/30/SnakeYaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-03-09 21:09:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                        <b>#</b> Java安全
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/03/09/%E6%B5%85%E6%9E%90C3P0%E6%94%BB%E5%87%BB%E9%93%BE/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text">0x01环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-text">0x02代码审计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Filter%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-text">Filter过滤器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%89%B4%E6%9D%83%E7%BB%95%E8%BF%87"><span class="toc-text">鉴权绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="toc-text">SQL注入</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2023 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%8D%8E%E5%A4%8FERP-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F03%2F09%2F%25E5%258D%258E%25E5%25A4%258FERP-%25E4%25BB%25A3%25E7%25A0%2581%25E5%25AE%25A1%25E8%25AE%25A1%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/03/09/%E5%8D%8E%E5%A4%8FERP-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
