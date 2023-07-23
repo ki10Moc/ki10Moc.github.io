@@ -8,10 +8,13 @@
   <meta name="author" content="ki10Moc" />
   <meta name="description" content="" />
   
-    <meta name="robots" content="noindex" />
-  
   
   <title>
+    
+      Funny_go 
+      
+      
+      |
     
      ki10Moc&#39;s World
   </title>
@@ -113,45 +116,206 @@
 
 
       <div class="flex-container">
-        <div class="container index">
-  <div class="post-list">
-    <!-- 遍历渲染文章 -->
-    
-      <div class="post-item" title="lmxcms1.4">
-        <div class="time-m-d">2022-04-17</div>
-        <div class="title">
-          <a href="/2022/04/17/lmxcms1.4/">
-            
-              
-                <span>lmxcms1.4</span>
-              
-            
-          </a>
-        </div>
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Funny_go</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-07-23 04:20:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Go/" title="Go">
+                    <b>#</b> Go
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Gin/" title="Gin">
+                    <b>#</b> Gin
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Gorm/" title="Gorm">
+                    <b>#</b> Gorm
+                  </a>
+                </span>
+                
+              </span>
+          
       </div>
-    
-      <div class="post-item" title="Commons Collections1">
-        <div class="time-m-d">2022-02-17</div>
-        <div class="title">
-          <a href="/2022/02/17/Commons%20Collections1/">
+      <div class="markdown-body">
+        <p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1nLaI1aZpA-IFkInIfKJrCw?pwd=z3q9">源码自行下载</a></p>
+<p>windows复现单独下载wkhtmltopdf</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/adrg/go-wkhtmltopdf/wiki/Install-on-Windows">Install on Windows · adrg&#x2F;go-wkhtmltopdf Wiki (github.com)</a></p>
+<p>回过头再看一下代码</p>
+<p>有用的地方就是<code>SubmitMoveHandler</code></p>
+<p>直接去move打</p>
+<p>其他都是废话</p>
+<p>gorm和gin框架</p>
+<p>5个路由</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">router.GET(<span class="string">&quot;/user&quot;</span>, UserHandler)		<span class="comment">//用户登录信息</span></span><br><span class="line">router.POST(<span class="string">&quot;/login&quot;</span>, LoginHandler)		<span class="comment">//对比数据库用户信息登录</span></span><br><span class="line">router.POST(<span class="string">&quot;/upload&quot;</span>, cookieCheckMiddleware(), UploadHandler) <span class="comment">//文件上传(需登录)</span></span><br><span class="line">router.POST(<span class="string">&quot;/move&quot;</span>, IpSecurityCheck(), SubmitMoveHandler)	<span class="comment">//移动文件(判断IP)</span></span><br><span class="line">router.POST(<span class="string">&quot;/download&quot;</span>, cookieCheckMiddleware(), DownloadHandler)	<span class="comment">//下载文件(需登录)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>首先从代码上两个比较明显的点</p>
+<p>1、IpSecurityCheck</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">IpSecurityCheck</span><span class="params">()</span></span> gin.HandlerFunc &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">		<span class="keyword">if</span> c.Request.RemoteAddr[:<span class="number">9</span>] != <span class="string">&quot;127.0.0.1&quot;</span> &amp;&amp; c.Request.RemoteAddr[:<span class="number">9</span>] != <span class="string">&quot;localhost&quot;</span> &#123;</span><br><span class="line">			c.JSON(<span class="number">403</span>, gin.H&#123;<span class="string">&quot;msg&quot;</span>: <span class="string">&quot;No you&#x27;are not allowed&quot;</span>&#125;)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		c.Next()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>2、SubmitMoveHandler</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SubmitMoveHandler</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> filename Filename</span><br><span class="line">	<span class="keyword">if</span> err := c.ShouldBindJSON(&amp;filename); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		c.JSON(http.StatusBadRequest, gin.H&#123;<span class="string">&quot;error&quot;</span>: err.Error()&#125;)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	cmd := exec.Command(<span class="string">&quot;/bin/bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;mv ./upload/pdf/&quot;</span>+filename.Filename+<span class="string">&quot; ./assert/pdf/&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err := cmd.Run(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	c.JSON(http.StatusOK, gin.H&#123;<span class="string">&quot;message&quot;</span>: filename.Filename&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>很明显的SSRF和命令注入</p>
+<p>那么再来看下前置步骤</p>
+<p>首先是struct进行查询时，gorm只会查询非零字段，若值为0，false，’’或其他零值</p>
+<p>gorm会忽略where条件</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230723033803704.png" alt="image-20230723033803704"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230723033823276.png" alt="image-20230723033823276"></p>
+<p>得到username和password</p>
+<p>进行登录</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230723033947090.png" alt="image-20230723033947090"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230723040521720.png" alt="image-20230723040521720"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230723034517349.png" alt="image-20230723034517349"></p>
+<p>————————–9a28df6f0f9a180f Content-Disposition: form-data; name&#x3D;”xx”; filename&#x3D;”flag” Content-Type: application&#x2F;octet-stream flag{ki10Moc_W0nt_31eep} ————————–9a28df6f0f9a180f–</p>
+<p>但其实这题代码写的有问题</p>
+<p>5个路由只需要move即可</p>
+<p>因为move没有身份验证</p>
+<p>可以直接打</p>
+<p>单纯的命令注入</p>
+<p>突然看到有命令执行！</p>
+<p>攻击队上班了？</p>
+<p>乐，复现题目被态势感知记录了</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230723012127208.png" alt="image-20230723012127208"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
             
-              
-                <span>Commons Collections1</span>
-              
+              <a href="/2023/06/10/log4j2%E7%BB%95%E8%BF%87%E6%89%8B%E6%B3%95/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
             
-          </a>
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-07-23 04:20:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Go/" title="Go">
+                        <b>#</b> Go
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Gin/" title="Gin">
+                        <b>#</b> Gin
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Gorm/" title="Gorm">
+                        <b>#</b> Gorm
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
         </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
       </div>
     
   </div>
-  <nav class="post-navigation">
-    
-      <a href="/page/3/"><i class="iconfont icon-angleleft"></i></a>
-    
-    <span class="page-num">4 / 4</span>
-    
-  </nav>
-</div>
+
 
         
 <div class="footer">
@@ -423,6 +587,24 @@
 
 
         
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Funny_go + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F07%2F23%2Ffunny_go1%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/07/23/funny_go1/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
   
   
 <script src="/js/shares.js"></script>
