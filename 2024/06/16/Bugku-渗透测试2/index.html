@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      不知名ST 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">不知名ST</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2024-06-16 23:09:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E6%B8%97%E9%80%8F/" title="渗透">
+                    <b>#</b> 渗透
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/RedTeam/" title="RedTeam">
+                    <b>#</b> RedTeam
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>口子是 Typecho 1.0/14.10.10 反序列化漏洞</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240616223822723.png" alt="image-20240616223822723"></p>
+<p>拿到根目录第一个 flag</p>
+<p 91715583734f67edae35a4595b9fdac3="">flag</p>
+<p>web 目录下有配置文件的备份，存有数据库信息</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240616224038367.png" alt="image-20240616224038367"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;host&#x27;</span> =&gt; <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;user&#x27;</span> =&gt; <span class="string">&#x27;cms&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;password&#x27;</span> =&gt; <span class="string">&#x27;7aed78676bf27528&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;charset&#x27;</span> =&gt; <span class="string">&#x27;utf8&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;port&#x27;</span> =&gt; <span class="string">&#x27;3306&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;database&#x27;</span> =&gt; <span class="string">&#x27;cms&#x27;</span>,</span><br></pre></td></tr></table></figure>
+<p>登录数据库拿到第二个 flag</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240616224207226.png" alt="image-20240616224207226"></p>
+<p 221d6e8a3af61a548c83d9b7fbb60ea2="">flag</p>
+<p>上传 fscan 扫描当前网段</p>
+<p>得到结果</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">192.168</span><span class="number">.0</span><span class="number">.2</span>:<span class="number">3306</span> open</span><br><span class="line"><span class="number">192.168</span><span class="number">.0</span><span class="number">.2</span>:<span class="number">80</span> open</span><br><span class="line"><span class="number">192.168</span><span class="number">.0</span><span class="number">.3</span>:<span class="number">80</span> open</span><br><span class="line"><span class="number">192.168</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">80</span> open</span><br><span class="line"><span class="number">192.168</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">22</span> open</span><br><span class="line">[*] WebTitle http:<span class="comment">//192.168.0.1        code:200 len:3392   title:Harry&#x27;s Blog</span></span><br><span class="line">[*] WebTitle http:<span class="comment">//192.168.0.2        code:200 len:3392   title:Harry&#x27;s Blog</span></span><br><span class="line">[+] mysql <span class="number">192.168</span><span class="number">.0</span><span class="number">.2</span>:<span class="number">3306</span>:root </span><br><span class="line">[*] WebTitle http:<span class="comment">//192.168.0.3        code:200 len:4789   title:Bugku后台管理系统</span></span><br></pre></td></tr></table></figure>
+<p>上 frp</p>
+<p>到这里有备份源码，但是到这里一动就卡死，为了不耽误时间 (懒)，直接往下打了</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240616233613711.png" alt="image-20240616233613711"></p>
+<p>log4 拿到 shell</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240616235105866.png" alt="image-20240616235105866"></p>
+<p>拿下三个 flag</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240616235329473.png" alt="image-20240616235329473"></p>
+<p 4047947872cfc49a32edec89778e04fb="">FLAG3=flag{7be5f76b1ccdb8c3326b21be543f62dc}<br>
+FLAG5=flag{98e1c8c214c041aad90185bca13ddb1b}<br>
+FLAG4=flag</p>
+<p>新的网段</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240617000207873.png" alt="image-20240617000207873"></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">./fscan -h <span class="number">192.168</span><span class="number">.1</span><span class="number">.2</span>/<span class="number">24</span></span><br><span class="line"></span><br><span class="line">   ___                              _    </span><br><span class="line">  / _ \     ___  ___ _ __ __ _  ___| | __ </span><br><span class="line"> / /_\/____/ __|/ __| <span class="string">&#x27;__/ _` |/ __| |/ /</span></span><br><span class="line"><span class="string">/ /_\\_____\__ \ (__| | | (_| | (__|   &lt;    </span></span><br><span class="line"><span class="string">\____/     |___/\___|_|  \__,_|\___|_|\_\   </span></span><br><span class="line"><span class="string">                     fscan version: 1.8.4</span></span><br><span class="line"><span class="string">start infoscan</span></span><br><span class="line"><span class="string">(icmp) Target 192.168.1.2     is alive</span></span><br><span class="line"><span class="string">(icmp) Target 192.168.1.1     is alive</span></span><br><span class="line"><span class="string">(icmp) Target 192.168.1.3     is alive</span></span><br><span class="line"><span class="string">[*] Icmp alive hosts len is: 3</span></span><br><span class="line"><span class="string">192.168.1.3:80 open</span></span><br><span class="line"><span class="string">192.168.1.1:80 open</span></span><br><span class="line"><span class="string">192.168.1.2:80 open</span></span><br><span class="line"><span class="string">192.168.1.1:22 open</span></span><br><span class="line"><span class="string">[*] alive ports len is: 4</span></span><br><span class="line"><span class="string">start vulscan</span></span><br><span class="line"><span class="string">[*] WebTitle http://192.168.1.2        code:200 len:4789   title:Bugku后台管理系统</span></span><br><span class="line"><span class="string">[*] WebTitle http://192.168.1.3        code:200 len:524    title:乙公司Git仓库</span></span><br><span class="line"><span class="string">[*] WebTitle http://192.168.1.1        code:200 len:3392   title:Harry&#x27;</span>s Blog</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240617001236756.png" alt="image-20240617001236756"></p>
+<p>git 一个木马到本地</p>
+<p>根目录下得到 flag</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240617001222018.png" alt="image-20240617001222018"></p>
+<p 2632b63fc888a9e143e0689a2dfc29c9="">flag</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240617001710628.png" alt="image-20240617001710628"></p>
+<p>emm</p>
+<p>最后还差 10 机器上 ftp 的两个 flag</p>
+<p>不打了 md**</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/12/11/S2-066%E5%88%86%E6%9E%90/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2024-06-16 23:09:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E6%B8%97%E9%80%8F/" title="渗透">
+                        <b>#</b> 渗透
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/RedTeam/" title="RedTeam">
+                        <b>#</b> RedTeam
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2025/03/10/Ollama%E6%9C%AA%E6%8E%88%E6%9D%83/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%B8%8D%E7%9F%A5%E5%90%8DST + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2024%2F06%2F16%2FBugku-%25E6%25B8%2597%25E9%2580%258F%25E6%25B5%258B%25E8%25AF%25952%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2024/06/16/Bugku-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%952/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

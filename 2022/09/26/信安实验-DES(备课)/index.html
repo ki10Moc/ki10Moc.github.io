@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      信安实验-DES(备课) 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">信安实验-DES(备课)</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2022-09-26 22:02:17
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/" title="信息安全">
+                    <b>#</b> 信息安全
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" title="密码学">
+                    <b>#</b> 密码学
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/DES/" title="DES">
+                    <b>#</b> DES
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="des加密"><a class="markdownIt-Anchor" href="#des加密">#</a> DES 加密</h3>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">明文M=(<span class="number">0123456789</span>ABCDEF)<span class="number">16</span>=(<span class="number">00000001</span> <span class="number">00100011</span> <span class="number">01000101</span> <span class="number">01100111</span> <span class="number">10001001</span> <span class="number">10101011</span> <span class="number">11001101</span> <span class="number">11101111</span>)<span class="number">2</span></span><br><span class="line">密钥K=（<span class="number">133457799</span>BBCDFF1）<span class="number">16</span>=(<span class="number">00010011</span> <span class="number">00110100</span> <span class="number">01010111</span> <span class="number">01111001</span> <span class="number">10011011</span> <span class="number">10111100</span> <span class="number">11011111</span> <span class="number">11110001</span>)<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<h3 id="秘钥的计算"><a class="markdownIt-Anchor" href="#秘钥的计算">#</a> 秘钥的计算</h3>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">K=<span class="number">00010011</span> <span class="number">00110100</span> <span class="number">01010111</span> <span class="number">01111001</span> <span class="number">10011011</span> <span class="number">10111100</span> <span class="number">11011111</span> <span class="number">11110001</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/5a329385cb94465a98992859e6b42bdb.png" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/8258fa37be9148139c7b868e496b4f6b.png" alt="在这里插入图片描述"></p>
+<p>压缩置换 1：</p>
+<p>00010011 8<br>
+00110100 16<br>
+01010111 24<br>
+01111001 32<br>
+10011011 40<br>
+10111100 48<br>
+11011111 56<br>
+11110001 64</p>
+<p><img src="https://img-blog.csdnimg.cn/141f6f7d9c6e4302ae8a4926d140bdb0.png" alt="在这里插入图片描述"><br>
+按照表格选出上述数字</p>
+<p>1111000<br>
+0110011<br>
+0010101<br>
+0101111<br>
+0101010<br>
+1011001<br>
+1001111<br>
+0001111</p>
+<p>得到</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">K0=<span class="number">11110000110011001010101011110101010101100110011110001111</span></span><br></pre></td></tr></table></figure>
+<p>拆分</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C0=<span class="number">1111000011001100101010101111</span></span><br><span class="line">D0=<span class="number">0101010101100110011110001111</span></span><br></pre></td></tr></table></figure>
+<p>第一轮，左移 1 位</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C1=<span class="number">1110000110011001010101011111</span></span><br><span class="line">D1=<span class="number">1010101011001100111100011110</span></span><br></pre></td></tr></table></figure>
+<p>合并得到新的子秘钥</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C1D1=<span class="number">11100001100110010101010111111010101011001100111100011110</span></span><br></pre></td></tr></table></figure>
+<p>压缩置换 2：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1110000</span>  <span class="number">7</span>    </span><br><span class="line"><span class="number">1100110</span>  <span class="number">14</span></span><br><span class="line"><span class="number">0101010</span>  <span class="number">21</span></span><br><span class="line"><span class="number">1011111</span>  <span class="number">28</span></span><br><span class="line"><span class="number">1010101</span>  <span class="number">35</span></span><br><span class="line"><span class="number">0110011</span>  <span class="number">42</span></span><br><span class="line"><span class="number">0011110</span>  <span class="number">49</span></span><br><span class="line"><span class="number">0011110</span>  <span class="number">56</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/f5f925ba28e24e34ac90f51ef2a5ca86.png" alt="在这里插入图片描述"></p>
+<p>根据压缩置换 2 表得到 K1：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">000110</span></span><br><span class="line"><span class="number">110000</span></span><br><span class="line"><span class="number">001011</span></span><br><span class="line"><span class="number">101111</span></span><br><span class="line"><span class="number">111111</span></span><br><span class="line"><span class="number">000111</span></span><br><span class="line"><span class="number">000001</span></span><br><span class="line"><span class="number">110010</span></span><br></pre></td></tr></table></figure>
+<p>得到</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">K1</span>(<span class="number">48</span>)= <span class="number">00011011</span> <span class="number">00000010</span> <span class="number">11101111</span> <span class="number">11111100</span> <span class="number">01110000</span> <span class="number">01110010</span></span><br></pre></td></tr></table></figure>
+<h3 id="初始转换"><a class="markdownIt-Anchor" href="#初始转换">#</a> 初始转换</h3>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">M=<span class="number">00000001</span> <span class="number">00100011</span> <span class="number">01000101</span> <span class="number">01100111</span> <span class="number">10001001</span> <span class="number">10101011</span> <span class="number">11001101</span> <span class="number">11101111</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">00000001</span> </span><br><span class="line"><span class="number">00100011</span> </span><br><span class="line"><span class="number">01000101</span> </span><br><span class="line"><span class="number">01100111</span> </span><br><span class="line"><span class="number">10001001</span> </span><br><span class="line"><span class="number">10101011</span> </span><br><span class="line"><span class="number">11001101</span> </span><br><span class="line"><span class="number">11101111</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/e3cf910b01294c3399b5b9a2618482a1.png" alt="在这里插入图片描述"><br>
+根据初始置换表转换：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00000001</span> <span class="number">8</span></span><br><span class="line"><span class="number">00100011</span> <span class="number">16</span></span><br><span class="line"><span class="number">01000101</span> <span class="number">24</span></span><br><span class="line"><span class="number">01100111</span> <span class="number">32</span></span><br><span class="line"><span class="number">10001001</span> <span class="number">40</span></span><br><span class="line"><span class="number">10101011</span> <span class="number">48</span></span><br><span class="line"><span class="number">11001101</span> <span class="number">56</span></span><br><span class="line"><span class="number">11101111</span> <span class="number">64</span></span><br></pre></td></tr></table></figure>
+<p>置换得到：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">11001100</span></span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">11001100</span></span><br><span class="line"><span class="number">11111111</span></span><br><span class="line"><span class="number">11110000</span></span><br><span class="line"><span class="number">10101010</span></span><br><span class="line"><span class="number">11110000</span></span><br><span class="line"><span class="number">10101010</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">M=<span class="number">11001100</span> <span class="number">00000000</span> <span class="number">11001100</span> <span class="number">11111111</span> <span class="number">11110000</span> <span class="number">10101010</span> <span class="number">11110000</span> <span class="number">10101010</span></span><br></pre></td></tr></table></figure>
+<p>分为左右两部分</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">L0=<span class="number">11001100</span> <span class="number">00000000</span> <span class="number">11001100</span> <span class="number">11111111</span></span><br><span class="line">R0=<span class="number">11110000</span> <span class="number">10101010</span> <span class="number">11110000</span> <span class="number">10101010</span></span><br></pre></td></tr></table></figure>
+<h3 id="扩展置换"><a class="markdownIt-Anchor" href="#扩展置换">#</a> 扩展置换</h3>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">R0=<span class="number">11110000</span> <span class="number">10101010</span> <span class="number">11110000</span> <span class="number">10101010</span></span><br></pre></td></tr></table></figure>
+<p>分组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1111</span> </span><br><span class="line">    <span class="number">0000</span> </span><br><span class="line">        <span class="number">1010</span> </span><br><span class="line">            <span class="number">1010</span> </span><br><span class="line">			    <span class="number">1111</span> </span><br><span class="line">				    <span class="number">0000</span> </span><br><span class="line">					    <span class="number">1010</span> </span><br><span class="line">						    <span class="number">1010</span></span><br></pre></td></tr></table></figure>
+<p>拓展置换得到</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">011110 </span><br><span class="line">    <span class="number">100001</span> </span><br><span class="line">        <span class="number">0</span>10101 </span><br><span class="line">            <span class="number">0</span>10101 </span><br><span class="line">			    011110 </span><br><span class="line">				    <span class="number">100001</span> </span><br><span class="line">					    <span class="number">0</span>10101 </span><br><span class="line">						    <span class="number">0</span>10101</span><br></pre></td></tr></table></figure>
+<p>得到</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E(R0)<span class="number">48</span>=01111010 <span class="number">000</span>10101 <span class="number">0</span>1010101 01111010 <span class="number">000</span>10101 <span class="number">0</span>1010101</span><br></pre></td></tr></table></figure>
+<p>R048=E (R0) 异或 K1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">K1(<span class="number">48</span>)= 00011011 <span class="number">000000</span>10 <span class="number">11101111</span> <span class="number">11111100</span> 01110000 01110010  </span><br></pre></td></tr></table></figure>
+<p>得到</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">R0(<span class="number">48</span>)=01100001 <span class="number">000</span>10111 <span class="number">10111010</span> <span class="number">10000110</span> 01100101 <span class="number">00</span>100111</span><br></pre></td></tr></table></figure>
+<h3 id="s盒替换"><a class="markdownIt-Anchor" href="#s盒替换">#</a> S 盒替换</h3>
+<p>将 R0 分组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">011000</span><br><span class="line"><span class="number">0</span>10001</span><br><span class="line">011110</span><br><span class="line"><span class="number">111010</span></span><br><span class="line"><span class="number">100001</span></span><br><span class="line"><span class="number">100110</span></span><br><span class="line"><span class="number">0</span>10100</span><br><span class="line"><span class="number">100111</span></span><br></pre></td></tr></table></figure>
+<p>扩展位二进制转十进制，原位二进制转为十进制，对应表格中数字转为二进制</p>
+<table>
+<thead>
+<tr>
+<th>组</th>
+<th>列</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1: 00=0</td>
+<td>1100=12</td>
+<td>5=0101</td>
+</tr>
+<tr>
+<td>S2:01=1</td>
+<td>1000=8</td>
+<td>12=1100</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://img-blog.csdnimg.cn/a018a0a03c624fcd864a96a3e1bbf815.png" alt="在这里插入图片描述"></p>
+<table>
+<thead>
+<tr>
+<th>组</th>
+<th>列</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3：00=0</td>
+<td>1111=15</td>
+<td>8=1000</td>
+</tr>
+<tr>
+<td>S4：10=2</td>
+<td>1101=13</td>
+<td>2=0010</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://img-blog.csdnimg.cn/4e5d0dd0e418412cad3b1af3b89bff6c.png" alt="在这里插入图片描述"></p>
+<table>
+<thead>
+<tr>
+<th>组</th>
+<th>列</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S5：11=3</td>
+<td>0000=0</td>
+<td>11=1011</td>
+</tr>
+<tr>
+<td>S6：10=2</td>
+<td>0011=3</td>
+<td>5=0101</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://img-blog.csdnimg.cn/191b04bf663540808826c522bd0b79c2.png" alt="在这里插入图片描述"></p>
+<table>
+<thead>
+<tr>
+<th>组</th>
+<th>列</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S7：00=0</td>
+<td>1010=10</td>
+<td>9=1001</td>
+</tr>
+<tr>
+<td>S8：11=3</td>
+<td>0011=3</td>
+<td>7=0111</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://img-blog.csdnimg.cn/65568edcdd1543d68e395157b854a99b.png" alt="在这里插入图片描述"><br>
+最终</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S1(011000)=<span class="number">0</span>101, S2(<span class="number">0</span>10001)=<span class="number">1100</span>, S3(011110)=<span class="number">1000</span>, S4(<span class="number">111010</span>)=<span class="number">00</span>10 S5(<span class="number">100001</span>)=<span class="number">1011</span>, S6(<span class="number">100110</span>)=<span class="number">0</span>101, S7(<span class="number">0</span>10100)=<span class="number">1001</span>, S8(<span class="number">100111</span>)=0111</span><br></pre></td></tr></table></figure>
+<h3 id="p盒置换"><a class="markdownIt-Anchor" href="#p盒置换">#</a> P 盒置换</h3>
+<p>分组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>101  <span class="number">4</span></span><br><span class="line"><span class="number">1100</span>  <span class="number">8</span></span><br><span class="line"><span class="number">1000</span>  <span class="number">12</span></span><br><span class="line"><span class="number">00</span>10  <span class="number">16</span></span><br><span class="line"><span class="number">1011</span>  <span class="number">20</span></span><br><span class="line"><span class="number">0</span>101  <span class="number">24</span></span><br><span class="line"><span class="number">1001</span>  <span class="number">28</span></span><br><span class="line">0111  <span class="number">32</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/8e0a181dd1f94cbf90170f1db29b1b95.png" alt="在这里插入图片描述"><br>
+根据 P 盒置换表转换得到：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00</span>10</span><br><span class="line">0011</span><br><span class="line"><span class="number">0</span>100</span><br><span class="line"><span class="number">1010</span></span><br><span class="line"><span class="number">1010</span></span><br><span class="line"><span class="number">1001</span></span><br><span class="line"><span class="number">1011</span></span><br><span class="line"><span class="number">1011</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">F= <span class="number">00</span>100011 <span class="number">0</span>1001010 <span class="number">10101001</span> <span class="number">10111011</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">L0=<span class="number">11001100</span> <span class="number">00000000</span> <span class="number">11001100</span> <span class="number">11111111</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">R1=L0^F=<span class="number">11101111</span> <span class="number">0</span>1001010 01100101 <span class="number">0</span>1000100</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">L1=R0=<span class="number">11110000</span> <span class="number">10101010</span> <span class="number">11110000</span> <span class="number">10101010</span></span><br></pre></td></tr></table></figure>
+<p>经过第一轮加密后</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">M1=<span class="number">11101111</span> <span class="number">01001010</span> <span class="number">01100101</span> <span class="number">01000100</span> <span class="number">11110000</span> <span class="number">10101010</span> <span class="number">11110000</span> <span class="number">10101010</span></span><br></pre></td></tr></table></figure>
+<p>即<br>
+ M1=(EF4A6544F0AAF0AA) 16</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/09/25/%E4%BF%A1%E5%AE%89%E5%AE%9E%E9%AA%8C-RSA(%E5%A4%87%E8%AF%BE)/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2022-09-26 22:02:17
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/" title="信息安全">
+                        <b>#</b> 信息安全
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" title="密码学">
+                        <b>#</b> 密码学
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/DES/" title="DES">
+                        <b>#</b> DES
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/11/14/FastJson%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#des%E5%8A%A0%E5%AF%86"><span class="toc-text"> DES 加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%98%E9%92%A5%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="toc-text"> 秘钥的计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E8%BD%AC%E6%8D%A2"><span class="toc-text"> 初始转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E7%BD%AE%E6%8D%A2"><span class="toc-text"> 扩展置换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#s%E7%9B%92%E6%9B%BF%E6%8D%A2"><span class="toc-text"> S 盒替换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#p%E7%9B%92%E7%BD%AE%E6%8D%A2"><span class="toc-text"> P 盒置换</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%BF%A1%E5%AE%89%E5%AE%9E%E9%AA%8C-DES(%E5%A4%87%E8%AF%BE) + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2022%2F09%2F26%2F%25E4%25BF%25A1%25E5%25AE%2589%25E5%25AE%259E%25E9%25AA%258C-DES(%25E5%25A4%2587%25E8%25AF%25BE)%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2022/09/26/%E4%BF%A1%E5%AE%89%E5%AE%9E%E9%AA%8C-DES(%E5%A4%87%E8%AF%BE)/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

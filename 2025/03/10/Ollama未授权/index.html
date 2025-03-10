@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Ollama未授权 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Ollama未授权</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2025-03-10 15:19:17
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" title="大模型">
+                    <b>#</b> 大模型
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="分析"><a class="markdownIt-Anchor" href="#分析">#</a> 分析</h3>
+<p>首先看下对请求处理的位置</p>
+<p>Server/routes.go</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Serve</span><span class="params">(ln net.Listener)</span></span> <span class="type">error</span> &#123;</span><br><span class="line">	level := slog.LevelInfo</span><br><span class="line">	<span class="keyword">if</span> envconfig.Debug() &#123;</span><br><span class="line">		level = slog.LevelDebug</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	slog.Info(<span class="string">&quot;server config&quot;</span>, <span class="string">&quot;env&quot;</span>, envconfig.Values())</span><br><span class="line">	handler := slog.NewTextHandler(os.Stderr, &amp;slog.HandlerOptions&#123;</span><br><span class="line">		Level:     level,</span><br><span class="line">		AddSource: <span class="literal">true</span>,</span><br><span class="line">		ReplaceAttr: <span class="function"><span class="keyword">func</span><span class="params">(_ []<span class="type">string</span>, attr slog.Attr)</span></span> slog.Attr &#123;</span><br><span class="line">			<span class="keyword">if</span> attr.Key == slog.SourceKey &#123;</span><br><span class="line">				source := attr.Value.Any().(*slog.Source)</span><br><span class="line">				source.File = filepath.Base(source.File)</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">return</span> attr</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	slog.SetDefault(slog.New(handler))</span><br><span class="line"></span><br><span class="line">	blobsDir, err := GetBlobsPath(<span class="string">&quot;&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> err := fixBlobs(blobsDir); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> !envconfig.NoPrune() &#123;</span><br><span class="line">		<span class="keyword">if</span> _, err := Manifests(<span class="literal">false</span>); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			slog.Warn(<span class="string">&quot;corrupt manifests detected, skipping prune operation.  Re-pull or delete to clear&quot;</span>, <span class="string">&quot;error&quot;</span>, err)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// clean up unused layers and manifests</span></span><br><span class="line">			<span class="keyword">if</span> err := PruneLayers(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> err</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			manifestsPath, err := GetManifestPath()</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> err</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> err := PruneDirectory(manifestsPath); err != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> err</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	s := &amp;Server&#123;addr: ln.Addr()&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> rc *ollama.Registry</span><br><span class="line">	<span class="keyword">if</span> useClient2 &#123;</span><br><span class="line">		<span class="keyword">var</span> err <span class="type">error</span></span><br><span class="line">		rc, err = ollama.DefaultRegistry()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> err</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	h, err := s.GenerateRoutes(rc)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	http.Handle(<span class="string">&quot;/&quot;</span>, h)</span><br><span class="line"></span><br><span class="line">	ctx, done := context.WithCancel(context.Background())</span><br><span class="line">	schedCtx, schedDone := context.WithCancel(ctx)</span><br><span class="line">	sched := InitScheduler(schedCtx)</span><br><span class="line">	s.sched = sched</span><br><span class="line"></span><br><span class="line">	slog.Info(fmt.Sprintf(<span class="string">&quot;Listening on %s (version %s)&quot;</span>, ln.Addr(), version.Version))</span><br><span class="line">	srvr := &amp;http.Server&#123;</span><br><span class="line">		<span class="comment">// Use http.DefaultServeMux so we get net/http/pprof for</span></span><br><span class="line">		<span class="comment">// free.</span></span><br><span class="line">		<span class="comment">//</span></span><br><span class="line">		<span class="comment">// TODO(bmizerany): Decide if we want to make this</span></span><br><span class="line">		<span class="comment">// configurable so it is not exposed by default, or allow</span></span><br><span class="line">		<span class="comment">// users to bind it to a different port. This was a quick</span></span><br><span class="line">		<span class="comment">// and easy way to get pprof, but it may not be the best</span></span><br><span class="line">		<span class="comment">// way.</span></span><br><span class="line">		Handler: <span class="literal">nil</span>,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// listen for a ctrl+c and stop any loaded llm</span></span><br><span class="line">	signals := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal, <span class="number">1</span>)</span><br><span class="line">	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		&lt;-signals</span><br><span class="line">		srvr.Close()</span><br><span class="line">		schedDone()</span><br><span class="line">		sched.unloadAllRunners()</span><br><span class="line">		done()</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	s.sched.Run(schedCtx)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// At startup we retrieve GPU information so we can get log messages before loading a model</span></span><br><span class="line">	<span class="comment">// This will log warnings to the log in case we have problems with detected GPUs</span></span><br><span class="line">	gpus := discover.GetGPUInfo()</span><br><span class="line">	gpus.LogDetails()</span><br><span class="line"></span><br><span class="line">	err = srvr.Serve(ln)</span><br><span class="line">	<span class="comment">// If server is closed from the signal handler, wait for the ctx to be done</span></span><br><span class="line">	<span class="comment">// otherwise error out quickly</span></span><br><span class="line">	<span class="keyword">if</span> !errors.Is(err, http.ErrServerClosed) &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	&lt;-ctx.Done()</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里初始化 ollama 的配置信息</p>
+<p>通过调用 s.GenerateRoutes 函数然后注册路由  http.Handle (&quot;/&quot;, s.GenerateRoutes (rc))</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> rc *ollama.Registry</span><br><span class="line">	<span class="keyword">if</span> useClient2 &#123;</span><br><span class="line">		<span class="keyword">var</span> err <span class="type">error</span></span><br><span class="line">		rc, err = ollama.DefaultRegistry()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> err</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	h, err := s.GenerateRoutes(rc)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	http.Handle(<span class="string">&quot;/&quot;</span>, h)</span><br></pre></td></tr></table></figure>
+<p>跟进下 GenerateRoutes</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Server)</span></span> GenerateRoutes(rc *ollama.Registry) (http.Handler, <span class="type">error</span>) &#123;</span><br><span class="line">	corsConfig := cors.DefaultConfig()</span><br><span class="line">	corsConfig.AllowCredentials = <span class="literal">true</span></span><br><span class="line">	corsConfig.AllowWildcard = <span class="literal">true</span></span><br><span class="line">	corsConfig.AllowBrowserExtensions = <span class="literal">true</span></span><br><span class="line">	corsConfig.AllowHeaders = []<span class="type">string</span>&#123;</span><br><span class="line">		<span class="string">&quot;Authorization&quot;</span>,</span><br><span class="line">		<span class="string">&quot;Content-Type&quot;</span>,</span><br><span class="line">		<span class="string">&quot;User-Agent&quot;</span>,</span><br><span class="line">		<span class="string">&quot;Accept&quot;</span>,</span><br><span class="line">		<span class="string">&quot;X-Requested-With&quot;</span>,</span><br><span class="line"></span><br><span class="line">		<span class="comment">// OpenAI compatibility headers</span></span><br><span class="line">		<span class="string">&quot;x-stainless-lang&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-package-version&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-os&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-arch&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-retry-count&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-runtime&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-runtime-version&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-async&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-helper-method&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-poll-helper&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-custom-poll-interval&quot;</span>,</span><br><span class="line">		<span class="string">&quot;x-stainless-timeout&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	corsConfig.AllowOrigins = envconfig.AllowedOrigins()</span><br><span class="line"></span><br><span class="line">	r := gin.Default()</span><br><span class="line">	r.Use(</span><br><span class="line">		cors.New(corsConfig),</span><br><span class="line">		allowedHostsMiddleware(s.addr),</span><br><span class="line">	)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// General</span></span><br><span class="line">	r.HEAD(<span class="string">&quot;/&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123; c.String(http.StatusOK, <span class="string">&quot;Ollama is running&quot;</span>) &#125;)</span><br><span class="line">	r.GET(<span class="string">&quot;/&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123; c.String(http.StatusOK, <span class="string">&quot;Ollama is running&quot;</span>) &#125;)</span><br><span class="line">	r.HEAD(<span class="string">&quot;/api/version&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123; c.JSON(http.StatusOK, gin.H&#123;<span class="string">&quot;version&quot;</span>: version.Version&#125;) &#125;)</span><br><span class="line">	r.GET(<span class="string">&quot;/api/version&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123; c.JSON(http.StatusOK, gin.H&#123;<span class="string">&quot;version&quot;</span>: version.Version&#125;) &#125;)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Local model cache management (new implementation is at end of function)</span></span><br><span class="line">	r.POST(<span class="string">&quot;/api/pull&quot;</span>, s.PullHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/api/push&quot;</span>, s.PushHandler)</span><br><span class="line">	r.HEAD(<span class="string">&quot;/api/tags&quot;</span>, s.ListHandler)</span><br><span class="line">	r.GET(<span class="string">&quot;/api/tags&quot;</span>, s.ListHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/api/show&quot;</span>, s.ShowHandler)</span><br><span class="line">	r.DELETE(<span class="string">&quot;/api/delete&quot;</span>, s.DeleteHandler)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Create</span></span><br><span class="line">	r.POST(<span class="string">&quot;/api/create&quot;</span>, s.CreateHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/api/blobs/:digest&quot;</span>, s.CreateBlobHandler)</span><br><span class="line">	r.HEAD(<span class="string">&quot;/api/blobs/:digest&quot;</span>, s.HeadBlobHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/api/copy&quot;</span>, s.CopyHandler)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Inference</span></span><br><span class="line">	r.GET(<span class="string">&quot;/api/ps&quot;</span>, s.PsHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/api/generate&quot;</span>, s.GenerateHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/api/chat&quot;</span>, s.ChatHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/api/embed&quot;</span>, s.EmbedHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/api/embeddings&quot;</span>, s.EmbeddingsHandler)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Inference (OpenAI compatibility)</span></span><br><span class="line">	r.POST(<span class="string">&quot;/v1/chat/completions&quot;</span>, openai.ChatMiddleware(), s.ChatHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/v1/completions&quot;</span>, openai.CompletionsMiddleware(), s.GenerateHandler)</span><br><span class="line">	r.POST(<span class="string">&quot;/v1/embeddings&quot;</span>, openai.EmbeddingsMiddleware(), s.EmbedHandler)</span><br><span class="line">	r.GET(<span class="string">&quot;/v1/models&quot;</span>, openai.ListMiddleware(), s.ListHandler)</span><br><span class="line">	r.GET(<span class="string">&quot;/v1/models/:model&quot;</span>, openai.RetrieveMiddleware(), s.ShowHandler)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> rc != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="comment">// wrap old with new</span></span><br><span class="line">		rs := &amp;registry.Local&#123;</span><br><span class="line">			Client:   rc,</span><br><span class="line">			Logger:   slog.Default(), <span class="comment">// TODO(bmizerany): Take a logger, do not use slog.Default()</span></span><br><span class="line">			Fallback: r,</span><br><span class="line"></span><br><span class="line">			Prune: PruneLayers,</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> rs, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> r, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该函数实际就是构造访问大模型的 cors 配置信息和一些接口配置信息</p>
+<p>注意到这里</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">corsConfig.AllowOrigins = envconfig.AllowedOrigins()</span><br><span class="line"></span><br><span class="line">r := gin.Default()</span><br><span class="line">r.Use(</span><br><span class="line">    cors.New(corsConfig),</span><br><span class="line">    allowedHostsMiddleware(s.addr),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这里通过 AllowedOrigins 加载环境变量，这里其实也有小问题，后面再看</p>
+<p>首先是 allowedHostsMiddleware 的鉴权函数</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">allowedHostsMiddleware</span><span class="params">(addr net.Addr)</span></span> gin.HandlerFunc &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">		<span class="keyword">if</span> addr == <span class="literal">nil</span> &#123;</span><br><span class="line">			c.Next()</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> addr, err := netip.ParseAddrPort(addr.String()); err == <span class="literal">nil</span> &amp;&amp; !addr.Addr().IsLoopback() &#123;</span><br><span class="line">			c.Next()</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		host, _, err := net.SplitHostPort(c.Request.Host)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			host = c.Request.Host</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> addr, err := netip.ParseAddr(host); err == <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> addr.IsLoopback() || addr.IsPrivate() || addr.IsUnspecified() || isLocalIP(addr) &#123;</span><br><span class="line">				c.Next()</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> allowedHost(host) &#123;</span><br><span class="line">			<span class="keyword">if</span> c.Request.Method == http.MethodOptions &#123;</span><br><span class="line">				c.AbortWithStatus(http.StatusNoContent)</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			c.Next()</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		c.AbortWithStatus(http.StatusForbidden)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实未授权是来源这个中间件的判断</p>
+<p>部署 ollama 时有两种判断：<br>
+1、没有给定环境变量中的绑定地址，也即 addr == nil ，那么就会直接 c.Next () 放行请求</p>
+<p>2、后面则是绑定了地址则解析请求 host 的情况，如果 IP 是回环地址、私有地址、未指定地址，或者满足自定义 isLocalIP 条件，则放行请求，最后判断是否是白名单的请求域名，如果是则放行；如果不是则返回 403</p>
+<p>未授权的点就是第一种情况，当启动 ollama 时没有给定监听地址，则默认放行所有请求。</p>
+<p>当然，最关键的就是这里只是鉴别了访问 IP，这个可以在数据包中进行伪造，最关键的是，这里并没有身份验证机制，也就是携带白名单 IP 访问即可获取到敏感信息。</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20250310144350080.png" alt="image-20250310144350080"></p>
+<h3 id="加固"><a class="markdownIt-Anchor" href="#加固">#</a> 加固</h3>
+<ul>
+<li>不要在公网直接安装或运行 ollama，至少监听的 host 只能是局域网地址；要么就用防火墙控制一下</li>
+<li>一定要用反向代理或者其他东西来处理一下</li>
+</ul>
+<p>例如 nginx：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">upstream ollama &#123;</span><br><span class="line">    server               localhost:11434;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen              8000 ssl;</span><br><span class="line">    server_name         ollama.mydomain.com;</span><br><span class="line"></span><br><span class="line">    # for ssl</span><br><span class="line">    ssl_certificate     &quot;path/to/cert.crt&quot;;</span><br><span class="line">    ssl_certificate_key &quot;path/to/private.key&quot;;</span><br><span class="line">    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        # Check if the Authorization header is present and has the correct Bearer token / API Key</span><br><span class="line">        set $token &quot;Bearer MY_PRIVATE_API_KEY&quot;;</span><br><span class="line">        if ($http_authorization != $token) &#123;</span><br><span class="line">            return 401 &quot;Unauthorized&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        # The localhost headers are to simulate the forwarded request as coming from localhost</span><br><span class="line">        # because I didn&#x27;t want to set the Ollama origins as *</span><br><span class="line">        proxy_set_header  Host &quot;localhost&quot;;</span><br><span class="line">        proxy_set_header  X-Real-IP &quot;127.0.0.1&quot;;</span><br><span class="line">        proxy_set_header  X-Forwarded-For &quot;127.0.0.1&quot;;</span><br><span class="line">        proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">        proxy_pass        http://ollama;  # Forward request to the actual web service</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>caddy</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">  upstream ollama &#123;</span><br><span class="line">      server               localhost:11434;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  server &#123;</span><br><span class="line">      listen              8000 ssl;</span><br><span class="line">      server_name         ollama.mydomain.com;</span><br><span class="line"></span><br><span class="line">      # for ssl</span><br><span class="line">      ssl_certificate     &quot;path/to/cert.crt&quot;;</span><br><span class="line">      ssl_certificate_key &quot;path/to/private.key&quot;;</span><br><span class="line">      ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">      ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line"></span><br><span class="line">      location / &#123;</span><br><span class="line">          # Check if the Authorization header is present and has the correct Bearer token / API Key</span><br><span class="line">          set $token &quot;Bearer MY_PRIVATE_API_KEY&quot;;</span><br><span class="line">          if ($http_authorization != $token) &#123;</span><br><span class="line">              return 401 &quot;Unauthorized&quot;;</span><br><span class="line">          &#125;</span><br><span class="line">          </span><br><span class="line">          # The localhost headers are to simulate the forwarded request as coming from localhost</span><br><span class="line">          # because I didn&#x27;t want to set the Ollama origins as *</span><br><span class="line">          proxy_set_header  Host &quot;localhost&quot;;</span><br><span class="line">          proxy_set_header  X-Real-IP &quot;127.0.0.1&quot;;</span><br><span class="line">          proxy_set_header  X-Forwarded-For &quot;127.0.0.1&quot;;</span><br><span class="line">          proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">          proxy_pass        http://ollama;  # Forward request to the actual web service</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  services:</span><br><span class="line">ollama:</span><br><span class="line">  image: ollama/ollama:latest</span><br><span class="line">  extra_hosts:</span><br><span class="line">    - &quot;host.docker.internal:host-gateway&quot;</span><br><span class="line">  ...</span><br><span class="line">caddy:</span><br><span class="line">  image: caddy:latest</span><br><span class="line">  environment:</span><br><span class="line">    OLLAMA_API_KEY: abc123</span><br><span class="line">  ports:</span><br><span class="line">    - 0.0.0.0:11434:8081</span><br><span class="line">  extra_hosts:</span><br><span class="line">    - &quot;host.docker.internal:host-gateway&quot;</span><br><span class="line">  links:</span><br><span class="line">    - ollama</span><br><span class="line">  volumes:</span><br><span class="line">    - /path/to/Caddyfile:/etc/caddy/Caddyfile</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/06/16/Bugku-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%952/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2025-03-10 15:19:17
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" title="大模型">
+                        <b>#</b> 大模型
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-text"> 分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%9B%BA"><span class="toc-text"> 加固</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Ollama%E6%9C%AA%E6%8E%88%E6%9D%83 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2025%2F03%2F10%2FOllama%25E6%259C%25AA%25E6%258E%2588%25E6%259D%2583%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2025/03/10/Ollama%E6%9C%AA%E6%8E%88%E6%9D%83/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

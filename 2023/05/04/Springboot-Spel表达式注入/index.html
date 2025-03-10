@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="ki10Moc" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Springboot-Spel表达式注入 
+      
+      
+      |
+    
+     ki10Moc&#39;s World
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/1.png">
+    <link rel="icon" href="/images/1.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RG82N8DQZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RG82N8DQZ9');
+    </script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="ki10Moc's World" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/1.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ki10Moc</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">友链</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">ki10Moc</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Springboot-Spel表达式注入</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-05-04 11:35:36
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                    <b>#</b> 代码审计
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                    <b>#</b> Java安全
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>[toc]</p>
+<h1 id="0x01-spel表达式基础"><a class="markdownIt-Anchor" href="#0x01-spel表达式基础">#</a> 0x01 SpEL 表达式基础</h1>
+<h3 id="spel简介"><a class="markdownIt-Anchor" href="#spel简介">#</a> SpEL 简介</h3>
+<p>在 Spring 3 中引入了 Spring 表达式语言（Spring Expression Language，简称 SpEL），这是一种功能强大的表达式语言，支持在运行时查询和操作对象图，可以与基于 XML 和基于注解的 Spring 配置还有 bean 定义一起使用。</p>
+<p>在 Spring 系列产品中，SpEL 是表达式计算的基础，实现了与 Spring 生态系统所有产品无缝对接。Spring 框架的核心功能之一就是通过依赖注入的方式来管理 Bean 之间的依赖关系，而 SpEL 可以方便快捷的对 ApplicationContext 中的 Bean 进行属性的装配和提取。由于它能够在运行时动态分配值，因此可以为我们节省大量 Java 代码。</p>
+<p>SpEL 有许多特性：</p>
+<ul>
+<li>使用 Bean 的 ID 来引用 Bean</li>
+<li>可调用方法和访问对象的属性</li>
+<li>可对值进行算数、关系和逻辑运算</li>
+<li>可使用正则表达式进行匹配</li>
+<li>可进行集合操作</li>
+</ul>
+<h3 id="spel定界符"><a class="markdownIt-Anchor" href="#spel定界符">#</a> SpEL 定界符 —— <code>#&#123;&#125;</code></h3>
+<p>SpEL 使用 <code>#&#123;&#125;</code>  作为定界符，所有在大括号中的字符都将被认为是 SpEL 表达式，在其中可以使用 SpEL 运算符、变量、引用 bean 及其属性和方法等。</p>
+<p>这里需要注意 <code>#&#123;&#125;</code>  和 <code>$&#123;&#125;</code>  的区别：</p>
+<ul>
+<li><code>#&#123;&#125;</code>  就是 SpEL 的定界符，用于指明内容通过 SpEL 表达式并执行；</li>
+<li><code>$&#123;&#125;</code>  主要用于加载外部属性文件中的值；</li>
+<li>两者可以混合使用，但是必须 <code>#&#123;&#125;</code>  在外面， <code>$&#123;&#125;</code>  在里面，如 <code>#&#123;'$&#123;&#125;'&#125;</code> ，注意单引号是字符串类型才添加的；</li>
+</ul>
+<h1 id="0x02-环境搭建"><a class="markdownIt-Anchor" href="#0x02-环境搭建">#</a> 0x02 环境搭建</h1>
+<p><a target="_blank" rel="noopener" href="https://github.com/LandGrey/SpringBootVulExploit/tree/master/repository/springboot-spel-rce">https://github.com/LandGrey/SpringBootVulExploit/tree/master/repository/springboot-spel-rce</a></p>
+<p>直接运行</p>
+<p>打开本地 9091 即可</p>
+<p>payload</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//localhost:9091/article?id=$&#123;T(java.lang.Runtime).getRuntime().exec(new%20String(new%20byte[]&#123;0x63,0x61,0x6c,0x63&#125;))&#125;</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221515517.png" alt="image-20230522151544480"></p>
+<h1 id="0x03-漏洞分析"><a class="markdownIt-Anchor" href="#0x03-漏洞分析">#</a> 0x03 漏洞分析</h1>
+<p>随便打个断点</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221515995.png" alt="image-20230522151557905"></p>
+<p>往下跟进</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221516781.png" alt="image-20230522151611575"></p>
+<p>这里捕获到 web 端的异常信息，判断 <code>targetException</code>  是 <code>RuntimeException</code>  类的对象，将我们输入的内容赋值给了 <code>targetException</code></p>
+<p>经过分支，Throwable 提取保存在堆栈中的错误信息。</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221516718.png" alt="image-20230522151623665"></p>
+<p>后面都是一些无关紧要的。。。</p>
+<p>直接将断点打在</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221516074.png" alt="image-20230522151635974"></p>
+<p>这里是调用 SpEL 解析器来解析上下文内容</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221516935.png" alt="image-20230522151649905"></p>
+<p>可以看到有报错的类，路径，报错类型、输入内容，事件和状态码</p>
+<p>根据上面的信息，我们直接来看 <code>message</code>  即可， <code>timestamp</code>  和 <code>status</code>  可以直接跳过</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221517944.png" alt="image-20230522151707822"></p>
+<p>跟进 <code>getValue</code></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221517046.png" alt="image-20230522151718932"></p>
+<p>第一步和上面一样，都是调用 SpEL 解析器根据上下文来解析内容</p>
+<p>这里是已经编译了，未 <code>false</code> ，跳过 <code>if</code></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221517047.png" alt="image-20230522151726835"></p>
+<p>这里利用标准评估上下文对象 StandardEvaluationContext 来对抽象语法树进行解析，实际是一个深度优先搜索的计算过程，最终返回整个表达式的计算结果；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ExpressionState</span> <span class="variable">expressionState</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExpressionState</span>(context, <span class="built_in">this</span>.configuration);</span><br><span class="line">		<span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> <span class="built_in">this</span>.ast.getValue(expressionState);</span><br><span class="line">		checkCompile(expressionState);</span><br><span class="line">		<span class="keyword">return</span> result;</span><br></pre></td></tr></table></figure>
+<p>获取输入的内容并调用 <code>toString</code></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221517570.png" alt="image-20230522151736503"></p>
+<p>接着跟进到这里</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221517379.png" alt="image-20230522151749339"></p>
+<p>其中 <code>placeholder</code>  拿到值 <code>message</code> ， <code>proval</code>  为 <code>payload</code></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221517119.png" alt="image-20230522151758072"></p>
+<p>并调用 <code>StringBuilder</code>  来处理修改我们的 <code>payload</code></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221518257.png" alt="image-20230522151805129"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">startIndex</span> <span class="operator">=</span> strVal.indexOf(<span class="built_in">this</span>.placeholderPrefix);</span><br></pre></td></tr></table></figure>
+<p>获取 <code>payload</code>  的前缀 <code>$&#123;</code></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221518906.png" alt="image-20230522151812827"></p>
+<p>进入 <code>while</code>  后，定义了 <code>endIndex</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">endIndex</span> <span class="operator">=</span> findPlaceholderEndIndex(result, startIndex);</span><br></pre></td></tr></table></figure>
+<p>来看下 <code>findPlaceholderEndIndex</code>  方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">findPlaceholderEndIndex</span><span class="params">(CharSequence buf, <span class="type">int</span> startIndex)</span> &#123;</span><br><span class="line">		<span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> startIndex + <span class="built_in">this</span>.placeholderPrefix.length();</span><br><span class="line">		<span class="type">int</span> <span class="variable">withinNestedPlaceholder</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">while</span> (index &lt; buf.length()) &#123;</span><br><span class="line">			<span class="keyword">if</span> (StringUtils.substringMatch(buf, index, <span class="built_in">this</span>.placeholderSuffix)) &#123;</span><br><span class="line">				<span class="keyword">if</span> (withinNestedPlaceholder &gt; <span class="number">0</span>) &#123;</span><br><span class="line">					withinNestedPlaceholder--;</span><br><span class="line">					index = index + <span class="built_in">this</span>.placeholderSuffix.length();</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="keyword">return</span> index;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (StringUtils.substringMatch(buf, index, <span class="built_in">this</span>.simplePrefix)) &#123;</span><br><span class="line">				withinNestedPlaceholder++;</span><br><span class="line">				index = index + <span class="built_in">this</span>.simplePrefix.length();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				index++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>从上图可知，int index 也就等于 24+2=26</p>
+<p>显然 <code>index&lt;buf.length()</code> ，进入 while 循环</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221518993.png" alt="image-20230522151821848"></p>
+<p>接着会遍历字符串是否为后缀 &quot;}&quot;，从 index=26 开始</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221518138.png" alt="image-20230522151832032"></p>
+<p>似乎到 109 就结束了</p>
+<p>下一步</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221522738.png" alt="img"></p>
+<p>这里 <code>For input string: &amp;quot;</code>  是 24，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">placeholder</span> <span class="operator">=</span> result.substring(startIndex + <span class="built_in">this</span>.placeholderPrefix.length(), endIndex);</span><br></pre></td></tr></table></figure>
+<p>换句话说也就是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">placeholder</span> <span class="operator">=</span> result.substring(<span class="number">24</span> + <span class="number">2</span>, <span class="number">109</span>);</span><br></pre></td></tr></table></figure>
+<p>换言之</p>
+<p>也就是将 ${} 中的内容提取出来</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">T(java.lang.Runtime).getRuntime().exec(<span class="keyword">new</span> <span class="title class_">String</span>(<span class="keyword">new</span> <span class="title class_">byte</span>[]&#123;<span class="number">0x63</span>,<span class="number">0x61</span>,<span class="number">0x6c</span>,<span class="number">0x63</span>&#125;))</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221522835.png" alt="image-20230522152224788"></p>
+<p>并将其赋值给 <code>originalPlaceholder</code></p>
+<p>重写的 <code>resolvePlaceholder</code>  处理 <code>name</code></p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221522289.png" alt="image-20230522152232137"></p>
+<p>还是同样的 <code>getValue</code></p>
+<p>获取上下文和 <code>Expression</code></p>
+<p>并编译表达式</p>
+<p><img src="https://raw.githubusercontent.com/ki10Moc/img/main/img/202305221522622.png" alt="img"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/03/09/%E5%8D%8E%E5%A4%8FERPV2.3-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-05-04 11:35:36
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="代码审计">
+                        <b>#</b> 代码审计
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Java%E5%AE%89%E5%85%A8/" title="Java安全">
+                        <b>#</b> Java安全
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/05/28/CISCN_2023/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-spel%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9F%BA%E7%A1%80"><span class="toc-text"> 0x01 SpEL 表达式基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#spel%E7%AE%80%E4%BB%8B"><span class="toc-text"> SpEL 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#spel%E5%AE%9A%E7%95%8C%E7%AC%A6"><span class="toc-text"> SpEL 定界符 —— #{}</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text"> 0x02 环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-text"> 0x03 漏洞分析</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ki10Moc/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="ki10Moc1949@gmail.com">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/profile.php?id=100083345720708">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" target="_blank" rel="noopener" href="https://twitter.com/ki10moc1/status/1494844731544662019?s=21&t=l-0lygAzRMHeJeBklnPt-A">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">Copyright © 2025 ki10Moc</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/ki10Moc/">霍布斯鲍姆学徒 | CTFer</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Springboot-Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5 + '&url=' + https%3A%2F%2Fki10moc.github.io%2F2023%2F05%2F04%2FSpringboot-Spel%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25BC%258F%25E6%25B3%25A8%25E5%2585%25A5%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ki10moc.github.io/2023/05/04/Springboot-Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
